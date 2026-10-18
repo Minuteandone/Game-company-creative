@@ -1,0 +1,149 @@
+name: Cold playtest report
+description: Record an uncoached play session for one of the current comparison candidates.
+title: "[Playtest] "
+labels:
+  - playtest
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing. Please report what actually happened in the session rather than trying to decide the company game for us.
+
+        **Observer rule:** do not explain strategy, intended outcomes, or the project's design hypotheses before play.
+
+  - type: dropdown
+    id: candidate
+    attributes:
+      label: Candidate
+      options:
+        - Borrowed Weather (#12)
+        - Signal Garden — Glass Kelp (#14)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: order
+    attributes:
+      label: Presentation order
+      description: If this tester played both candidates, which did they encounter first?
+      options:
+        - This was the only candidate they played
+        - First
+        - Second
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device and input
+      placeholder: "Example: Windows laptop, Chrome, keyboard + trackpad"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: coaching
+    attributes:
+      label: Completed without coaching?
+      options:
+        - Yes
+        - No — minor control clarification
+        - No — substantial explanation/help
+        - Did not complete
+    validations:
+      required: true
+
+  - type: textarea
+    id: observation
+    attributes:
+      label: Raw observation notes
+      description: Hesitation, confusion, spontaneous remarks, repeated actions, or moments of obvious intent. Prefer observed behavior over interpretation.
+      placeholder: "What did you actually see/hear the player do?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: deliberate
+    attributes:
+      label: What did the player say they deliberately caused?
+      description: Ask after play. Preserve their wording when possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tradeoff
+    attributes:
+      label: Who or what benefited, and who or what paid a cost?
+      description: Record the player's answer, including uncertainty.
+    validations:
+      required: true
+
+  - type: textarea
+    id: callback
+    attributes:
+      label: What changed later because of an earlier action?
+      description: Did the player notice any delayed consequence or callback?
+    validations:
+      required: true
+
+  - type: textarea
+    id: memory
+    attributes:
+      label: Most memorable person or place
+      description: Who/what did the player remember, and why?
+    validations:
+      required: true
+
+  - type: textarea
+    id: morality
+    attributes:
+      label: Did the game seem to have a designer-approved moral answer?
+      description: Record the player's answer and reasoning.
+    validations:
+      required: true
+
+  - type: textarea
+    id: mechanic
+    attributes:
+      label: What would be lost if the mechanic were replaced by a Continue button?
+      description: This is the main mechanic/content-coupling question.
+    validations:
+      required: true
+
+  - type: textarea
+    id: tenminutes
+    attributes:
+      label: If they had ten more minutes, what would they want to do?
+      description: More story, replay, a harder system, another island/day, nothing, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: borrowed
+    attributes:
+      label: Borrowed Weather notes
+      description: If applicable — did stamps become routine? Were meters watched? Was a delayed callback noticed and correctly attributed? Was replay desire about policy or unseen prose?
+
+  - type: textarea
+    id: glass
+    attributes:
+      label: Glass Kelp notes
+      description: If applicable — could they explain Iona/Orren blind spots, source provenance, interference, desired message before solve, authorship after transmission, and WHEN/ACTION/WHY consequences? Did they run into an unreachable desired source pattern?
+
+  - type: textarea
+    id: quote
+    attributes:
+      label: One spontaneous player quote
+      description: Optional, but often more useful than a numeric score.
+
+  - type: checkboxes
+    id: conditions
+    attributes:
+      label: Session conditions
+      options:
+        - label: The player was not shown the design/convergence docs before play.
+          required: true
+        - label: The observer did not coach strategy or preferred outcomes.
+          required: true
+        - label: This report describes a real play session, not a prediction from reading code.
+          required: true
