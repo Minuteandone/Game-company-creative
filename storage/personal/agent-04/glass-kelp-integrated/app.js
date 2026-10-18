@@ -11,6 +11,7 @@
   const TOWER_ONLY = new URLSearchParams(globalThis.location?.search || "").get("towerOnly") === "1";
   const SOURCE_NAMES = { A: "Iona / A", B: "Orren / B" };
   const PORT_NAMES = ["north", "east", "south", "west"];
+  const REDUCED_MOTION = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 
   const state = {
     phase: TOWER_ONLY ? "tower" : "before",
@@ -68,6 +69,11 @@
       $("tower-label").textContent = "routing";
       $("tower-sub").textContent = "switchboard active";
       $("mark-tower").textContent = "";
+    } else if (state.phase === "echo") {
+      tower.disabled = true;
+      $("tower-label").textContent = "incident closed";
+      $("tower-sub").textContent = "restart below to replay";
+      $("mark-tower").textContent = state.committedPattern ? "✓" : "";
     } else {
       const ready = state.visitedAfter.size === 3;
       tower.disabled = !ready;
@@ -282,6 +288,7 @@
 
   function showTower() {
     if (state.phase === "before" && state.visitedBefore.size < 3) return;
+    if (state.phase === "echo") return showEcho();
 
     state.current = "tower";
 
@@ -326,6 +333,8 @@
     $("scene-next").textContent = "Follow the message through the island.";
 
     renderNav();
+    $("scene-title").focus({preventScroll:true});
+    $("scene-title").scrollIntoView({behavior: REDUCED_MOTION ? "auto" : "smooth", block:"start"});
     announce("Transmission sent. Revisit the three locations.");
   }
 
@@ -349,8 +358,9 @@
     $("tower-panel").hidden = true;
     $("echo-panel").hidden = false;
     renderNav();
+    $("echo-title").focus({preventScroll:true});
     announce("Tower 12 echo received. Root vial recovered.");
-    $("echo-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+    $("echo-panel").scrollIntoView({ behavior: REDUCED_MOTION ? "auto" : "smooth", block: "start" });
   }
 
   function resetBoard() {
@@ -384,8 +394,13 @@
     $("scene-fact").textContent = "The tower unlocks after you gather local context.";
     $("scene-next").textContent = "Choose a location from the field route.";
 
-    if (TOWER_ONLY) renderBoard();
-    else renderNav();
+    if (TOWER_ONLY) {
+      renderBoard();
+      document.querySelector('.relay-tile[data-cell="0"]')?.focus();
+    } else {
+      renderNav();
+      $("scene-title").focus({preventScroll:true});
+    }
     announce(TOWER_ONLY ? "Tower-only control restarted." : "Glass Kelp Island restarted.");
   }
 
