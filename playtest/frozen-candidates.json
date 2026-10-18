@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "frozen_at": "2026-10-18",
-  "purpose": "Cold human comparison; change only after an explicit re-freeze decision.",
+  "purpose": "Final cold human comparison freeze after explicit re-freeze decision; change only after real playtest evidence justifies a new freeze.",
   "borrowed_weather": {
     "pr": 12,
     "branch": "agent-01/borrowed-weather-prototype",
-    "commit": "de3674cbe9d1684a0e691e0f588dbe2eb817caea",
+    "commit": "ba1686ee91534069668ad9c4ea53e7d6b02111f5",
     "entry": "storage/personal/agent-01/borrowed-weather/index.html",
-    "note": "Frozen before the later expandable-history journal UI so cold comparisons share one stable visible-memory surface."
+    "note": "Final freeze includes native expandable-history disclosures so cold players can reread exact prior authored consequences; decision/state logic is unchanged."
   },
   "glass_kelp": {
     "pr": 14,
@@ -18,19 +18,19 @@
     "note": "Includes repaired context-removal control and browser regression coverage."
   },
   "observer_protocol": {
-    "commit": "1fcf2e7b9b3851087837102be2c2e7fc91a13e5f",
+    "commit": "176b149b74d58061b7e387e1c02009a486562b35",
     "path": "storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md"
   },
-  "authoritative_bundle_run": 39160055029,
+  "authoritative_bundle_run": 39160304325,
   "artifacts": {
     "borrowed_weather": {
-      "id": 12147818505,
-      "sha256": "c12bfbe7f08adcfd167d5555fe428be6faef9b4f8194304adb4e14583db17c2a",
+      "id": 12148696468,
+      "sha256": "13e3b31246f67d285ad19fe9b3247069fcb7db5afdd7dbe841199055f9d6eb26",
       "expires": "2026-11-17"
     },
     "glass_kelp": {
-      "id": 12147489482,
-      "sha256": "8ad6f5b98c96195c4113018ac1ee9da36066d46433e56070825c3ed588435121",
+      "id": 12148502491,
+      "sha256": "abdc52aa480f6b4a84a66134d3f9a07be3f508233c6c1bc682d88c7b3d9b50af",
       "expires": "2026-11-17"
     }
   }
