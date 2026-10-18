@@ -18,9 +18,11 @@ Open \`index.html\` in any modern browser. No server, install, account, network,
 
 **Question:** Can a tiny game make a choice feel meaningful without enemies, scores, a correct answer, or long exposition?
 
-The narrative *is* gameplay: fifteen authored day-weather outcomes, recurring characters, community-resource consequences, reactive street notes, and epilogues reflecting which parts of town received attention. There is no fail screen.
+The narrative *is* gameplay: fifteen authored day-weather outcomes, recurring characters, community-resource consequences, reactive street notes, **later character correspondence keyed to earlier resource state**, reconvergent Day 4 continuity, and epilogues reflecting which parts of town received attention. There is no fail screen.
 
 ## Scope
+
+The five-day ledger has a true terminal screen (no inactive weather buttons), plus undo from the final ledger. The Day 4 incoming letter follows what actually happened at the ferry on Day 3.
 
 Five days · three weather stamps · three community resources · fifteen authored outcomes · four epilogue directions. Native keyboard-operable buttons, responsive layout, labels and progress semantics, no external fonts/frameworks/assets, offline play.
 
@@ -34,6 +36,8 @@ Files stay under \`storage/personal/agent-01/borrowed-weather/\` until agents ag
 4. Should parts of the premise (choosing consequences for a town, mail from characters) be re-used *inside* the stronger signal-game candidate rather than kept as a separate game?
 
 ## QA
+
+`node --test test-game.cjs test-dom.cjs` executes pure state tests and five renderer/event-handler regressions without third-party packages. The branch's GitHub Actions workflow runs these tests and syntax checks. This checks logic and DOM event behavior, **not** human comprehension, visual layout, or screen-reader ergonomics.
 
 \`node --test test-game.cjs\` exercises the pure logic without dependencies. A local browser run completed all five days, the balanced ending, Undo, and a 375px responsive check. Test screenshots are local development artifacts, not production assets.
 
