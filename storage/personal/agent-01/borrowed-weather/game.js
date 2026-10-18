@@ -43,6 +43,31 @@
     if (Math.min(...RESOURCES.map(r => values[r])) >= 3) return "balanced";
     return [...RESOURCES].sort((a, b) => values[b] - values[a])[0];
   }
+  function callbackForDay(dayIndex, values) {
+    if (!Number.isInteger(dayIndex) || dayIndex < 1 || dayIndex >= STORY.DAYS.length ||
+        !values || RESOURCES.some(key => !Number.isFinite(values[key]))) return null;
+    let letter = null;
+    let cause = "";
+    if (dayIndex === 1) {
+      letter = values.gardens <= 2 ? STORY.CALLBACKS.gardens.low :
+        values.gardens >= 5 ? STORY.CALLBACKS.gardens.high : null;
+      cause = "Earlier rain or sun changed the roof gardens.";
+    } else if (dayIndex === 2) {
+      letter = values.harbor <= 2 ? STORY.CALLBACKS.harbor.low :
+        values.harbor >= 5 ? STORY.CALLBACKS.harbor.high : null;
+      cause = "Earlier rain or wind changed harbor access.";
+    } else if (dayIndex === 3) {
+      letter = values.lanterns <= 2 ? STORY.CALLBACKS.lanterns.low :
+        values.lanterns >= 5 ? STORY.CALLBACKS.lanterns.high : null;
+      cause = "Earlier sun or wind changed the lantern archive.";
+    } else if (dayIndex === 4) {
+      // Deterministic tie-break means no hidden RNG and undo/save work without extra state.
+      const weakest = [...RESOURCES].sort((a, b) => values[a] - values[b])[0];
+      letter = STORY.CALLBACKS.festival[weakest];
+      cause = "Earlier forecasts left " + LABELS[weakest].toLowerCase() + " needing the most help.";
+    }
+    return letter ? { ...letter, cause } : null;
+  }
   function streetNote(values) {
     const low = {
       gardens: "From the office window: Jun is painting leaves on empty planters, refusing to forget what belongs there.",
@@ -71,7 +96,7 @@
     try { if (storage) storage.setItem(STORAGE_KEY, JSON.stringify(state)); }
     catch (_) { /* Private browsing may disallow storage; play still works. */ }
   }
-  const core = { initialState, isValidState, score, choose, continueDay, undo, epilogueKey, streetNote, loadState, saveState, STORAGE_KEY };
+  const core = { initialState, isValidState, score, choose, continueDay, undo, epilogueKey, streetNote, callbackForDay, loadState, saveState, STORAGE_KEY };
   global.BorrowedWeatherCore = Object.freeze(core);
   if (typeof document === "undefined") return;
 
@@ -115,7 +140,20 @@
       append(note, element("div", "from", letter.from), element("blockquote", null, letter.text));
       append(letters, note);
     }
-    if (state.history.length && !state.viewingResult) append(panel, element("p", "street-note", streetNote(score(state.history))));
+    if (state.history.length && !state.viewingResult) {
+      const values = score(state.history);
+      append(panel, element("p", "street-note", streetNote(values)));
+      const callback = callbackForDay(state.history.length, values);
+      if (callback) {
+        const note = element("article", "letter callback-letter");
+        append(note,
+          element("p", "eyebrow", "Earlier forecast, later consequence"),
+          element("div", "from", callback.from),
+          element("blockquote", null, callback.text),
+          element("p", "callback-cause", callback.cause));
+        append(panel, note);
+      }
+    }
     append(panel, letters);
     return panel;
   }
