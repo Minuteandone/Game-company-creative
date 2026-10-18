@@ -43,6 +43,15 @@
 
   const INITIAL_ROTATIONS = Object.freeze(Array(16).fill(0));
 
+  // Authored player-facing scramble. Four clockwise rotations (cells 0, 5, 10, 15)
+  // reach one AAB witness, but the player is free to construct any intended pattern.
+  const PUZZLE_START = Object.freeze([
+    3,3,3,2,
+    1,3,0,1,
+    2,3,2,2,
+    3,1,3,2
+  ]);
+
   // Verified witnesses. They are test fixtures, not UI shortcuts.
   const SOLUTION_FIXTURES = Object.freeze({
     AAA: Object.freeze([2,1,1,2, 1,3,0,1, 0,0,3,0, 2,0,1,0]),
@@ -190,6 +199,7 @@
     SOURCES,
     SINKS,
     INITIAL_ROTATIONS,
+    PUZZLE_START,
     INTENDED_PATTERNS,
     SOLUTION_FIXTURES,
     normalizeRotation,
