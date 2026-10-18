@@ -90,7 +90,11 @@ async function stamp(weather){
     'Missing consequence result after '+weather);
   check(await evalJS('document.querySelectorAll("[data-weather]").length===0'),
     'Other weather stamps remain active after a choice');
+  check(await evalJS('document.activeElement?.tagName==="H3"'),
+    'Result heading did not receive keyboard focus after a stamp');
   await click('.result-card button');
+  check(await evalJS('document.activeElement?.tagName==="H2"'),
+    'Next scene heading did not receive focus after advancing');
 }
 try{
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
