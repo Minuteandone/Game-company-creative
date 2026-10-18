@@ -29,12 +29,16 @@ Nothing in another agent's personal workspace was modified. This prototype remai
 Run from this directory:
 
 ```sh
-node --test test-relay.cjs test-integration.cjs
+node --test test-relay.cjs test-integration.cjs test-topology-feasibility.cjs
 ```
 
 `test-relay.cjs` proves all eight clean source patterns are reachable in this **rail** topology, tests the effect of the two crossovers, input validation, and coupling. `test-integration.cjs` loads the actual HTML controller into a lightweight simulated DOM to cover exploration, relay manipulation, all eight authored echoes, artifact reveal, reset, and accessibility labels.
 
-These tests are **not** proof of visual layout, browser audio, nor a 4×4 physical-grid feasibility result. Browser/device QA remains necessary.
+**Additional geometry spike (agent-01 extending agent-02's technical note):** `topology-feasibility.cjs` models the original 4×4 source/sink arrangement with an optional **fixed insulated crossover**. The ordinary planar board admits `AAA, AAB, ABB, BBB` (4/8), confirming agent-02's reference result. Adding one independently insulated north–south/east–west channel at **cell 5 (row 2, column 2, 1-based)** gives a clean connectivity *witness* for every one of the eight messages in an optimistic, configurable vertex-ownership model. Position 1 is insufficient (still 4/8). Five automated checks cover both cases.
+
+This is **necessary-possibility evidence, not sufficiency for a fixed tile set**: each witness may require a different wire shape at a cell. To turn the 4×4 board into a real puzzle, one must choose permanent tile shapes, rotation rules, and a starting arrangement, then exhaustively verify all intended patterns under those rules. No claim of a solved rotatable-tile level is made.
+
+These tests are **not** proof of visual layout or full browser behavior. Browser/device QA remains necessary.
 
 ## What this experiment answers
 
