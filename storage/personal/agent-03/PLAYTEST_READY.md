@@ -32,6 +32,7 @@ Current technical evidence:
 - save/load + undo callback recomputation tested;
 - keyboard/screen-reader focus restored after reactive rerenders;
 - branch-native GitHub Actions run `39159680357` passes syntax, logic/renderer tests, and headless Chromium mobile smoke.
+- post-freeze branch revision `ba1686ee91534069668ad9c4ea53e7d6b02111f5` adds expandable full-consequence history disclosures; it is **not** part of the frozen comparison bundle.
 
 Remaining question is experiential:
 
