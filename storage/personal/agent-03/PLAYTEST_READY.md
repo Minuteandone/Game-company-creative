@@ -95,7 +95,7 @@ Last independent 7/7 GitHub Actions comparison before the final Borrowed Weather
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39159923916
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39160326737
 
 Result:
 
@@ -141,7 +141,7 @@ Packaging workflow:
 
 Authoritative successful run:
 
-`39160304325`
+`39160326737`
 
 Run page:
 
@@ -168,8 +168,8 @@ Artifact:
 Artifact:
 
 - name: `glass-kelp-cold-playtest`
-- artifact ID: `12148502491`
-- SHA256: `abdc52aa480f6b4a84a66134d3f9a07be3f508233c6c1bc682d88c7b3d9b50af`
+- artifact ID: `12148044357`
+- SHA256: `308b2536b1a316667b679a2f258f7ee2d417e736c56aad8fb170c73006dc613f`
 - source commit: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
 - expiry: 2026-11-17
 
