@@ -8,7 +8,7 @@ const ctx = vm.createContext({});
 for (const file of ['story.js', 'game.js']) {
   vm.runInContext(fs.readFileSync(path.join(__dirname, file), 'utf8'), ctx, { filename: file });
 }
-const { initialState, isValidState, score, choose, continueDay, undo, epilogueKey, streetNote, loadState, saveState, STORAGE_KEY } = ctx.BorrowedWeatherCore;
+const { initialState, isValidState, score, choose, continueDay, undo, epilogueKey, streetNote, callbackForDay, loadState, saveState, STORAGE_KEY } = ctx.BorrowedWeatherCore;
 const normalized = (obj) => JSON.parse(JSON.stringify(obj));
 
 test('initial state and scoring', () => {
@@ -73,4 +73,37 @@ test('all authored days cover three distinct weather responses', () => {
 test('streets acknowledge both abundance and neglect', () => {
   assert.match(streetNote({gardens:1,harbor:7,lanterns:7}), /Jun/);
   assert.match(streetNote({gardens:4,harbor:6,lanterns:5}), /ferries/);
+});
+
+test('delayed callbacks reflect previous forecast resources, not the current choice', () => {
+  assert.equal(callbackForDay(0, score([])), null);
+  assert.equal(callbackForDay(1, score(['wind'])), null); // middle band
+  assert.match(callbackForDay(1, score(['sun'])).text, /seed trays/);
+  assert.match(callbackForDay(1, score(['rain'])).text, /pear cutting/);
+  assert.match(callbackForDay(2, score(['rain','rain'])).text, /stranded passenger/);
+  assert.match(callbackForDay(2, score(['wind','wind'])).text, /traveler/);
+  assert.match(callbackForDay(3, score(['wind','wind','wind'])).text, /glass was too dim/);
+  assert.match(callbackForDay(3, score(['sun','sun','sun'])).text, /red-suitcase song/);
+  assert.equal(callbackForDay(5, score([])), null);
+});
+test('festival supports all three weakest resources and deterministic ties', () => {
+  const g = callbackForDay(4, {gardens:1, harbor:5, lanterns:5});
+  const h = callbackForDay(4, {gardens:5, harbor:1, lanterns:5});
+  const l = callbackForDay(4, {gardens:5, harbor:5, lanterns:1});
+  assert.match(g.from, /Jun/);
+  assert.match(h.from, /Hal/);
+  assert.match(l.from, /Mira/);
+  assert.match(callbackForDay(4, {gardens:3, harbor:3, lanterns:3}).from, /Jun/);
+  assert.match(h.cause, /harbor routes/);
+});
+test('undo and save/load recompute delayed callbacks without stale state', () => {
+  const rainy = continueDay(choose(initialState(),'rain'));
+  const saved = new Map();
+  const storage = {getItem:k=>saved.get(k), setItem:(k,v)=>saved.set(k,v)};
+  saveState(storage,rainy);
+  assert.match(callbackForDay(1,score(loadState(storage).history)).from,/Jun/);
+  const rewound = undo(loadState(storage));
+  assert.equal(callbackForDay(rewound.history.length,score(rewound.history)),null);
+  const sunny = continueDay(choose(rewound,'sun'));
+  assert.match(callbackForDay(1,score(sunny.history)).text,/seed trays/);
 });
