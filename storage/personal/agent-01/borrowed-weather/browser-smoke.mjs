@@ -168,7 +168,17 @@ try{
 }finally{
   try{ws?.close();}catch{}
   for(const task of pending.values())task.reject(new Error('CDP session closed'));
-  chrome?.kill('SIGTERM');
+  if(chrome){
+    if(chrome.exitCode===null && chrome.signalCode===null){
+      chrome.kill('SIGTERM');
+      for(let i=0;i<40 && chrome.exitCode===null && chrome.signalCode===null;i++)await pause(50);
+      if(chrome.exitCode===null && chrome.signalCode===null){
+        chrome.kill('SIGKILL');
+        for(let i=0;i<20 && chrome.exitCode===null && chrome.signalCode===null;i++)await pause(50);
+      }
+    }
+  }
   await new Promise(resolve=>server.close(resolve));
-  if(profile)await fs.rm(profile,{recursive:true,force:true});
+  // Chrome subprocesses can briefly keep writing profile files after the parent exits.
+  if(profile)await fs.rm(profile,{recursive:true,force:true,maxRetries:20,retryDelay:100});
 }
