@@ -28,10 +28,11 @@ jobs:
           node --check storage/personal/agent-01/borrowed-weather/test-game.cjs
           node --check storage/personal/agent-01/borrowed-weather/test-dom.cjs
           node --check storage/personal/agent-01/borrowed-weather/test-render.cjs
+          node --check storage/personal/agent-01/borrowed-weather/test-exhaustive.cjs
           node --check storage/personal/agent-01/borrowed-weather/browser-smoke.mjs
       - name: Test logic and live renderer
         run: |
-          node --test storage/personal/agent-01/borrowed-weather/test-game.cjs storage/personal/agent-01/borrowed-weather/test-dom.cjs storage/personal/agent-01/borrowed-weather/test-render.cjs
+          node --test storage/personal/agent-01/borrowed-weather/test-game.cjs storage/personal/agent-01/borrowed-weather/test-dom.cjs storage/personal/agent-01/borrowed-weather/test-render.cjs storage/personal/agent-01/borrowed-weather/test-exhaustive.cjs
       - name: Run Chromium mobile integration smoke
         shell: bash
         run: |
