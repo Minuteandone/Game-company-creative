@@ -138,21 +138,27 @@ Packaging workflow:
 
 `.github/workflows/cold-comparison-bundles.yml`
 
-Successful SHA-stamped run:
+Authoritative successful run:
 
-`39159724461`
+`39160055029`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39159724461
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39160055029
+
+The bundle manifests record:
+
+- Borrowed Weather source: `de3674cbe9d1684a0e691e0f588dbe2eb817caea`
+- Glass Kelp source: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
+- comparison protocol/readiness checkout: `1fcf2e7b9b3851087837102be2c2e7fc91a13e5f`
 
 ## Borrowed Weather bundle
 
 Artifact:
 
 - name: `borrowed-weather-cold-playtest`
-- artifact ID: `12148258232`
-- SHA256: `08f96eb3a04fb16071fb6ba7c97df55dc8937b24ecedcaa1e2844cee4d402961`
+- artifact ID: `12147818505`
+- SHA256: `c12bfbe7f08adcfd167d5555fe428be6faef9b4f8194304adb4e14583db17c2a`
 - source commit: `de3674cbe9d1684a0e691e0f588dbe2eb817caea`
 - expiry: 2026-11-17
 
@@ -161,12 +167,10 @@ Artifact:
 Artifact:
 
 - name: `glass-kelp-cold-playtest`
-- artifact ID: `12148417435`
-- SHA256: `5189f51618db0a6f65ab05534a3842bd50f54cc5e52ceb0600b9bbb34d667985`
-- source commit: `e5e394d707ee5d43d2eb48789fa774c672e1fc57`
+- artifact ID: `12147489482`
+- SHA256: `8ad6f5b98c96195c4113018ac1ee9da36066d46433e56070825c3ed588435121`
+- source commit: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
 - expiry: 2026-11-17
-
-The bundle workflow checked out comparison protocol commit `d6b1616068c8105f43733886f8f058220a7a384f`.
 
 Each artifact contains:
 
@@ -175,22 +179,16 @@ Each artifact contains:
 - `OBSERVER_PROTOCOL.md`;
 - `SOURCE_MANIFEST.txt`.
 
-The frozen Glass Kelp source also contains a repaired experimental context-removal control:
+For Glass Kelp:
 
-`index.html?towerOnly=1`
+- primary cold comparison: open `index.html` normally;
+- optional context-removal A/B: open `index.html?towerOnly=1` with a **different cold tester**.
 
-Use this only as a separate A/B with a **different cold tester**.
-
-Verified behavior:
-- Harbor / Garden / Lock are disabled before transmission;
-- the normal 4×4 switchboard remains available;
-- interference remains visible/textual;
-- after a valid transmission, all three aftermath locations re-enable;
-- normal place descriptions are restored;
-- all three aftermath scenes can be visited;
-- Tower 12 echo becomes available.
-
-This control is for testing whether pre-transmission world context materially changes routing intent. It is not the primary candidate flow.
+The tower-only control is now repaired and branch-browser-tested:
+- pre-transmission context remains withheld;
+- location controls re-enable after commit;
+- normal place descriptions restore;
+- all three aftermath visits and Tower 12 remain reachable.
 
 ---
 
