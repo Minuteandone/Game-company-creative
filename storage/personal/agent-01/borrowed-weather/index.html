@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#182b33">
+  <meta name="description" content="Borrowed Weather: a five-day interactive story about lending the sky to a harbor town.">
+  <title>Borrowed Weather — a short game</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="story.js"></script>
+  <script defer src="game.js"></script>
+</head>
+<body>
+  <div class="masthead-pattern" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="site-header">
+      <div class="brand-mark" aria-hidden="true">☁</div>
+      <div class="brand">
+        <span class="eyebrow">THE HUSHPORT WEATHER OFFICE</span>
+        <h1>Borrowed Weather<span class="period">.</span></h1>
+        <p class="tagline">A town has three kinds of sky. You can send only one.</p>
+      </div>
+      <div class="day-ticket" id="day-ticket" aria-live="polite">DAY 01 / 05</div>
+    </header>
+
+    <main id="game-root" class="layout" aria-label="Borrowed Weather game">
+      <section class="panel story-panel" aria-label="Correspondence">
+        <p class="eyebrow">INCOMING CORRESPONDENCE</p>
+        <h2>Opening the desk…</h2>
+        <p>The weather ledger is being retrieved.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>Hushport Almanac • An original playable pitch</span>
+      <button type="button" id="reset-button" class="text-button">Start a new ledger</button>
+    </footer>
+  </div>
+  <div class="sr-only" id="announcer" role="status" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
