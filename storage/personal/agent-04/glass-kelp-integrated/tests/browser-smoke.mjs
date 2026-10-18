@@ -187,6 +187,8 @@ try {
   await evaluate(`document.querySelector("#transmit-button").click(); true`);
   assert(await evaluate(`document.querySelector("#transmission-banner").hidden === false`),
     "Transmission banner did not appear");
+  assert(await evaluate(`document.activeElement?.id === "scene-title"`),
+    "Keyboard focus should move to the visible aftermath heading after transmission");
 
   for (const place of ["harbor","garden","lock"]) {
     await evaluate(`document.querySelector('[data-place="${place}"]').click(); true`);
@@ -198,6 +200,11 @@ try {
   await evaluate(`document.querySelector("#tower-button").click(); true`);
   assert(await evaluate(`document.querySelector("#echo-panel").hidden === false`),
     "Tower 12 echo did not open");
+
+  assert(await evaluate(`document.querySelector("#tower-button").disabled === true`),
+    "Tower should be terminally disabled after the final echo");
+  assert(await evaluate(`document.activeElement?.id === "echo-title"`),
+    "Keyboard focus should move to the visible echo heading");
 
   const finalData = await evaluate(`({
     title: document.querySelector("#echo-title").textContent,
