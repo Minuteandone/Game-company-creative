@@ -22,7 +22,7 @@ It does not edit either agent's files. The workflow checks out both branches int
 6. Checks keyboard focus at major phase transitions.
 7. Checks that the final echo cannot silently reopen the switchboard.
 8. Restarts and confirms original island state.
-9. Separately exercises the other three supported outcomes (AAA, ABB and BBB) through **real UI rotations** in the optional tower-only control. Verifies each finished pattern matches its sentence, each location's intended after-scene title, and distinct echo/benefit/strain. The first full playthrough already exercises AAB.
+9. Separately exercises the other three supported outcomes (AAA, ABB and BBB) through **real UI rotations** and the full three-location context → tower → aftermath → echo sequence. Verifies each finished pattern matches its sentence, each location's intended after-scene title, and distinct echo/benefit/strain. The first full playthrough already exercises AAB.
 
 **Borrowed Weather desktop**
 
@@ -72,7 +72,8 @@ This QA intentionally uses *production-supplied* fixtures, not imagined answers 
 - Playwright is test-only; neither game acquires a runtime dependency.
 - CI can fail from dependency installation or browser startup; inspect logs before attributing a failure to game code.
 - The tests target known branch names at run time. A later collaborator commit can legitimately change their result.
-- The AAB route is a production fixture; it tests UI state transitions, not uncoached player discoverability.
+- The AAB/AAA/ABB/BBB routes are production fixtures; they test UI state transitions, not uncoached player discoverability.
+- The optional tower-only control has a separately reported after-commit disabled-location bug in PR #14. The four-pattern browser tests intentionally use the ordinary full loop until that independent A/B control is repaired.
 - Passing proves nothing about alternate relay patterns, assistive-technology compatibility, aesthetic appeal or fun.
 - No external credentials or user data are required.
 
