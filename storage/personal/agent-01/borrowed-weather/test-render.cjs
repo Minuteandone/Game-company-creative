@@ -16,6 +16,22 @@ function browser(previousStorage){
       replaceChildren(...items){this.children=[...items]},
       addEventListener(event,fn){this.listeners[event]=fn},
       setAttribute(key,value){this.attributes[key]=value},
+      querySelector(selector){
+        let current=this;
+        for(const part of selector.trim().split(/\\s+/)){
+          const matches=[];
+          (function visit(n){
+            for(const child of n.children){
+              if(part.startsWith('.')?child.className.split(' ').includes(part.slice(1)):child.tagName===part)matches.push(child);
+              visit(child);
+            }
+          })(current);
+          current=matches[0];
+          if(!current)return null;
+        }
+        return current;
+      },
+      focus(){document.activeElement=this},
       click(){assert.ok(this.listeners.click,'missing click event on '+this.tagName);this.listeners.click()}
     };
   }
@@ -33,7 +49,7 @@ function browser(previousStorage){
   const cls=c=>find(n=>n.className.split(' ').includes(c));
   const stamp=w=>cls('stamp').find(n=>n.dataset.weather===w);
   const next=()=>cls('primary-button').find(n=>/Open the next morning|Read the closing ledger/.test(n.textContent));
-  return {ids,memory,find,cls,stamp,next,core:context.BorrowedWeatherCore};
+  return {ids,memory,document,find,cls,stamp,next,core:context.BorrowedWeatherCore};
 }
 function pick(b,w){const btn=b.stamp(w);assert.ok(btn,'weather stamp '+w+' missing');btn.click();assert.ok(b.cls('result-card').length);const n=b.next();assert.ok(n);n.click();}
 test('five-day renderer has no inert sixth stamp after ending',()=>{
@@ -76,4 +92,18 @@ test('save/reload preserves both current day and result-screen phase',()=>{
   const dayTwo=browser(b.memory);
   assert.match(dayTwo.ids['day-ticket'].textContent,/DAY 02/);
   assert.ok(dayTwo.stamp('wind'));
+});
+
+test('focus follows rewritten result, new morning, and final ledger',()=>{
+  const b=browser();
+  b.stamp('rain').click();
+  assert.equal(b.document.activeElement.tagName,'h3');
+  assert.equal(b.document.activeElement.textContent,'Names written in water');
+  b.next().click();
+  assert.equal(b.document.activeElement.tagName,'h2');
+  assert.equal(b.document.activeElement.textContent,'A place to keep yesterday');
+  for(const w of ['sun','rain','wind','sun'])pick(b,w);
+  assert.equal(b.ids['day-ticket'].textContent,'LEDGER COMPLETE');
+  assert.equal(b.document.activeElement.tagName,'h2');
+  assert.equal(b.document.activeElement.textContent,b.cls('epilogue')[0].querySelector('h2').textContent);
 });
