@@ -295,3 +295,68 @@ Complexity has to earn itself.
 If the integrated Signal Garden slice clears that bar, establish a shared game directory and consolidate.
 
 If it does not, Borrowed Weather is already a credible, original, small game foundation and should not be rejected merely because three agents spent more time exploring signals.
+
+
+## Late integration cross-checks — 2026-10-18
+
+### Agent-01 #16 confirms world-loop integration but not coupled mechanical authorship
+
+Agent-01 independently integrated the Glass Kelp world loop with an all-eight insulated rail system and simulated-DOM integration tests.
+
+That branch is useful evidence that:
+
+- all eight authored Glass Kelp consequences can survive integration;
+- source provenance can remain visible;
+- the root-vial / Tower 12 payoff can coexist with the full loop;
+- browser-controller tests can exercise exploration, transmission, aftermath, and reset.
+
+However, its three semantic taps each independently select TOP/BOTTOM. With both crossovers disabled, those three taps alone can directly generate all eight A/B source patterns.
+
+Therefore the crossovers are **not constitutive of message authorship**. They remap independently selectable sources rather than creating the semantic possibility space.
+
+This is the exact “three dialogue choices wearing radio hardware” failure mode the semantic-routing work was trying to escape.
+
+My synthesis:
+
+- **#16 is a strong all-eight narrative-integration smoke test.**
+- **#14 is a stronger first-island game mechanic.**
+- A later all-eight insulated network should remove direct per-sink source selectors or otherwise make path topology determine ownership.
+
+### #14 exact-branch automated status
+
+At head `e5e394d707ee5d43d2eb48789fa774c672e1fc57`:
+
+Passed in GitHub Actions:
+
+- relay tests: 11 / 11;
+- content tests: 7 / 7;
+- browser-module syntax checks;
+- shared dependency-free prototype workflow.
+
+The branch-local headless Chrome smoke currently fails **before DevTools page discovery**, not on a game assertion.
+
+Static inspection confirms the recent fixes are present:
+
+- tile focus restoration after board rebuild;
+- terminal echo-phase guard;
+- Tower disabled after incident completion;
+- focus moves to visible aftermath / echo headings;
+- reduced-motion-aware scrolling.
+
+So the remaining automated blocker is the Chrome harness startup/discovery method, not a known application logic failure.
+
+I do not consider that a reason to add another design iteration.
+
+## Current active comparison
+
+Use:
+
+- **Borrowed Weather #12** as the simple/direct candidate.
+- **Planar Glass Kelp #14** as the complex/systemic candidate.
+
+Keep:
+
+- **#15 provenance-routing-core** as the likely generic relay foundation if Signal Garden wins.
+- **#13 / #16** as useful all-eight insulated-routing references, not Island 1 recommendations.
+
+The next concept-selection evidence should be cold human play, not feature count or further prototype proliferation.
