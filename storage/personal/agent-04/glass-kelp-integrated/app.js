@@ -8,13 +8,14 @@
 
   const $ = (id) => document.getElementById(id);
   const LOCATIONS = ["harbor", "garden", "lock"];
+  const TOWER_ONLY = new URLSearchParams(globalThis.location?.search || "").get("towerOnly") === "1";
   const SOURCE_NAMES = { A: "Iona / A", B: "Orren / B" };
   const PORT_NAMES = ["north", "east", "south", "west"];
 
   const state = {
-    phase: "before",
-    current: null,
-    visitedBefore: new Set(),
+    phase: TOWER_ONLY ? "tower" : "before",
+    current: TOWER_ONLY ? "tower" : null,
+    visitedBefore: new Set(TOWER_ONLY ? LOCATIONS : []),
     visitedAfter: new Set(),
     rotations: Array.from(relay.PUZZLE_START),
     moves: 0,
@@ -48,8 +49,12 @@
       $("mark-" + place).textContent = visits.has(place) ? "✓" : "";
     }
 
-    $("visit-label").textContent = visits.size + " / 3";
-    $("phase-label").textContent = phaseLabel();
+    $("visit-label").textContent = TOWER_ONLY && state.phase === "tower"
+      ? "context withheld"
+      : visits.size + " / 3";
+    $("phase-label").textContent = TOWER_ONLY && state.phase === "tower"
+      ? "tower-only control"
+      : phaseLabel();
 
     const tower = $("tower-button");
     if (state.phase === "before") {
@@ -71,6 +76,16 @@
       $("mark-tower").textContent = state.committedPattern ? "✓" : "";
     }
 
+    if (TOWER_ONLY && state.phase === "tower") {
+      for (const place of LOCATIONS) {
+        const button = document.querySelector('.place-button[data-place="' + place + '"]');
+        if (!button) continue;
+        button.disabled = true;
+        const sub = button.querySelector(".place-sub");
+        if (sub) sub.textContent = "context withheld in this test version";
+        $("mark-" + place).textContent = "";
+      }
+    }
     setActivePlace(state.current);
   }
 
@@ -346,9 +361,10 @@
   }
 
   function restart() {
-    state.phase = "before";
-    state.current = null;
+    state.phase = TOWER_ONLY ? "tower" : "before";
+    state.current = TOWER_ONLY ? "tower" : null;
     state.visitedBefore.clear();
+    if (TOWER_ONLY) LOCATIONS.forEach(place => state.visitedBefore.add(place));
     state.visitedAfter.clear();
     state.rotations = Array.from(relay.PUZZLE_START);
     state.moves = 0;
@@ -356,8 +372,8 @@
 
     $("transmission-banner").hidden = true;
     $("echo-panel").hidden = true;
-    $("tower-panel").hidden = true;
-    $("scene-panel").hidden = false;
+    $("tower-panel").hidden = TOWER_ONLY ? false : true;
+    $("scene-panel").hidden = TOWER_ONLY ? true : false;
 
     $("scene-eyebrow").textContent = "arrival / service path";
     $("scene-title").textContent = "The island is listening.";
@@ -368,8 +384,9 @@
     $("scene-fact").textContent = "The tower unlocks after you gather local context.";
     $("scene-next").textContent = "Choose a location from the field route.";
 
-    renderNav();
-    announce("Glass Kelp Island restarted.");
+    if (TOWER_ONLY) renderBoard();
+    else renderNav();
+    announce(TOWER_ONLY ? "Tower-only control restarted." : "Glass Kelp Island restarted.");
   }
 
   document.querySelectorAll(".place-button[data-place]").forEach((button) => {
@@ -392,5 +409,10 @@
   $("transmit-button").addEventListener("click", transmit);
   $("restart-button").addEventListener("click", restart);
 
-  renderNav();
+  if (TOWER_ONLY) {
+    showTower();
+    announce("Tower-only control active. Island context is withheld before transmission.");
+  } else {
+    renderNav();
+  }
 })();
