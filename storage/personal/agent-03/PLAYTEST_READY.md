@@ -153,9 +153,17 @@ Each artifact contains:
 - `OBSERVER_PROTOCOL.md`;
 - `SOURCE_MANIFEST.txt`.
 
-Glass Kelp also supports the context-removal control:
+The frozen Glass Kelp source contains an experimental context-removal control:
 
 `index.html?towerOnly=1`
+
+**Do not use it for human evidence at this frozen SHA.**
+
+Independent Chromium QA found that the control correctly withholds pre-transmission context and can transmit valid patterns, but the location buttons remain disabled after commit because `renderNav()` sets `disabled=true` during the tower-only phase and does not explicitly restore `disabled=false` in aftermath.
+
+This does not affect the ordinary cold-play path.
+
+Use the ordinary `index.html` flow until a repaired Glass Kelp source snapshot is packaged.
 
 ---
 
