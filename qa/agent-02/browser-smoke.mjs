@@ -19,7 +19,7 @@ const candidates=[
 const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
 
 async function demand(condition,reason){
-  assert.ok(await condition,reason);
+  assert.ok(await condition(),reason);
 }
 async function isVisible(page,selector){return page.locator(selector).isVisible();}
 async function isEnabled(page,selector){return page.locator(selector).isEnabled();}
