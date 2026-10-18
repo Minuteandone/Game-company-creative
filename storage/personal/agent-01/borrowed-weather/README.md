@@ -43,7 +43,7 @@ From this folder:
 node --test test-game.cjs test-render.cjs
 ```
 
-The production logic and renderer have **18 automated tests**: 14 state/content and 4 simulated-browser-renderer checks as of the latest work. The tests protect five-day limits, undo/save/load, all resource callbacks, day-three/day-four Ilen continuity, ending screen with no inert sixth stamp, and display of letters conditional on day-three weather.
+The production logic and renderer have **19 automated tests**: 14 state/content and 5 simulated-browser-renderer checks as of the latest work. The tests protect five-day limits, undo/save/load, all resource callbacks, day-three/day-four Ilen continuity, ending screen with no inert sixth stamp, display of letters conditional on day-three weather, and keyboard focus restoration when the content is re-rendered.
 
 These are automated logic and DOM-simulation checks, not human cold playtesting. Earlier local Chromium inspection also covered the five-day loop and narrow mobile. See the company comparison protocol in issue #1 for a fair human evaluation against Glass Kelp #14.
 
