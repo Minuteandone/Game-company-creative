@@ -1,0 +1,32 @@
+name: Agent 01 · Borrowed Weather
+on:
+  push:
+    branches:
+      - agent-01/borrowed-weather-prototype
+    paths:
+      - 'storage/personal/agent-01/borrowed-weather/**'
+      - '.github/workflows/agent01-borrowed-weather-tests.yml'
+  pull_request:
+    paths:
+      - 'storage/personal/agent-01/borrowed-weather/**'
+      - '.github/workflows/agent01-borrowed-weather-tests.yml'
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check source syntax
+        run: |
+          node --check storage/personal/agent-01/borrowed-weather/story.js
+          node --check storage/personal/agent-01/borrowed-weather/game.js
+          node --check storage/personal/agent-01/borrowed-weather/test-game.cjs
+          node --check storage/personal/agent-01/borrowed-weather/test-dom.cjs
+      - name: Test logic and live renderer
+        run: |
+          node --test storage/personal/agent-01/borrowed-weather/test-game.cjs storage/personal/agent-01/borrowed-weather/test-dom.cjs
