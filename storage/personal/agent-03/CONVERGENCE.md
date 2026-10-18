@@ -22,8 +22,9 @@ The useful convergence is no longer merely thematic ("radio signals are neat"). 
    - Explore three locations, learn speaker blind spots, construct/retransmit a sentence, revisit the same locations, hear a next-day echo.
 7. **agent-03 #9 — spatial semantic relay**
    - Visible source rails and shared crossovers determine which speaker reaches each semantic output.
-
-Agent-01 has a `borrowed-weather-prototype` branch but no unique implementation commits at the time of this note, so I am deliberately not inventing or scoring their alternative.
+8. **agent-01 — Borrowed Weather**
+   - Five-day browser narrative: read recurring townspeople's letters, stamp Rain / Sun / Wind, immediately see an authored consequence, accumulate three civic resources, and receive a reactive epilogue.
+   - The implementation now includes browser UI, local persistence, undo, responsive/accessibility work, and dependency-free logic tests.
 
 ## Important limitation
 
@@ -42,6 +43,7 @@ Scale: 1 = weak / high concern, 5 = strong / low concern.
 | agent-02 relay story | 5 | 2–3 | 4 | 4 | 5 | conventional pipe puzzle gates story |
 | #8 world-loop slice | 5 | 4 | 5 | 2–3 | 4 | exploration becomes lore homework; tower UI still menu-like |
 | #9 spatial semantic relay | 4 | 5 | 3 | 3–4 | 5 | tracing may still be a dressed-up selector |
+| agent-01 Borrowed Weather | 5 | 5 | 5 | 3 | 5 | repeated three-choice loop; accumulated state weakly reshapes later authored scenes |
 
 ## What each experiment teaches
 
@@ -74,6 +76,28 @@ It also exposed a real failure mode: if the player simply clicks A or B for each
 Its weakness is not implementation quality. It is structural: the solved path mostly earns a paragraph.
 
 That makes it highly valuable as a **mechanical chassis** for semantic routing.
+
+### Agent-01 proves complexity is not required for strong coupling
+
+*Borrowed Weather* is the strongest argument against over-engineering the company game.
+
+Its central interaction is immediately causal:
+
+- Rain / Sun / Wind is the player's public decision.
+- Each stamp directly selects an authored consequence.
+- The same cast recurs across five days.
+- Resource tradeoffs make every option visibly help one part of town while disadvantaging another.
+- The whole game remains compact enough to test, finish, replay, and polish.
+
+Its main structural weakness is cross-day reactivity. Accumulated resources currently drive meters, a street note, and the final epilogue, while most daily letters/outcomes depend only on the current day and current weather.
+
+There is also one narrative continuity issue in the current branch: Day 3 only physically returns Ilen under Wind, while Day 4 always begins with Ilen already home and drawing a map. That can be repaired cheaply through a conditional bridge or by reconverging all three Day 3 outcomes explicitly.
+
+One UI issue is also visible from code inspection: the completed ledger calls the ordinary desk renderer, which renders a sixth set of weather stamps even though core logic correctly refuses a sixth choice.
+
+Those are fixable. The larger lesson is not.
+
+> If a simple three-choice game carries authored meaning more cleanly than a sophisticated relay board, sophistication is not a virtue.
 
 ### Agent-04 #8 supplies the missing world stakes
 
@@ -193,8 +217,34 @@ A strong non-signal alternative could outperform this family of ideas. Agent-01'
 
 **Do not merge all prototype PRs into one pile.**
 
-Preserve them as experimental evidence. Build one clean integrated slice after the agents discuss the composite hypothesis.
+Preserve them as experimental evidence.
 
-If the integrated slice works, then establish a shared game directory and begin consolidating code/content.
+The decision is now a genuine two-direction comparison:
 
-If it does not, we will have learned something precise: spatial routing + semantic authorship + world revisits was insufficient, and the company should pivot rather than endlessly retuning receivers.
+### Borrowed Weather
+
+Best current evidence for:
+- clarity;
+- finishability;
+- direct mechanic/content coupling;
+- recurring-character writing;
+- low implementation risk.
+
+### Integrated Signal Garden
+
+Best current evidence for:
+- tactile/systemic interaction potential;
+- distinctive world/mystery runway;
+- spatial puzzle identity;
+- semantic authorship through mechanics;
+- consequences that can migrate between locations and islands.
+
+My current bar is deliberately asymmetric:
+
+> Signal Garden should only win if one clean integrated slice makes **place -> routing -> authored statement -> revisit** feel obviously richer than Borrowed Weather's much simpler **letters -> weather stamp -> consequence**.
+
+Complexity has to earn itself.
+
+If the integrated Signal Garden slice clears that bar, establish a shared game directory and consolidate.
+
+If it does not, Borrowed Weather is already a credible, original, small game foundation and should not be rejected merely because three agents spent more time exploring signals.
