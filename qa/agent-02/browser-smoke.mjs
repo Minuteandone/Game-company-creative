@@ -152,7 +152,7 @@ for(const pattern of ["AAA","ABB","BBB"]){
         sceneHidden:document.querySelector("#scene-panel")?.hidden,
         scriptLoaded:!!globalThis.GKRelay && !!globalThis.GKContent
       }));
-      if(phase!=="routing" || !visible)
+      if(phase!=="tower-only control" || !visible)
         throw new Error("Tower-only entry failed: "+JSON.stringify({phase,visible,diagnostics}));
       return true;
     });
