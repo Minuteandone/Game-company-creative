@@ -89,13 +89,13 @@ Successful comparison run head:
 
 `1cbb93fb446de290a7b865e40c6538e020a9dae7`
 
-Last independent 7/7 GitHub Actions comparison before the final Borrowed Weather ledger-disclosure polish:
+Independent 7/7 GitHub Actions comparison:
 
 `39159923916`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39160326737
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39159923916
 
 Result:
 
@@ -113,7 +113,7 @@ Browser QA: 7 / 7 scenarios passed
 
 For Glass Kelp:
 - ordinary AAB path covers arrival/context, real relay clicks, transmission, three aftermath scenes, echo/artifact, terminal guard, restart, focus and mobile behavior;
-- AAA / ABB / BBB each run through the **ordinary full-context game loop**, not the broken tower-only helper;
+- AAA / ABB / BBB each run through the ordinary full-context game loop;
 - each additional pattern is built using actual production tile clicks to its production `SOLUTION_FIXTURES` state;
 - each verifies transmit readiness, exact authored preview, all three pattern-specific consequences, pattern-specific echo, benefit and strain.
 
@@ -127,9 +127,25 @@ QA artifact:
 
 Important:
 
-This automated QA uses known valid routes/choices. It proves the ordinary interaction paths work in Chromium. The final Borrowed Weather head later added only expandable prior-consequence disclosures; that exact final head is separately green in native real-Chromium run `39160136612`. The final Glass Kelp head is separately green in branch Chrome run `39160004106`, including tower-only aftermath. None of this measures intuitiveness, discoverability, agency, narrative memory, or fun.
+That independent comparison predates Borrowed Weather's final expandable-history disclosure polish.
 
-The optional `?towerOnly=1` helper is no longer quarantined. Glass Kelp run `39160004106` directly verifies the repaired control: context is withheld before transmission, AAB becomes transmissible, Harbor/Garden/Lock re-enable after commit, all three aftermaths remain reachable, and Tower 12 opens. Use it only as a separate context-removal A/B with a different cold tester; the primary comparison still uses ordinary `index.html`.
+The final frozen Borrowed Weather head `ba1686ee91534069668ad9c4ea53e7d6b02111f5` is separately green in its own real-Chromium workflow:
+
+`39160136612`
+
+The final frozen Glass Kelp head `563fdf9f8850b8376fd2978dd24d577cd6193cfc` is separately green in branch Chrome workflow:
+
+`39160004106`
+
+That Glass Kelp run also verifies the repaired `?towerOnly=1` control through:
+- withheld pre-transmission context;
+- valid AAB routing;
+- transmission;
+- Harbor / Garden / Lock re-enabled after commitment;
+- all three aftermath revisits;
+- Tower 12 echo.
+
+These are scripted technical checks. They do not measure intuitiveness, discoverability, agency, narrative memory, enjoyment, or replay desire.
 
 ---
 
@@ -139,87 +155,70 @@ Packaging workflow:
 
 `.github/workflows/cold-comparison-bundles.yml`
 
-Authoritative successful run:
+Source-of-truth manifest:
 
-`39160326737`
+`playtest/frozen-candidates.json`
+
+Authoritative manifest-driven run:
+
+`39160571351`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39160304325
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39160571351
 
-The bundle manifests record:
+That run resolves exactly:
 
-- Borrowed Weather source: `ba1686ee91534069668ad9c4ea53e7d6b02111f5`
-- Glass Kelp source: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
-- comparison protocol/readiness checkout: `176b149b74d58061b7e387e1c02009a486562b35`
+- Borrowed Weather: `ba1686ee91534069668ad9c4ea53e7d6b02111f5`
+- Glass Kelp: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
+- observer protocol: `176b149b74d58061b7e387e1c02009a486562b35`
 
 ## Borrowed Weather bundle
 
-Artifact:
-
 - name: `borrowed-weather-cold-playtest`
-- artifact ID: `12148696468`
-- SHA256: `13e3b31246f67d285ad19fe9b3247069fcb7db5afdd7dbe841199055f9d6eb26`
+- artifact ID: `12148244732`
+- SHA256: `09415654dd750fb48ff64b3e6c5fbb292c2cb1f82d7eeee9de0e4e9722e3d0f2`
 - source commit: `ba1686ee91534069668ad9c4ea53e7d6b02111f5`
 - expiry: 2026-11-17
 
 ## Glass Kelp bundle
 
-Artifact:
-
 - name: `glass-kelp-cold-playtest`
-- artifact ID: `12148044357`
-- SHA256: `308b2536b1a316667b679a2f258f7ee2d417e736c56aad8fb170c73006dc613f`
+- artifact ID: `12148920959`
+- SHA256: `47b13290d4ba31bd491c349ce3a795edb5e81dfadc46565ef525700e13150a6c`
 - source commit: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
 - expiry: 2026-11-17
 
 Each artifact contains:
-
 - only the offline runtime files needed for that candidate;
 - `PLAYTEST_README.txt`;
 - `OBSERVER_PROTOCOL.md`;
 - `SOURCE_MANIFEST.txt`.
 
 For Glass Kelp:
-
 - primary cold comparison: open `index.html` normally;
-- optional context-removal A/B: open `index.html?towerOnly=1` with a **different cold tester**.
+- optional context-removal A/B: open `index.html?towerOnly=1` with a different cold tester.
 
-The tower-only control is now repaired and branch-browser-tested:
-- pre-transmission context remains withheld;
-- location controls re-enable after commit;
-- normal place descriptions restore;
-- all three aftermath visits and Tower 12 remain reachable.
+The tower-only control is not an alternate game mode. It exists only to test whether pre-transmission knowledge of Harbor / Garden / Lock changes message intent.
 
 ---
 
-## Reproducibility validation
+## Reproducibility contract
 
-The packaging workflow now resolves source refs from:
+The packaging workflow resolves refs from:
 
 `playtest/frozen-candidates.json`
 
-rather than following moving branch heads.
+rather than from moving branch heads.
 
-Manifest-driven validation run:
+The final freeze deliberately includes Borrowed Weather's expandable prior-consequence history UI while keeping its decision/state/narrative branching unchanged.
 
-`39160459775`
+A future bundle rerun may have a different outer ZIP digest because `SOURCE_MANIFEST.txt` includes the workflow run ID and archive metadata changes. Reproducibility is defined by:
+- the frozen candidate commit;
+- the frozen observer-protocol commit;
+- the runtime files named in the bundle.
 
-Run page:
-
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39160459775
-
-The rerun independently resolved:
-
-- Borrowed Weather: `ba1686ee91534069668ad9c4ea53e7d6b02111f5`
-- Glass Kelp: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
-- observer protocol: `176b149b74d58061b7e387e1c02009a486562b35`
-
-This matches the explicit final re-freeze manifest exactly.
-
-The uploaded ZIP digests are **not expected to be byte-identical across workflow runs**, because `SOURCE_MANIFEST.txt` includes the workflow run ID and the artifact archive carries fresh packaging metadata. Reproducibility is defined by the pinned source commits + protocol commit, not by a stable outer ZIP hash across reruns.
-
-The original authoritative artifacts listed above remain valid through their expiry date.
+Do not silently replace a frozen SHA with a newer branch checkout.
 
 ---
 
