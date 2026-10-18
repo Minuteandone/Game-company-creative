@@ -172,7 +172,7 @@ h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:
     <section id="scene" class="scene">
       <div id="sceneHead" class="scene-head harbor">
         <p id="sceneEyebrow" class="eyebrow">arrival / low tide</p>
-        <h2 id="sceneTitle">The island is listening.</h2>
+        <h2 id="sceneTitle" tabindex="-1">The island is listening.</h2>
       </div>
       <div class="scene-body">
         <div id="sceneText">
@@ -187,7 +187,7 @@ h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:
     <section id="tower" class="tower" aria-label="Tower 11 receiver">
       <div class="scene-head tower-bg">
         <p class="eyebrow">Tower 11 / split-channel receiver</p>
-        <h2>Two voices. Three bands. One sentence.</h2>
+        <h2 id="towerTitle" tabindex="-1">Two voices. Three bands. One sentence.</h2>
       </div>
 
       <div class="voice-grid">
@@ -232,7 +232,7 @@ h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:
 
   <section id="ending" class="ending" aria-live="polite">
     <p class="eyebrow">tomorrow / tower echo</p>
-    <h2 id="endingTitle"></h2>
+    <h2 id="endingTitle" tabindex="-1"></h2>
     <p id="endingText"></p>
     <div id="endingEcho" class="echo"></div>
     <div id="rootVial" class="root-vial"></div>
@@ -458,6 +458,7 @@ h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:
       ? (state.visited.size<3?"Keep exploring. Tower 11 unlocks after all three places.":"You now have enough context to climb Tower 11.")
       : (state.revisited.size<3?"Revisit the other places to see how the same sentence traveled.":"You've seen the island answer. Return to Tower 11 for tomorrow's echo.");
     renderMap();
+    $("sceneTitle").focus?.();
   }
 
   function showTower(){
@@ -471,6 +472,7 @@ h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:
       $("resetRelaysButton").style.display="";
       $("contextNote").textContent="You have met both speakers' blind spots. Filtering is authorship now, not signal repair.";
     }else{
+      updateRoutes(); // Freeze accessible rail controls after transmission.
       $("transcript").innerHTML=transcriptHTML();
       $("transmitButton").style.display="none";
       $("resetRelaysButton").style.display="none";
@@ -480,6 +482,7 @@ h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:
       if(state.revisited.size===3) showEnding();
     }
     renderMap();
+    $("towerTitle").focus?.();
   }
 
   function updateRoutes(){
@@ -532,6 +535,7 @@ h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:
     $("sceneFact").textContent="Return to the Harbor, Glass Garden, and North Lock. Each location responds to the same three-part message differently.";
     $("sceneNext").textContent="Revisit all three locations.";
     renderMap();
+    $("sceneTitle").focus?.();
   }
 
   function showEnding(){
@@ -541,6 +545,7 @@ h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:
     $("endingEcho").textContent=e.echo;
     $("rootVial").textContent="ARTIFACT — ROOT VIAL. Iona gives you a narrow glass maintenance sample. A translucent root inside bends toward the receiver. After Tower 12 speaks, the waterline rises without breaking the seal.";
     $("ending").classList.add("show");
+    $("endingTitle").focus?.();
     setTimeout(()=>$("ending").scrollIntoView({behavior:"smooth",block:"nearest"}),50);
   }
 
