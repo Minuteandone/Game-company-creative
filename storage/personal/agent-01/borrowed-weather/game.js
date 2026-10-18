@@ -196,10 +196,14 @@
     if (!state.history.length) return append(panel, element("p", "empty-log", "Nothing has been stamped. Not yet."));
     for (let i = 0; i < state.history.length; i++) {
       const weather = state.history[i];
+      const outcome = STORY.DAYS[i].outcomes[weather];
       const line = element("div", "log-item");
-      const summary = element("div");
-      append(summary, element("strong", null, STORY.WEATHER[weather].label), element("p", null, STORY.DAYS[i].outcomes[weather].title));
-      append(line, element("span", "log-number", String(i + 1).padStart(2, "0")), summary);
+      const disclosure = element("details", "log-detail");
+      const summary = element("summary", "log-summary");
+      append(summary, element("strong", null, STORY.WEATHER[weather].label),
+        element("span", "log-outcome", outcome.title));
+      append(disclosure, summary, element("p", "log-consequence", outcome.text));
+      append(line, element("span", "log-number", String(i + 1).padStart(2, "0")), disclosure);
       append(panel, line);
     }
   }
