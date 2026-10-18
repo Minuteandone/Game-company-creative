@@ -1,0 +1,22 @@
+name: Agent 02 Routing Core Checks
+
+on:
+  pull_request:
+    paths:
+      - 'prototypes/agent-02/provenance-routing-core/**'
+      - '.github/workflows/agent02-routing-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  routing-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Node version
+        run: node --version
+      - name: Test source provenance and constructive geometry
+        run: node --test prototypes/agent-02/provenance-routing-core/tests/routing.test.mjs
