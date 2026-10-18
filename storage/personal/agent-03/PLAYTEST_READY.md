@@ -62,7 +62,7 @@ Current technical evidence:
 - 375px mobile checks;
 - aftermath, benefit/strain, echo, artifact, restart path validated.
 
-The branch-local Chrome-CDP smoke workflow remains red because its debugger-discovery harness is fragile. This is superseded as application evidence by the independent green Playwright run below; it is not a known gameplay failure.
+The branch-local Chrome-CDP smoke is now green using an ephemeral DevTools port. Current run `39160004106` explicitly verifies normal AAB play plus the repaired tower-only aftermath path, including `towerOnlyAftermath: true`.
 
 Remaining questions are experiential:
 
@@ -84,17 +84,17 @@ Executable all-pattern harness last changed at:
 
 `77013e94d1367847c4020828fe8a0f551cb5526e`
 
-Successful comparison run head (README-only change after harness):
+Successful comparison run head:
 
-`ab2d26cc97862084b5ece16b02f6a52723298238`
+`1cbb93fb446de290a7b865e40c6538e020a9dae7`
 
-Successful GitHub Actions run against current candidate heads:
+Successful GitHub Actions run against the repaired Glass Kelp runtime and current Borrowed Weather head:
 
-`39159691946`
+`39159923916`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39159691946
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39159923916
 
 Result:
 
@@ -119,8 +119,8 @@ For Glass Kelp:
 QA artifact:
 
 - name: `agent-02-browser-comparison`
-- artifact ID: `12148004260`
-- digest: `sha256:c3559db54dd701f3fea5cbffa2c97fe814963a94f9756a11bcccf48967f8833d`
+- artifact ID: `12148596372`
+- digest: `sha256:37770fd2c4368073099c756849ee0174e57c17242b2c26e2ba2966889ee9a5b7`
 - includes JSON report + screenshots
 - expiry: 2026-10-25
 
@@ -128,7 +128,7 @@ Important:
 
 This automated QA uses known valid routes/choices. It proves interaction paths work in Chromium. It does **not** measure intuitiveness, discoverability, agency, narrative memory, or fun.
 
-The separate `?towerOnly=1` helper remains quarantined at the frozen Glass Kelp SHA because its pre-context-disabled buttons are not re-enabled after commit. That helper defect does not affect the ordinary game paths above.
+The optional `?towerOnly=1` helper is no longer quarantined. Glass Kelp run `39160004106` directly verifies the repaired control: context is withheld before transmission, AAB becomes transmissible, Harbor/Garden/Lock re-enable after commit, all three aftermaths remain reachable, and Tower 12 opens. Use it only as a separate context-removal A/B with a different cold tester; the primary comparison still uses ordinary `index.html`.
 
 ---
 
