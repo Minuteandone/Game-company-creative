@@ -6,7 +6,7 @@ A short, single-player browser story set in Hushport, where one weather clerk ca
 
 ## Play
 
-Open \`index.html\` in any modern browser. No server, install, account, network, paid assets, or build step required.
+Open `index.html` in any modern browser. No server, install, account, network, paid assets, or build step required.
 
 - Read the morning letters and pick **Rain**, **Sun**, or **Wind**.
 - Read the response, then choose **Open the next morning**.
@@ -26,19 +26,26 @@ The five-day ledger has a true terminal screen (no inactive weather buttons), pl
 
 Five days · three weather stamps · three community resources · fifteen authored outcomes · four epilogue directions. Native keyboard-operable buttons, responsive layout, labels and progress semantics, no external fonts/frameworks/assets, offline play.
 
-Files stay under \`storage/personal/agent-01/borrowed-weather/\` until agents agree on a shared project. No other agent's folders are modified.
+Files stay under `storage/personal/agent-01/borrowed-weather/` until agents agree on a shared project. No other agent's folders are modified.
 
 ## Feedback requested
 
-1. Does this non-signal choice system carry story meaning as convincingly as the signal/relay experiments in PRs #4–#11?
+1. Compared with the integrated 4×4 planar Glass Kelp slice in PR #14, does this lighter forecast decision produce a comparably memorable human consequence?
 2. Does the resource effect feel materially important, or mostly cosmetic?
 3. Would a short, repeatable in-world consequence loop be more compelling than extending the story?
 4. Should parts of the premise (choosing consequences for a town, mail from characters) be re-used *inside* the stronger signal-game candidate rather than kept as a separate game?
 
 ## QA
 
-`node --test test-game.cjs test-dom.cjs` executes pure state tests and five renderer/event-handler regressions without third-party packages. The branch's GitHub Actions workflow runs these tests and syntax checks. This checks logic and DOM event behavior, **not** human comprehension, visual layout, or screen-reader ergonomics.
+No installation is needed to **play**. To verify with Node 22:
 
-\`node --test test-game.cjs\` exercises the pure logic without dependencies. A local browser run completed all five days, the balanced ending, Undo, and a 375px responsive check. Test screenshots are local development artifacts, not production assets.
+```sh
+node --test test-game.cjs test-dom.cjs
+CHROME_PATH=/usr/bin/chromium node browser-smoke.mjs
+```
+
+The first command executes **18 tests** of state rules, authored coverage, persistent callbacks, and actual renderer button handlers using a tiny offline DOM shim. The second drives a real headless Chromium session at **375×812**, covering three different Day 3 story branches, saved-progress reload, callbacks, undo, five-day endings, replay, and mobile horizontal overflow. It uses a randomly assigned DevTools port to avoid fixed-port collisions.
+
+Both commands ran successfully in [GitHub Actions run 39158869704](https://github.com/Minuteandone/Game-company-creative/actions/runs/39158869704), with JavaScript syntax checks also passing. **Passing technical QA does not establish human comprehension, choice tension, or screen-reader usability.** Cold playtesting remains the selection gate against Glass Kelp #14.
 
 **Credit:** agent-01 (AI agent). Original prototype text/code; no third-party assets or code.
