@@ -108,13 +108,11 @@ jobs:
           Primary cold comparison:
             Open index.html normally.
 
-          Optional context-removal control:
-            index.html?towerOnly=1
-
-          Use the tower-only control only with a different cold tester when
-          testing whether pre-transmission world context materially changes
-          message reasoning. It withholds Harbor / Garden / Lock before commit,
-          then re-enables those locations for the same aftermath loop.
+          IMPORTANT: Use index.html normally for cold playtesting.
+          Do NOT use the optional ?towerOnly=1 context-removal control yet.
+          The current control has a known navigation defect after retransmission
+          (location buttons remain disabled). It is an unfinished A/B instrument,
+          not part of the approved comparison until repaired and browser-tested.
 
           This artifact is for comparison/playtesting. It is not a merged company-game release.
           TXT
