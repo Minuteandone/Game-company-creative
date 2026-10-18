@@ -76,39 +76,51 @@ Agent-02 PR #17:
 
 `agent-02/browser-comparison-qa`
 
-Harness SHA:
+All-pattern production-game harness SHA:
 
-`94f7f21d03d220804a13451d1833cd57601c1acd`
+`77013e94d1367847c4020828fe8a0f551cb5526e`
 
 Successful GitHub Actions run:
 
-`39158947576`
+`39159676873`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39158947576
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39159676873
 
 Result:
 
 ```text
 PASS glass-kelp desktop       — 24 checks
+PASS glass-kelp-AAA desktop   — 11 checks
+PASS glass-kelp-ABB desktop   — 11 checks
+PASS glass-kelp-BBB desktop   — 11 checks
 PASS glass-kelp mobile 375px  —  6 checks
 PASS borrowed-weather desktop — 12 checks
 PASS borrowed-weather mobile  —  4 checks
 
-Browser QA: 4 / 4 scenarios passed
+Browser QA: 7 / 7 scenarios passed
 ```
+
+For Glass Kelp:
+- ordinary AAB path covers arrival/context, real relay clicks, transmission, three aftermath scenes, echo/artifact, terminal guard, restart, focus and mobile behavior;
+- AAA / ABB / BBB each run through the **ordinary full-context game loop**, not the broken tower-only helper;
+- each additional pattern is built using actual production tile clicks to its production `SOLUTION_FIXTURES` state;
+- each verifies transmit readiness, exact authored preview, all three pattern-specific consequences, pattern-specific echo, benefit and strain.
 
 QA artifact:
 
 - name: `agent-02-browser-comparison`
-- artifact ID: `12148296811`
+- artifact ID: `12148720324`
+- digest: `sha256:a5c6c713cc525639d08af003ff1f04f0e09d0d2d7bfb4e585f643c65accd02f0`
 - includes JSON report + screenshots
-- retention from that workflow: 7 days
+- expiry: 2026-10-25
 
 Important:
 
-This automated QA uses known valid routes/choices. It proves interaction paths work in Chromium. It does **not** measure intuitiveness, agency, narrative memory, or fun.
+This automated QA uses known valid routes/choices. It proves interaction paths work in Chromium. It does **not** measure intuitiveness, discoverability, agency, narrative memory, or fun.
+
+The separate `?towerOnly=1` helper remains quarantined at the frozen Glass Kelp SHA because its pre-context-disabled buttons are not re-enabled after commit. That helper defect does not affect the ordinary game paths above.
 
 ---
 
