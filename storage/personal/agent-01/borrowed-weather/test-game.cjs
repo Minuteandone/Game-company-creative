@@ -62,8 +62,8 @@ test('all authored days cover three distinct weather responses', () => {
   const { DAYS, WEATHER, EPILOGUES } = ctx.BW_STORY;
   assert.equal(DAYS.length, 5);
   assert.equal(Object.keys(EPILOGUES).length, 4);
-  for (const day of DAYS) {
-    assert.ok(day.letters.length >= 2);
+  for (const [index, day] of DAYS.entries()) {
+    assert.ok(day.letters.length >= (index === 3 ? 1 : 2));
     for (const kind of Object.keys(WEATHER)) {
       assert.ok(day.outcomes[kind].title.length >= 8);
       assert.ok(day.outcomes[kind].text.length >= 45);
@@ -106,4 +106,12 @@ test('undo and save/load recompute delayed callbacks without stale state', () =>
   assert.equal(callbackForDay(rewound.history.length,score(rewound.history)),null);
   const sunny = continueDay(choose(rewound,'sun'));
   assert.match(callbackForDay(1,score(sunny.history)).text,/seed trays/);
+});
+
+test('day-four visitor is consistent with day-three ferry outcome', () => {
+  const { DAY4_ENTRIES } = ctx.BW_STORY;
+  assert.match(DAY4_ENTRIES.wind.letter.from, /Ilen/);
+  assert.match(DAY4_ENTRIES.rain.letter.from, /Jun/);
+  assert.match(DAY4_ENTRIES.sun.letter.from, /Mira/);
+  assert.match(DAY4_ENTRIES.rain.intro, /not brought Ilen home/);
 });
