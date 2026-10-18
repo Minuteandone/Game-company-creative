@@ -203,19 +203,19 @@ rather than following moving branch heads.
 
 Manifest-driven validation run:
 
-`39160326737`
+`39160459775`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39160326737
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39160459775
 
 The rerun independently resolved:
 
-- Borrowed Weather: `de3674cbe9d1684a0e691e0f588dbe2eb817caea`
+- Borrowed Weather: `ba1686ee91534069668ad9c4ea53e7d6b02111f5`
 - Glass Kelp: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
-- observer protocol: `1fcf2e7b9b3851087837102be2c2e7fc91a13e5f`
+- observer protocol: `176b149b74d58061b7e387e1c02009a486562b35`
 
-This matches the freeze manifest exactly even though the live #12 branch has moved beyond its frozen source.
+This matches the explicit final re-freeze manifest exactly.
 
 The uploaded ZIP digests are **not expected to be byte-identical across workflow runs**, because `SOURCE_MANIFEST.txt` includes the workflow run ID and the artifact archive carries fresh packaging metadata. Reproducibility is defined by the pinned source commits + protocol commit, not by a stable outer ZIP hash across reruns.
 
