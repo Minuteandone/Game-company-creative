@@ -140,6 +140,16 @@ try{
       await waitJS('document.readyState==="complete" && document.querySelector(".callback-letter")?.textContent.includes("pear cutting")','reload persistence');
     }
     await stamp('wind');
+    // Expanding the second day's log should recover both the early letter
+    // caused by yesterday's rain and today's exact authored weather response.
+    const journalReadable=await evalJS('(()=>{'+
+      'const log=document.querySelectorAll(".log-detail")[1];'+
+      'if(!log)return false;'+
+      'log.querySelector("summary").click();'+
+      'return log.open && log.textContent.includes("pear cutting") &&'+
+      'log.textContent.includes("ferry carries recordings") &&'+
+      'log.querySelector("blockquote.log-followup")!==null;})()');
+    check(journalReadable,'Past forecast disclosure did not reveal its outcome and return letter');
     await stamp(third);
     const author={rain:'Jun',sun:'Mira',wind:'Ilen'}[third];
     check(await evalJS('document.querySelector(".letter-stack .from")?.textContent.includes('+JSON.stringify(author)+')'),
@@ -151,6 +161,8 @@ try{
     check(await evalJS('document.querySelectorAll("[data-weather]").length===0'),'Final ledger still has stamps');
     check(await evalJS('document.querySelector(".desk-panel")?.textContent.includes("Office closed")'),
       'Final ledger not marked closed');
+    check(await evalJS('document.querySelectorAll(".log-detail").length===5 && document.querySelectorAll(".log-followup").length >= 1'),
+      'Final ledger did not preserve all five forecast details and later correspondence');
     if(third==='wind'){
       await click('.desk-panel .text-button');
       check(await evalJS('document.querySelectorAll("[data-weather]").length===3'),'Final undo failed');
