@@ -219,6 +219,7 @@
     relay.type = "button";
     relay.setAttribute("aria-pressed", String(state.relay[config.relay]));
     relay.setAttribute("aria-label", config.name + " crossover. " + config.effectLong);
+    relay.dataset.relay = config.relay;
     append(relay,
       document.createTextNode(config.name + ": " + (state.relay[config.relay] ? "CROSSED" : "STRAIGHT")),
       el("small", null, config.effectLong)
@@ -226,6 +227,8 @@
     relay.addEventListener("click", () => {
       state.relay = Relay.toggle(state.relay, config.relay);
       render();
+      const replacement = root.querySelector('[data-relay="' + config.relay + '"]');
+      if (replacement) replacement.focus();
       announce(config.name + " crossover " + (state.relay[config.relay] ? "crossed." : "straight."));
     });
     append(stage, relay);
