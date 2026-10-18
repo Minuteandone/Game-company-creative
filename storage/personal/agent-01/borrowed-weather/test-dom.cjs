@@ -10,11 +10,29 @@ class Element {
   getAttribute(k){return this.attributes[k]??null;}
   addEventListener(event,fn){(this.listeners[event]??=[]).push(fn);}
   click(){if(!this.disabled)for(const fn of this.listeners.click??[])fn();}
+  focus(){if(this.ownerDocument)this.ownerDocument.activeElement=this;}
+  querySelector(selector){
+    const parts=selector.trim().split(/\s+/);
+    const matches=(n,p)=>p[0]==='.'?n.className.split(/\s+/).includes(p.slice(1)):n.tagName===p.toUpperCase();
+    const found=[];
+    function traverse(n){for(const child of n.children){found.push(child);traverse(child);}}
+    traverse(this);
+    if(parts.length===1)return found.find(n=>matches(n,parts[0]))??null;
+    if(parts.length===2)return found.find(n=>{
+      if(!matches(n,parts[1]))return false;
+      for(let parent=n.parentNode;parent;parent=parent.parentNode)
+        if(matches(parent,parts[0]))return true;
+      return false;
+    })??null;
+    throw new Error('Unsupported test selector: '+selector);
+  }
 }
 function mount(storageMap=new Map()){
   const ids={};for(const id of ['game-root','day-ticket','announcer','reset-button'])ids[id]=new Element('div');
   ids['reset-button'].tagName='BUTTON';
-  const document={getElementById:id=>ids[id]??null,createElement:tag=>new Element(tag)};
+  const document={activeElement:null,getElementById:id=>ids[id]??null,
+    createElement:tag=>{const node=new Element(tag);node.ownerDocument=document;return node;}};
+  for(const element of Object.values(ids))element.ownerDocument=document;
   const localStorage={getItem:k=>storageMap.get(k)??null,setItem:(k,v)=>storageMap.set(k,v)};
   const context=vm.createContext({document,localStorage,confirm:()=>true});
   for(const file of ['story.js','game.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,file),'utf8'),context,{filename:file});
@@ -28,7 +46,7 @@ function mount(storageMap=new Map()){
   const button=label=>all(n=>n.tagName==='BUTTON'&&n.textContent.includes(label))[0];
   function next(){const b=button('Open the next morning')||button('Read the closing ledger');assert.ok(b,'result advance button');b.click();}
   function play(weather){const b=stamp(weather);assert.ok(b,weather+' stamp visible');b.click();next();}
-  return {ids,byClass,stamp,button,next,play};
+  return {ids,document,byClass,stamp,button,next,play};
 }
 test('stamp -> result -> later correspondence',()=>{
   const ui=mount();assert.equal(ui.byClass('stamp').length,3);
@@ -72,4 +90,25 @@ test('replay clears local save and begins clean',()=>{
   assert.equal(ui.byClass('stamp').length,3);
   assert.match(ui.ids['day-ticket'].textContent,/DAY 01/);
   assert.equal(mount(shared).byClass('callback-letter').length,0);
+});
+
+test('keyboard focus moves into each new scene when buttons are replaced',()=>{
+  const ui=mount();
+  ui.stamp('rain').click();
+  const resultHeading=ui.ids['game-root'].querySelector('.result-card h3');
+  assert.ok(resultHeading);
+  assert.equal(ui.document.activeElement,resultHeading,'stamp should focus result heading');
+  assert.equal(resultHeading.getAttribute('tabindex'),'-1');
+  ui.next();
+  const dayHeading=ui.ids['game-root'].querySelector('.story-panel h2');
+  assert.equal(ui.document.activeElement,dayHeading,'advance should focus new morning heading');
+  ui.button('Undo the last stamp').click();
+  assert.equal(ui.document.activeElement,ui.ids['game-root'].querySelector('.story-panel h2'));
+  ui.stamp('wind').click();
+  ui.next();
+  for(let i=0;i<4;i++)ui.play(i%2?'sun':'wind');
+  const finalHeading=ui.ids['game-root'].querySelector('.epilogue h2');
+  assert.equal(ui.document.activeElement,finalHeading,'closing ledger should focus epilogue heading');
+  ui.button('Begin another five days').click();
+  assert.equal(ui.document.activeElement,ui.ids['game-root'].querySelector('.story-panel h2'),'replay should focus new opening');
 });
