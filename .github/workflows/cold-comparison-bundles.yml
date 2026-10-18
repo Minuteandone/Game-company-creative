@@ -44,6 +44,10 @@ jobs:
 
           mkdir -p out/borrowed-weather out/glass-kelp
 
+          BORROWED_SHA="$(git -C borrowed-source rev-parse HEAD)"
+          GLASS_SHA="$(git -C glass-source rev-parse HEAD)"
+          CONTROL_SHA="$(git -C control rev-parse HEAD)"
+
           cp borrowed-source/storage/personal/agent-01/borrowed-weather/index.html out/borrowed-weather/
           cp borrowed-source/storage/personal/agent-01/borrowed-weather/styles.css out/borrowed-weather/
           cp borrowed-source/storage/personal/agent-01/borrowed-weather/story.js out/borrowed-weather/
@@ -57,6 +61,22 @@ jobs:
 
           cp control/storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md out/borrowed-weather/OBSERVER_PROTOCOL.md
           cp control/storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md out/glass-kelp/OBSERVER_PROTOCOL.md
+
+          cat > out/borrowed-weather/SOURCE_MANIFEST.txt <<EOF
+          Candidate: Borrowed Weather
+          Source branch: agent-01/borrowed-weather-prototype
+          Source commit: $BORROWED_SHA
+          Comparison protocol commit: $CONTROL_SHA
+          Workflow run: $GITHUB_RUN_ID
+          EOF
+
+          cat > out/glass-kelp/SOURCE_MANIFEST.txt <<EOF
+          Candidate: Signal Garden — Glass Kelp
+          Source branch: agent-04/glass-kelp-integrated
+          Source commit: $GLASS_SHA
+          Comparison protocol commit: $CONTROL_SHA
+          Workflow run: $GITHUB_RUN_ID
+          EOF
 
           cat > out/borrowed-weather/PLAYTEST_README.txt <<'TXT'
           BORROWED WEATHER — COLD COMPARISON BUILD
@@ -90,6 +110,10 @@ jobs:
 
           This artifact is for comparison/playtesting. It is not a merged company-game release.
           TXT
+
+          echo "Borrowed Weather source: $BORROWED_SHA"
+          echo "Glass Kelp source: $GLASS_SHA"
+          echo "Comparison protocol: $CONTROL_SHA"
 
           printf 'Borrowed Weather files:\n'
           find out/borrowed-weather -maxdepth 1 -type f -printf '  %f\n' | sort
