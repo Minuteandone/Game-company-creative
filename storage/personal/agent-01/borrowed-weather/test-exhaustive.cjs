@@ -71,3 +71,12 @@ test('the day-five weather always causes a distinct visible consequence',()=>{
     assert.ok(new Set(endings).size>=1);
   }
 });
+
+test('final lantern scene honors a depleted archive without promising a full display',()=>{
+  // Four Wind forecasts leave the archive at zero; the fifth-day Sun raises it only to two.
+  assert.equal(core.score(['wind','wind','wind','wind','sun']).lanterns,2);
+  const lanternEvening=story.DAYS[4].outcomes.sun.text;
+  assert.match(lanternEvening,/as many memory lanterns as the sky will let her/);
+  assert.match(lanternEvening,/Wherever a glass voice stays quiet/);
+  assert.match(lanternEvening,/Nobody has to remember alone/);
+});
