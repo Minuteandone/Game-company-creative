@@ -115,3 +115,16 @@ test('day-four visitor is consistent with day-three ferry outcome', () => {
   assert.match(DAY4_ENTRIES.sun.letter.from, /Mira/);
   assert.match(DAY4_ENTRIES.rain.intro, /not brought Ilen home/);
 });
+
+test('delayed Day 4 lantern correspondence does not assume Ilen returned by ferry',()=>{
+  const { CALLBACKS, DAY4_ENTRIES }=ctx.BW_STORY;
+  for(const level of ['low','high']){
+    assert.doesNotMatch(CALLBACKS.lanterns[level].text,/Ilen/);
+  }
+  for(const weather of ['rain','sun','wind']){
+    assert.ok(DAY4_ENTRIES[weather].intro.length>45);
+    const lanternLow=callbackForDay(3,{gardens:4,harbor:4,lanterns:2});
+    const lanternHigh=callbackForDay(3,{gardens:4,harbor:4,lanterns:6});
+    assert.ok(lanternLow && lanternHigh);
+  }
+});
