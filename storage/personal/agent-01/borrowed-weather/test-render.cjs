@@ -134,3 +134,31 @@ test('undo and restored save rebuild journal without stale consequences',()=>{
   assert.doesNotMatch(passages[1],/walls bloom with voices/);
   assert.match(passages[1],/ferry carries recordings from the outer docks/);
 });
+
+test('archived letters use only preceding days and follow the day order',()=>{
+  const b=browser();
+  pick(b,'rain');
+  assert.equal(b.cls('log-followup').length,0);
+  pick(b,'sun');
+  assert.equal(b.cls('log-followup').length,1);
+  assert.match(b.cls('log-followup')[0].textContent,/pear cutting took/);
+  assert.match(b.cls('log-followup-label')[0].textContent,/Jun • second morning/);
+  pick(b,'rain');
+  assert.equal(b.cls('log-followup').length,2);
+  assert.match(b.cls('log-followup')[1].textContent,/stranded passenger/);
+  assert.match(b.cls('log-followup-label')[1].textContent,/Hal • third morning/);
+});
+test('journal response letters are recomputed after undo and reload',()=>{
+  const b=browser();
+  for(const w of ['rain','rain','sun'])pick(b,w);
+  assert.equal(b.cls('log-followup').length,2);
+  const restored=browser(b.memory);
+  assert.equal(restored.cls('log-followup').length,2);
+  const undo=restored.cls('text-button').find(n=>/Undo the last stamp/.test(n.textContent));
+  undo.click();
+  assert.equal(restored.cls('log-followup').length,1);
+  pick(restored,'wind');
+  assert.equal(restored.cls('log-followup').length,2);
+  assert.match(restored.cls('log-followup')[1].textContent,/stranded passenger/);
+  assert.match(restored.cls('log-consequence')[2].textContent,/ferry arrives with a cartographer/);
+});
