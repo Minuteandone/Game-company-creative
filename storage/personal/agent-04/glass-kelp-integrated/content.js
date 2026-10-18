@@ -94,6 +94,25 @@
     })
   });
 
+  const IMPACTS = Object.freeze({
+    AAA: Object.freeze({
+      benefit: "The Glass Garden gets its dusk watering window, and Iona's volunteers can act on a message they immediately recognize.",
+      strain: "The Harbor absorbs an evening level change while the North Lock opens under pressure uncertainty."
+    }),
+    AAB: Object.freeze({
+      benefit: "The Garden still receives water at dusk, while Orren's flood warning makes volunteers prepare for a surge instead of assuming the opening is harmless.",
+      strain: "The public instruction contradicts its own warning: the Lock opens even as the broadcast says the Garden may drown."
+    }),
+    ABB: Object.freeze({
+      benefit: "Orren's seal order reduces reservoir risk, and Iona's dusk timing gives the Harbor a clear moment to expect the decision.",
+      strain: "The Garden loses its best watering window, while the flood warning spreads even though the gate remains shut."
+    }),
+    BBB: Object.freeze({
+      benefit: "The North Lock gets the conservative operation Orren wanted before the known pressure surge, and ferry crews can plan around the early closure.",
+      strain: "The Glass Garden stays dry, and one intact expert voice begins acquiring more civic authority than its limited field of view deserves."
+    })
+  });
+
   const ARTIFACT = Object.freeze({
     name: "Root vial",
     before: "A narrow maintenance vial containing one translucent root and a finger of green reservoir water. Iona labels it with the date and Tower 11.",
@@ -203,6 +222,7 @@
     SLOTS,
     BEFORE,
     ECHOES,
+    IMPACTS,
     ARTIFACT,
     sentenceFor,
     meaningFor,
