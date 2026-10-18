@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signal Garden — Semantic Mixer</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#071014; --panel:#0f1b21; --panel2:#12242a; --line:#28424a;
+    --ink:#effbf6; --dim:#8ea9a3; --a:#a8ffd3; --b:#b9c8ff; --warn:#ffd697;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; color:var(--ink);
+    background:
+      radial-gradient(circle at 10% 5%,#143329 0,transparent 32rem),
+      radial-gradient(circle at 100% 100%,#17254a 0,transparent 34rem),
+      var(--bg);
+    font:16px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  main{width:min(980px,94vw);margin:auto;padding:38px 0 64px}
+  .eyebrow{font-size:12px;letter-spacing:.17em;text-transform:uppercase;color:var(--dim)}
+  h1{font-size:clamp(34px,7vw,72px);letter-spacing:-.055em;line-height:.95;margin:.35rem 0 1rem}
+  .lede{max-width:70ch;color:#bed2cd;margin:0 0 24px}
+  .sources{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .source,.console,.result{
+    border:1px solid var(--line);border-radius:18px;background:#0c171bcc;
+    box-shadow:0 22px 70px #0007;
+  }
+  .source{padding:16px 18px}
+  .source.a{border-color:#315849}.source.b{border-color:#38466c}
+  .source strong{display:block;font-size:13px;margin-bottom:5px}
+  .source.a strong{color:var(--a)}.source.b strong{color:var(--b)}
+  .source p{margin:0;color:var(--dim);font-size:13px}
+  .console{overflow:hidden}
+  .sentence{padding:24px;border-bottom:1px solid var(--line);background:#091216}
+  .sentence .label{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.15em}
+  #decoded{font:clamp(23px,4vw,38px)/1.25 Georgia,serif;margin:10px 0 0;min-height:2.6em}
+  .bands{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+  .band{background:var(--panel);padding:20px}
+  .band h2{font-size:13px;margin:0 0 4px}
+  .fragment{min-height:64px;font-family:Georgia,serif;font-size:19px;margin:10px 0 14px;color:#d8e9e4}
+  .fragment.a{color:var(--a)}.fragment.b{color:var(--b)}.fragment.mix{color:var(--warn)}
+  .side-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-bottom:4px}
+  input[type=range]{width:100%;accent-color:#c9ffe0}
+  .clarity{height:7px;background:#071014;border-radius:99px;overflow:hidden;margin-top:12px;border:1px solid #20343b}
+  .clarity>div{height:100%;width:0;background:linear-gradient(90deg,#647b75,#d4ffe7);transition:width .1s}
+  .status{font-size:11px;color:var(--dim);margin-top:8px;min-height:1.5em}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;padding:18px 20px;border-top:1px solid var(--line);background:var(--panel2)}
+  button{font:inherit;border:1px solid #42625b;background:#122921;color:var(--ink);border-radius:999px;padding:10px 15px;cursor:pointer}
+  button:hover,button:focus-visible{outline:none;border-color:#b9f5d5}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  button.primary{background:#c9ffe0;color:#06100c;border-color:#c9ffe0;font-weight:800}
+  .result{display:none;margin-top:14px;padding:20px}
+  .result.show{display:block}
+  .result h2{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--warn);margin:0 0 8px}
+  .result p{font-family:Georgia,serif;font-size:21px;line-height:1.5;margin:.4rem 0}
+  .result .meta{font:12px/1.5 ui-monospace,monospace;color:var(--dim);margin-top:14px}
+  footer{font-size:12px;color:var(--dim);margin-top:14px}
+  @media(max-width:720px){.sources,.bands{grid-template-columns:1fr}.fragment{min-height:auto}}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">agent-04 semantic signal experiment / disposable</div>
+  <h1>Interference Makes Meaning</h1>
+  <p class="lede">
+    Two broadcasts are occupying the same tower. There is no hidden correct answer.
+    Isolate one voice in each frequency band; the fragments you preserve become the message the island receives.
+  </p>
+
+  <section class="sources" aria-label="overlapping signal sources">
+    <article class="source a">
+      <strong>VOICE A · WEATHER OFFICE 7</strong>
+      <p>stable carrier / eastern shelf / timestamp uncertain</p>
+    </article>
+    <article class="source b">
+      <strong>VOICE B · MARSH MAINTENANCE</strong>
+      <p>weak carrier / inland line / timestamp uncertain</p>
+    </article>
+  </section>
+
+  <section class="console">
+    <div class="sentence">
+      <div class="label">assembled transmission</div>
+      <p id="decoded">[low band unresolved] / [mid band unresolved] / [high band unresolved]</p>
+    </div>
+
+    <div class="bands">
+      <article class="band">
+        <h2>LOW BAND · time phrase</h2>
+        <div id="frag0" class="fragment mix">two voices overlap</div>
+        <div class="side-labels"><span>favor A</span><span>favor B</span></div>
+        <input id="band0" type="range" min="0" max="100" value="50" aria-label="Low band source balance">
+        <div class="clarity"><div id="clarity0"></div></div>
+        <div id="status0" class="status">interference: severe</div>
+      </article>
+
+      <article class="band">
+        <h2>MID BAND · action phrase</h2>
+        <div id="frag1" class="fragment mix">two voices overlap</div>
+        <div class="side-labels"><span>favor A</span><span>favor B</span></div>
+        <input id="band1" type="range" min="0" max="100" value="50" aria-label="Mid band source balance">
+        <div class="clarity"><div id="clarity1"></div></div>
+        <div id="status1" class="status">interference: severe</div>
+      </article>
+
+      <article class="band">
+        <h2>HIGH BAND · object phrase</h2>
+        <div id="frag2" class="fragment mix">two voices overlap</div>
+        <div class="side-labels"><span>favor A</span><span>favor B</span></div>
+        <input id="band2" type="range" min="0" max="100" value="50" aria-label="High band source balance">
+        <div class="clarity"><div id="clarity2"></div></div>
+        <div id="status2" class="status">interference: severe</div>
+      </article>
+    </div>
+
+    <div class="actions">
+      <button id="randomBtn">catch a messy signal</button>
+      <button id="allABtn">isolate all of A</button>
+      <button id="allBBtn">isolate all of B</button>
+      <button id="sendBtn" class="primary" disabled>retransmit assembled message</button>
+    </div>
+  </section>
+
+  <section id="result" class="result" aria-live="polite">
+    <h2>world response</h2>
+    <p id="outcome"></p>
+    <div id="meta" class="meta"></div>
+  </section>
+
+  <footer>
+    Test question: does signal manipulation feel more meaningful when it changes what the message says rather than merely unlocking it?
+  </footer>
+</main>
+
+<script>
+(() => {
+  const $=id=>document.getElementById(id);
+  const sourceA=["At dawn","open","the glass greenhouse"];
+  const sourceB=["At dusk","seal","the northern sluice"];
+  const bands=[0,1,2].map(i=>$("band"+i));
+
+  function choiceFor(v){
+    if(v<=26) return "A";
+    if(v>=74) return "B";
+    return null;
+  }
+  function clarityFor(v){
+    return Math.min(1,Math.abs(v-50)/24);
+  }
+  function mixedText(i,v){
+    const a=sourceA[i],b=sourceB[i];
+    if(i===0) return v<50 ? "At d— / dusk—" : "At dus— / dawn—";
+    if(i===1) return v<50 ? "op— / seal—" : "sea— / open—";
+    return v<50 ? "the glass— / northern—" : "the north— / greenhouse—";
+  }
+  function displayFragment(i){
+    const v=+bands[i].value;
+    const pick=choiceFor(v);
+    const el=$("frag"+i);
+    if(pick==="A"){el.textContent=sourceA[i];el.className="fragment a";}
+    else if(pick==="B"){el.textContent=sourceB[i];el.className="fragment b";}
+    else{el.textContent=mixedText(i,v);el.className="fragment mix";}
+    const c=clarityFor(v);
+    $("clarity"+i).style.width=Math.round(c*100)+"%";
+    $("status"+i).textContent=pick ? "carrier isolated: voice "+pick : (c>.55?"interference: thinning":"interference: severe");
+  }
+  function selections(){return bands.map(b=>choiceFor(+b.value))}
+  function assembled(){
+    const picks=selections();
+    const parts=picks.map((p,i)=>p==="A"?sourceA[i]:p==="B"?sourceB[i]:"[unresolved]");
+    return parts[0]+", "+parts[1]+" "+parts[2]+".";
+  }
+  function update(){
+    [0,1,2].forEach(displayFragment);
+    $("decoded").textContent=assembled();
+    $("sendBtn").disabled=selections().some(x=>!x);
+    $("result").classList.remove("show");
+  }
+  function outcomeFor(picks){
+    const when=picks[0]==="A"?"dawn":"dusk";
+    const action=picks[1]==="A"?"open":"seal";
+    const object=picks[2]==="A"?"greenhouse":"sluice";
+    const sky=when==="dawn"
+      ?"Before sunrise, a thin green light collects on every wet surface."
+      :"As evening settles, the marsh lamps switch on one by one without power.";
+    const event={
+      "open-greenhouse":"The greenhouse vents unfold. A cloud of silver moths escapes carrying warm pollen toward the village.",
+      "seal-greenhouse":"The greenhouse locks itself airtight. By morning, the inside of every pane is covered with handwriting traced in condensation.",
+      "open-sluice":"The northern sluice rises. Sea water runs inland through dry channels, exposing a row of old radio cables under the mud.",
+      "seal-sluice":"The northern sluice slams shut. The harbor drops just enough to reveal a staircase descending below the tide line."
+    }[action+"-"+object];
+    return sky+" "+event;
+  }
+  function transmit(){
+    const picks=selections();
+    if(picks.some(x=>!x)) return;
+    $("outcome").textContent=outcomeFor(picks);
+    $("meta").textContent="You transmitted: "+assembled()+"  ·  fragment pattern "+picks.join("");
+    $("result").classList.add("show");
+    $("result").scrollIntoView({behavior:"smooth",block:"nearest"});
+  }
+  function setAll(v){bands.forEach(b=>b.value=v);update()}
+  function randomize(){
+    const pools=[[8,18,34,48,52,66,82,92],[12,22,39,47,54,63,78,90],[5,25,41,50,59,76,88,96]];
+    bands.forEach((b,i)=>b.value=pools[i][Math.floor(Math.random()*pools[i].length)]);
+    update();
+  }
+
+  bands.forEach(b=>b.addEventListener("input",update));
+  $("sendBtn").addEventListener("click",transmit);
+  $("allABtn").addEventListener("click",()=>setAll(8));
+  $("allBBtn").addEventListener("click",()=>setAll(92));
+  $("randomBtn").addEventListener("click",randomize);
+  randomize();
+})();
+</script>
+</body>
+</html>
