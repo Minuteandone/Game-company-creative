@@ -10,6 +10,11 @@
   const LOCATIONS = ["harbor", "garden", "lock"];
   const TOWER_ONLY = new URLSearchParams(globalThis.location?.search || "").get("towerOnly") === "1";
   const SOURCE_NAMES = { A: "Iona / A", B: "Orren / B" };
+  const PLACE_SUB_DEFAULTS = Object.freeze({
+    harbor: "tide gauge · ferries · Mara",
+    garden: "root beds · Keeper Iona",
+    lock: "pressure room · Operator Orren"
+  });
   const PORT_NAMES = ["north", "east", "south", "west"];
   const REDUCED_MOTION = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
 
@@ -46,7 +51,18 @@
       ? state.visitedBefore
       : state.visitedAfter;
 
+    const contextWithheld = TOWER_ONLY && (state.phase === "before" || state.phase === "tower");
     for (const place of LOCATIONS) {
+      const button = document.querySelector('.place-button[data-place="' + place + '"]');
+      if (button) {
+        button.disabled = contextWithheld;
+        const sub = button.querySelector(".place-sub");
+        if (sub) {
+          sub.textContent = contextWithheld
+            ? "context withheld in this test version"
+            : PLACE_SUB_DEFAULTS[place];
+        }
+      }
       $("mark-" + place).textContent = visits.has(place) ? "✓" : "";
     }
 
@@ -82,15 +98,8 @@
       $("mark-tower").textContent = state.committedPattern ? "✓" : "";
     }
 
-    if (TOWER_ONLY && state.phase === "tower") {
-      for (const place of LOCATIONS) {
-        const button = document.querySelector('.place-button[data-place="' + place + '"]');
-        if (!button) continue;
-        button.disabled = true;
-        const sub = button.querySelector(".place-sub");
-        if (sub) sub.textContent = "context withheld in this test version";
-        $("mark-" + place).textContent = "";
-      }
+    if (contextWithheld) {
+      for (const place of LOCATIONS) $("mark-" + place).textContent = "";
     }
     setActivePlace(state.current);
   }
@@ -402,6 +411,10 @@
       $("scene-title").focus({preventScroll:true});
     }
     announce(TOWER_ONLY ? "Tower-only control restarted." : "Glass Kelp Island restarted.");
+  }
+
+  if (TOWER_ONLY) {
+    $("leave-tower").hidden = true;
   }
 
   document.querySelectorAll(".place-button[data-place]").forEach((button) => {
