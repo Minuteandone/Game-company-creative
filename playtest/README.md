@@ -128,7 +128,7 @@ Both frozen candidates have automated browser evidence.
 
 Independent comparative Chromium QA:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39159676873
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39159923916
 
 Glass Kelp's four authored normal-game messages (AAA / AAB / ABB / BBB) have each completed through real relay-tile clicks, transmission, aftermath, and their distinct Tower 12 result.
 
