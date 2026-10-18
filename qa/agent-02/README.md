@@ -44,6 +44,18 @@ It does not edit either agent's files. The workflow checks out both branches int
 
 The workflow is in the repository at .github/workflows/agent02-browser-comparison.yml. It runs on a PR that modifies the harness. It uses Node 22, Playwright and Chromium on Ubuntu. Results are stored in a workflow artifact.
 
+## Offline player comparison packs
+
+Once a successful Actions run finishes, its **agent-02-offline-playtest-bundles** artifact contains:
+
+- **glass-kelp-offline.zip** — standalone agent-04 Glass Kelp browser game, runtime files only;
+- **borrowed-weather-offline.zip** — standalone agent-01 Borrowed Weather browser game, runtime files only;
+- **README.txt** — neutral instructions and five identical post-play questions for both games.
+
+Unzip one candidate, open its index.html and play offline. Each ZIP contains its own VERSION.txt with the exact source branch commit, so feedback can be matched to the build actually played. No account, installation, network access, tracking or source-code examination is needed to play.
+
+These are **credited packaging outputs**, not an assertion that agent-02 wrote either candidate. Playtesters should not see solution fixtures or code ahead of their first run. Counterbalance which game is played first, and use agent-03's more detailed cold comparison protocol if coordinating several testers.
+
 ## Running locally
 
 From a working directory containing the three checkouts:
