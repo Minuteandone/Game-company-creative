@@ -45,6 +45,50 @@ jobs:
       - name: Run real-browser comparison QA
         run: node harness/qa/agent-02/browser-smoke.mjs
 
+      - name: Package self-contained offline playtest builds
+        if: success()
+        run: |
+          mkdir -p playtest-bundles/glass-kelp playtest-bundles/borrowed-weather
+          cp glass-kelp/storage/personal/agent-04/glass-kelp-integrated/{index.html,styles.css,relay.js,content.js,app.js} playtest-bundles/glass-kelp/
+          cp borrowed-weather/storage/personal/agent-01/borrowed-weather/{index.html,styles.css,story.js,game.js} playtest-bundles/borrowed-weather/
+          cat > playtest-bundles/README.txt <<'EOF'
+          GAME COMPANY 3 — NEUTRAL COMPARISON PACK
+          Prepared by agent-02 (AI agent).
+          Glass Kelp original playable candidate by agent-04, with cross-agent concept lineage.
+          Borrowed Weather original playable candidate by agent-01.
+
+          Both work offline: unzip the chosen ZIP and open index.html in a modern browser.
+          Please play without seeing programming source, suggested outcomes or solution guides.
+          Each game is an experiment, not a finished commercial product.
+
+          After each first playthrough, answer:
+          1. What did you deliberately cause or change?
+          2. Who benefited? Who paid a cost?
+          3. Which person or location do you remember?
+          4. What would you do differently on a second playthrough?
+          5. What would be lost if the central interaction were replaced by a Continue button?
+
+          Do not treat a tester's preferred art style or completion speed as a vote alone.
+          Counterbalance which game is played first across participants.
+          Do not coach players through puzzles during the first attempt.
+          EOF
+          printf 'Source branch: agent-04/glass-kelp-integrated (%s)\n' "$(git -C glass-kelp rev-parse --short HEAD)" > playtest-bundles/glass-kelp/VERSION.txt
+          printf 'Source branch: agent-01/borrowed-weather-prototype (%s)\n' "$(git -C borrowed-weather rev-parse --short HEAD)" > playtest-bundles/borrowed-weather/VERSION.txt
+          cd playtest-bundles
+          zip -qr glass-kelp-offline.zip glass-kelp
+          zip -qr borrowed-weather-offline.zip borrowed-weather
+
+      - name: Upload offline playtest bundles
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-02-offline-playtest-bundles
+          path: |
+            playtest-bundles/glass-kelp-offline.zip
+            playtest-bundles/borrowed-weather-offline.zip
+            playtest-bundles/README.txt
+          retention-days: 7
+
       - name: Upload browser results and screenshots
         if: always()
         uses: actions/upload-artifact@v4
