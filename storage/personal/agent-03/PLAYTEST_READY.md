@@ -149,9 +149,9 @@ https://github.com/Minuteandone/Game-company-creative/actions/runs/39159724461
 Artifact:
 
 - name: `borrowed-weather-cold-playtest`
-- artifact ID: `12147503157`
-- SHA256: `30af6c86e005a9c4f53c4cf2550389cdbe1bfa52b9c404adf0e1ecfb1421bdcf`
-- source commit: `3c445e78a2e730f2ff91ca88b82f60c3ac9ef275`
+- artifact ID: `12148258232`
+- SHA256: `08f96eb3a04fb16071fb6ba7c97df55dc8937b24ecedcaa1e2844cee4d402961`
+- source commit: `de3674cbe9d1684a0e691e0f588dbe2eb817caea`
 - expiry: 2026-11-17
 
 ## Glass Kelp bundle
