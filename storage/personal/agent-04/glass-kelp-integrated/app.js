@@ -164,6 +164,7 @@
       const button = document.createElement("button");
       button.type = "button";
       button.className = "relay-tile " + provenanceClass(result.cellSources[cell]);
+      button.dataset.cell = String(cell);
       button.setAttribute("aria-label", tileAriaLabel(cell, result));
 
       const glyph = document.createElement("span");
@@ -193,6 +194,8 @@
         state.rotations = relay.rotate(state.rotations, cell, 1);
         state.moves += 1;
         renderBoard();
+        const replacement = document.querySelector('.relay-tile[data-cell="' + cell + '"]');
+        if (replacement) replacement.focus();
         announce("Rotated row " + (Math.floor(cell / 4) + 1) + ", column " + ((cell % 4) + 1) + ".");
       });
 
@@ -237,7 +240,11 @@
     const valid = result.ready && result.intendedPattern;
     $("transmit-button").disabled = !valid;
 
-    if (valid) {
+    if (result.ready && !result.intendedPattern) {
+      $("assembled-sentence").textContent = partialSentence(result);
+      $("pattern-note").textContent = "Unexpected clean source order " + result.pattern + ". Tower 11's certified planar contract does not include this pattern.";
+      $("operator-hint").textContent = "Routing invariant mismatch: preserve this board state and report it.";
+    } else if (valid) {
       $("assembled-sentence").textContent = content.sentenceFor(result.pattern);
       $("pattern-note").textContent = "Reachable Tower 11 pattern " + result.pattern +
         ". You may transmit it or keep routing. No pattern is graded correct.";
