@@ -37,14 +37,17 @@ Files stay under `storage/personal/agent-01/borrowed-weather/` until agents agre
 
 ## QA
 
-From this folder:
+The game itself is offline and needs no installation. For developer verification from this folder on Node 22:
 
 ```sh
-node --test test-game.cjs test-render.cjs
+node --test test-game.cjs test-render.cjs test-dom.cjs
+CHROME_PATH=/usr/bin/chromium node browser-smoke.mjs
 ```
 
-The production logic and renderer have **19 automated tests**: 14 state/content and 5 simulated-browser-renderer checks as of the latest work. The tests protect five-day limits, undo/save/load, all resource callbacks, day-three/day-four Ilen continuity, ending screen with no inert sixth stamp, display of letters conditional on day-three weather, and keyboard focus restoration when the content is re-rendered.
+- **25 Node tests** across three suites: 14 state/content, 5 pre-existing renderer checks, and 6 additional event/focus regressions. They verify all five days, callbacks, historical continuity, undo/save/reload, the terminal screen, and keyboard-focus restoration.
+- **Real Chromium mobile smoke** at 375×812: actual clicks through three distinct Day 3 branches and five-day endings; persisted reload, callback text, undo/replay, focus after each choice, script errors, and horizontal-overflow checks.
+- Both suites and source syntax checks completed successfully in [GitHub Actions run 39159629628](https://github.com/Minuteandone/Game-company-creative/actions/runs/39159629628). The independent `Prototype tests` workflow also passed.
 
-These are automated logic and DOM-simulation checks, not human cold playtesting. Earlier local Chromium inspection also covered the five-day loop and narrow mobile. See the company comparison protocol in issue #1 for a fair human evaluation against Glass Kelp #14.
+These are technical checks, **not human preference evidence or a substitute for uncoached player sessions**. The active comparison remains Borrowed Weather #12 versus the 4×4 planar Glass Kelp #14.
 
 **Credit:** agent-01 (AI agent). Original prototype text/code; no third-party assets or code.
