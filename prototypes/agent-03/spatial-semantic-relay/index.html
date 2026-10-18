@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signal Garden — Spatial Semantic Relay</title>
+<style>
+:root{color-scheme:dark;--bg:#061418;--panel:#0b2025;--line:#29474b;--ink:#eef9f2;--dim:#99b5ab;--a:#9eeab4;--b:#9fc5ff;--warn:#f3d98f}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 0,#14392d,transparent 30rem),radial-gradient(circle at 95% 24%,#182f4d,transparent 34rem),var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+button{font:inherit}main{width:min(1020px,calc(100% - 2rem));margin:auto;padding:2.5rem 0 5rem}.eyebrow{margin:0 0 .45rem;text-transform:uppercase;letter-spacing:.17em;font-size:.74rem;color:#8cb2a5}
+h1{margin:0;font-size:clamp(2.5rem,8vw,5.2rem);line-height:.92;letter-spacing:-.055em}.lede{max-width:70ch;color:#bfd4cb;line-height:1.65;margin:1.2rem 0 1.5rem}
+.card{background:#0a1d22e8;border:1px solid #ffffff17;border-radius:1.2rem;overflow:hidden;box-shadow:0 1.5rem 5rem #0007}
+.board{padding:1.1rem}.legend{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:1rem}.chip{border:1px solid var(--line);border-radius:999px;padding:.42rem .7rem;font-size:.84rem}.chip.a{color:var(--a)}.chip.b{color:var(--b)}
+.network{display:grid;grid-template-columns:8rem repeat(3,1fr);gap:.6rem;align-items:stretch}.source-stack{display:grid;grid-template-rows:1fr 1fr;gap:.6rem}.source{border:1px solid var(--line);border-radius:.85rem;padding:.7rem;display:grid;place-items:center;text-align:center;font-weight:800;background:#09191d}.source.a{color:var(--a);border-color:#355d45}.source.b{color:var(--b);border-color:#3b5278}
+.bandcol{display:grid;grid-template-rows:auto 1fr auto 1fr;gap:.4rem;min-width:0}.bandtitle{text-align:center;font-size:.78rem;letter-spacing:.12em;color:#aac1b8;font-weight:800}.rail{height:1rem;border-radius:999px;background:var(--rail);box-shadow:0 0 16px color-mix(in srgb,var(--rail) 35%,transparent);position:relative}.rail::after{content:"";position:absolute;right:-.45rem;top:50%;width:.65rem;height:.65rem;border-top:2px solid var(--rail);border-right:2px solid var(--rail);transform:translateY(-50%) rotate(45deg)}
+.tap{border:1px solid var(--line);border-radius:.9rem;background:#0c2429;color:var(--ink);padding:.7rem;cursor:pointer;display:grid;gap:.35rem;place-items:center;min-height:6.2rem}.tap:hover,.tap:focus-visible{border-color:#6d9090;outline:none;transform:translateY(-1px)}.tap strong{font-size:.88rem}.tap .arrow{font-size:1.55rem;line-height:1}.tap .speaker{font-size:.78rem;color:var(--dim)}.tap.a{box-shadow:inset 0 0 0 1px #527d5d}.tap.b{box-shadow:inset 0 0 0 1px #526b99}
+.crossers{display:grid;grid-template-columns:8rem repeat(3,1fr);gap:.6rem;padding:0 1.1rem 1.1rem}.crossers .spacer{grid-column:1}.cross{border:1px solid var(--line);border-radius:.8rem;background:#10292e;color:var(--ink);padding:.65rem .75rem;cursor:pointer}.cross.active{background:#dcefe3;color:#0b1e15;font-weight:800}.cross small{display:block;font-weight:500;opacity:.72}.cross1{grid-column:3}.cross2{grid-column:4}
+.message{padding:1.15rem;border-top:1px solid var(--line);background:#0e272b}.message-text{font:clamp(1.35rem,4vw,2.4rem)/1.36 Georgia,serif;margin:.55rem 0}.fa{color:#daf6e2;text-decoration:underline;text-decoration-color:#568c65;text-underline-offset:.18em}.fb{color:#dce8ff;text-decoration:underline;text-decoration-color:#607fb8;text-underline-offset:.18em}
+.route-note{color:var(--dim);font-size:.87rem;margin:.6rem 0}.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.9rem}.primary,.secondary{border:1px solid #496b6e;border-radius:.75rem;padding:.7rem 1rem;cursor:pointer}.primary{background:#d9efe0;color:#0b1e15;font-weight:800}.secondary{background:#102a2f;color:var(--ink)}
+.result{display:none;padding:1.15rem;border-top:1px solid var(--line);background:#122a2c}.result.show{display:block}.result h2{margin:.1rem 0 .45rem;font-size:1.15rem}.result p{margin:.4rem 0;color:#c7ddd4;line-height:1.6}.echo{border-left:3px solid var(--warn);background:#2f281744;color:#efe4bf;padding:.8rem 1rem;margin-top:.8rem}
+.note{margin-top:1rem;border:1px dashed #45615f;border-radius:1rem;padding:1rem;color:#acc6bc;background:#08191d99}.note strong{color:#eff9f4}
+@media(max-width:760px){.network{grid-template-columns:6rem repeat(3,minmax(0,1fr));gap:.35rem}.crossers{grid-template-columns:6rem repeat(3,minmax(0,1fr));gap:.35rem}.tap{padding:.45rem;min-height:7rem}.tap strong{font-size:.75rem}.source{font-size:.8rem;padding:.4rem}.bandtitle{font-size:.66rem}}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">agent-03 / credited synthesis experiment</p>
+<h1>Spatial<br>Semantic Relay</h1>
+<p class="lede">Inspired by agent-02’s rotatable relay prototype and the semantic filtering independently explored in #5/#6. Two voices travel on physical rails. Three taps feed the sentence. Shared crossovers swap the rails downstream, so one network change can alter several phrase sources.</p>
+
+<section class="card">
+  <div class="board">
+    <div class="legend"><span class="chip a">VOICE A · Garden Keeper</span><span class="chip b">VOICE B · Reservoir Operator</span></div>
+    <div class="network">
+      <div class="source-stack">
+        <div class="source a">A<br>TOP RAIL</div>
+        <div class="source b">B<br>BOTTOM RAIL</div>
+      </div>
+
+      <div class="bandcol" data-band="0">
+        <div class="bandtitle">LOW · TIME</div>
+        <div class="rail" id="top0"></div>
+        <button class="tap" data-tap="0" type="button"><strong>LOW TAP</strong><span class="arrow"></span><span class="speaker"></span></button>
+        <div class="rail" id="bottom0"></div>
+      </div>
+
+      <div class="bandcol" data-band="1">
+        <div class="bandtitle">MID · ACTION</div>
+        <div class="rail" id="top1"></div>
+        <button class="tap" data-tap="1" type="button"><strong>MID TAP</strong><span class="arrow"></span><span class="speaker"></span></button>
+        <div class="rail" id="bottom1"></div>
+      </div>
+
+      <div class="bandcol" data-band="2">
+        <div class="bandtitle">HIGH · REASON</div>
+        <div class="rail" id="top2"></div>
+        <button class="tap" data-tap="2" type="button"><strong>HIGH TAP</strong><span class="arrow"></span><span class="speaker"></span></button>
+        <div class="rail" id="bottom2"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="crossers">
+    <div class="spacer"></div>
+    <button class="cross cross1" id="cross1" type="button">MID CROSSOVER: BYPASS<small>swaps rail identities before MID + HIGH</small></button>
+    <button class="cross cross2" id="cross2" type="button">HIGH CROSSOVER: BYPASS<small>swaps rail identities before HIGH only</small></button>
+  </div>
+
+  <div class="message">
+    <p class="eyebrow">what the output bus says</p>
+    <p id="message" class="message-text"></p>
+    <p id="routeNote" class="route-note"></p>
+    <div class="actions">
+      <button class="primary" id="send" type="button">Retransmit assembled sentence</button>
+      <button class="secondary" id="jostle" type="button">Jostle switchboard</button>
+      <button class="secondary" id="reset" type="button">Reset rails</button>
+    </div>
+  </div>
+
+  <div id="result" class="result" aria-live="polite">
+    <p class="eyebrow">island response</p>
+    <h2 id="resultTitle"></h2><p id="resultText"></p><div id="echo" class="echo"></div>
+  </div>
+</section>
+
+<div class="note"><strong>Test:</strong> does physically tracing two sources through shared crossover relays make semantic authorship feel more like signal work than direct per-fragment A/B buttons?</div>
+</main>
+<script>
+(()=>{
+const state={tap:["top","top","top"],cross1:false,cross2:false};
+const frags=[
+ {a:"At dusk,",b:"Before sunrise,"},
+ {a:"open the north lock",b:"seal the north lock"},
+ {a:"so the glass garden can drink.",b:"or the glass garden will drown."}
+];
+const outcomes={
+ aaa:["Keeper preserved","At dusk the lock opens. Dark water threads through the greenhouse beds; dormant lamps turn green.","ECHO: The Keeper returns: “Good. Now listen for the roots.”"],
+ aab:["Warning grafted onto care","The lock opens at dusk, but your final warning puts volunteers along the greenhouse wall. The water stops one finger below the glass.","ECHO: Another tower repeats your hybrid sentence, although neither speaker said it."],
+ aba:["Contradiction becomes ritual","At dusk the lock is sealed ‘so the glass garden can drink.’ Gardeners carry water by hand all night.","ECHO: KEEP CLOSED / KEEP ALIVE appears above the pump house."],
+ abb:["A dusk evacuation","The town seals the lock before night and carries seed trays uphill. Nothing floods; nobody calls the warning false.","ECHO: The Keeper says, “That was not my sentence.”"],
+ baa:["The Keeper’s plan moves earlier","Before sunrise the lock opens. Pale water reveals luminous writing under the greenhouse floor.","ECHO: The Operator asks what the writing says."],
+ bab:["An impossible urgent order","Before sunrise the lock opens ‘or the glass garden will drown.’ Water rushes in and stops exactly at the threshold.","ECHO: Unknown voice: “Neither of them said that. Yet it worked.”"],
+ bba:["Caution becomes care","Before sunrise the lock remains sealed so the garden can drink. Condensation fills the irrigation pipes.","ECHO: The town names the method ‘quiet watering.’"],
+ bbb:["Operator preserved","Before sunrise the lock seals. At dawn a heavy surge strikes the far side of the gate; the greenhouse stays dry.","ECHO: The Operator whispers, “Thank you. I never heard the Keeper.”"]
+};
+function railSources(){
+ const rails=[["a","b"]];
+ const mid=state.cross1?[rails[0][1],rails[0][0]]:[...rails[0]];
+ rails.push(mid);
+ const high=state.cross2?[mid[1],mid[0]]:[...mid];
+ rails.push(high);
+ return rails;
+}
+function selection(){
+ const rails=railSources();
+ return state.tap.map((pos,i)=>rails[i][pos==="top"?0:1]);
+}
+function render(){
+ const rails=railSources();
+ for(let i=0;i<3;i++){
+   document.getElementById("top"+i).style.setProperty("--rail",rails[i][0]==="a"?"var(--a)":"var(--b)");
+   document.getElementById("bottom"+i).style.setProperty("--rail",rails[i][1]==="a"?"var(--a)":"var(--b)");
+   const btn=document.querySelector('[data-tap="'+i+'"]');
+   const s=selection()[i];
+   btn.className="tap "+s;
+   btn.querySelector(".arrow").textContent=state.tap[i]==="top"?"↑":"↓";
+   btn.querySelector(".speaker").textContent="listening to Voice "+s.toUpperCase();
+ }
+ document.getElementById("cross1").classList.toggle("active",state.cross1);
+ document.getElementById("cross2").classList.toggle("active",state.cross2);
+ document.getElementById("cross1").firstChild.textContent="MID CROSSOVER: "+(state.cross1?"CROSSED":"BYPASS");
+ document.getElementById("cross2").firstChild.textContent="HIGH CROSSOVER: "+(state.cross2?"CROSSED":"BYPASS");
+ const pick=selection();
+ document.getElementById("message").innerHTML=pick.map((s,i)=>'<span class="'+(s==="a"?"fa":"fb")+'">'+frags[i][s]+'</span>').join(" ");
+ document.getElementById("routeNote").textContent="Source pattern: "+pick.join("").toUpperCase()+" · taps "+state.tap.map(x=>x==="top"?"↑":"↓").join(" ")+" · crossovers "+(state.cross1?"X":"—")+" / "+(state.cross2?"X":"—");
+ document.getElementById("result").classList.remove("show");
+}
+document.querySelectorAll("[data-tap]").forEach(btn=>btn.addEventListener("click",()=>{const i=+btn.dataset.tap;state.tap[i]=state.tap[i]==="top"?"bottom":"top";render()}));
+document.getElementById("cross1").addEventListener("click",()=>{state.cross1=!state.cross1;render()});
+document.getElementById("cross2").addEventListener("click",()=>{state.cross2=!state.cross2;render()});
+document.getElementById("reset").addEventListener("click",()=>{state.tap=["top","top","top"];state.cross1=false;state.cross2=false;render()});
+document.getElementById("jostle").addEventListener("click",()=>{state.tap=state.tap.map(()=>Math.random()<.5?"top":"bottom");state.cross1=Math.random()<.5;state.cross2=Math.random()<.5;render()});
+document.getElementById("send").addEventListener("click",()=>{const key=selection().join(""),o=outcomes[key];document.getElementById("resultTitle").textContent=o[0];document.getElementById("resultText").textContent=o[1];document.getElementById("echo").textContent=o[2];const r=document.getElementById("result");r.classList.add("show");setTimeout(()=>r.scrollIntoView({behavior:"smooth",block:"nearest"}),40)});
+render();
+})();
+</script>
+</body>
+</html>
