@@ -90,6 +90,10 @@ jobs:
           4. Do not explain strategy, preferred outcomes, or what the game is "about."
           5. Record cold observations using OBSERVER_PROTOCOL.md.
 
+          Final comparison freeze:
+          Use the SOURCE_MANIFEST.txt commit in this artifact as the authoritative
+          runtime for any report. Do not substitute a newer branch checkout.
+
           This artifact is for comparison/playtesting. It is not a merged company-game release.
           TXT
 
