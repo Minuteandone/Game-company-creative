@@ -131,11 +131,14 @@
     section.setAttribute("aria-label", ariaLabel);
     return section;
   }
-  function renderLetters(day) {
+  function renderLetters(day, dayIndex) {
     const panel = createSection("story-panel", "Incoming correspondence");
-    append(panel, element("p", "eyebrow", "Incoming correspondence"), element("h2", null, day.title), element("p", "lead", day.intro));
+    const dayFourEntry = dayIndex === 3 ? STORY.DAY4_ENTRIES[state.history[2]] : null;
+    const intro = dayFourEntry ? dayFourEntry.intro : day.intro;
+    const lettersToRender = dayFourEntry ? [dayFourEntry.letter, ...day.letters] : day.letters;
+    append(panel, element("p", "eyebrow", "Incoming correspondence"), element("h2", null, day.title), element("p", "lead", intro));
     const letters = element("div", "letter-stack");
-    for (const letter of day.letters) {
+    for (const letter of lettersToRender) {
       const note = element("article", "letter");
       append(note, element("div", "from", letter.from), element("blockquote", null, letter.text));
       append(letters, note);
@@ -197,11 +200,13 @@
     back.addEventListener("click", () => commit(undo(state), "Last stamp undone. You can choose again."));
     append(panel, back);
   }
-  function renderDesk(values) {
+  function renderDesk(values, isClosed = false) {
     const panel = createSection("desk-panel", "Weather stamping desk");
     renderMeters(panel, values);
     const dayNumber = state.history.length;
-    if (state.viewingResult) {
+    if (isClosed) {
+      append(panel, element("p", "eyebrow", "Office closed"), element("p", "desk-note", "All five forecasts have been filed. The ledger is complete; you can still undo the last stamp below."));
+    } else if (state.viewingResult) {
       const weather = state.history[dayNumber - 1];
       const result = STORY.DAYS[dayNumber - 1].outcomes[weather];
       const card = element("div", "result-card");
@@ -242,7 +247,7 @@
     again.type = "button";
     again.addEventListener("click", restart);
     append(epilogue, again);
-    append(root, epilogue, renderDesk(values));
+    append(root, epilogue, renderDesk(values, true));
   }
   function render() {
     clear(root);
@@ -251,7 +256,7 @@
     ticket.textContent = completed ? "LEDGER COMPLETE" : "DAY " + String(state.history.length + (state.viewingResult ? 0 : 1)).padStart(2, "0") + " / 05";
     if (completed) return renderFinal();
     const dayIndex = state.history.length - (state.viewingResult ? 1 : 0);
-    append(root, renderLetters(STORY.DAYS[dayIndex]), renderDesk(score(state.history)));
+    append(root, renderLetters(STORY.DAYS[dayIndex], dayIndex), renderDesk(score(state.history)));
   }
   function restart() {
     commit(initialState(), "New ledger started. The first morning is ready.");
