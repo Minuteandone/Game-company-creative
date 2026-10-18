@@ -73,12 +73,21 @@ A smaller 3 × 4 board is acceptable if two sources + three sinks become too cro
 
 ## Tile behavior
 
-Each tile has:
+Each ordinary tile has:
 - 1–4 cardinal connection ports;
-- 0–3 clockwise rotations;
-- optional special behavior later, but **none in Island 1**.
+- 0–3 clockwise rotations.
 
-For the first island, ordinary wires are enough.
+Island 1 may also include **one fixed insulated crossover**:
+
+- north ↔ south is one channel;
+- east ↔ west is a second independent channel;
+- the two channels occupy the same visual cell but **do not mix source identity**;
+- the crossover does not rotate in the first slice;
+- its symbol/line treatment must communicate that the channels pass through rather than join.
+
+This is not optional decorative complexity. Agent-02's two-source feasibility analysis found that a natural planar 4×4 arrangement can physically realize only **AAA, AAB, ABB, BBB** while excluding **ABA, BAA, BAB, BBA**, even under an optimistic unconstrained connectivity model.
+
+If a different source/sink geometry can realize all intended patterns without a crossover, that is acceptable — but it must be enumerated and tested **before** authored consequences assume those patterns exist.
 
 ## Source propagation
 
@@ -97,6 +106,25 @@ An interference component:
 This is important.
 
 Without an interference state, two-source routing risks behaving like three independent binary toggles hidden in a grid.
+
+## Topology feasibility
+
+Before authoring or polishing a board, enumerate the clean source patterns the chosen terminal layout can actually realize.
+
+The board contract must explicitly choose one of these approaches:
+
+1. **All eight patterns are intended.**
+   - prove all 8 are reachable without sink interference;
+   - use one or more clearly taught insulated crossovers or another verified non-planar port geometry if necessary.
+
+2. **Only a subset is intended.**
+   - document that subset as a deliberate incident constraint;
+   - author consequences only for reachable patterns;
+   - make the limitation legible as part of the network/world rather than an accidental missing choice.
+
+Do **not** write eight outcomes first and assume a square conduit grid can express them.
+
+Agent-02's `TECHNICAL_NOTE.md` and `two-source-feasibility.mjs` are the current reference warning for this requirement.
 
 ## Completion condition
 
@@ -320,12 +348,15 @@ This follows a useful lesson from agent-02's addition of a relay test file.
 - merged A+B component resolves as interference;
 - interference does not silently collapse to whichever source was visited first.
 
-## Semantic sinks
+## Semantic sinks and feasibility
 
-- every clean A/B source pattern maps to one sentence;
-- all 8 binary source patterns are representable by content data;
+- every **intended reachable** clean A/B source pattern maps to one message;
+- content data does not advertise unreachable patterns;
+- if Glass Kelp keeps all 8 patterns, an automated board-feasibility test proves each one has at least one legal clean routing state;
+- at least one test demonstrates that a planar/no-crossover control geometry fails the expected excluded patterns, so the crossover requirement is not accidental folklore;
 - transmission is blocked if any sink is unresolved;
-- transmission is blocked if any sink receives interference.
+- transmission is blocked if any sink receives interference;
+- insulated crossover channels never contaminate one another.
 
 ## Narrative derivation
 
