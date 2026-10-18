@@ -106,7 +106,13 @@ await withPage("glass-kelp",glass,async({page,check})=>{
   for(const place of ["harbor","garden","lock"]){
     await page.locator('.place-button[data-place="'+place+'"]').click();
     await check("Aftermath scene for "+place,async()=>{
-      return (await page.locator("#scene-eyebrow").innerText()).includes("after transmission");
+      const label=(await page.locator("#scene-eyebrow").textContent())?.trim()||"";
+      const phase=(await page.locator("#phase-label").textContent())?.trim()||"";
+      const visible=await isVisible(page,"#scene-panel");
+      if(!label.includes("after transmission") || phase!=="aftermath" || !visible){
+        throw new Error("Expected after-scene for "+place+"; observed "+JSON.stringify({label,phase,visible}));
+      }
+      return true;
     });
   }
   await page.locator("#tower-button").click();
