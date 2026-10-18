@@ -221,7 +221,7 @@
     relay.setAttribute("aria-label", config.name + " crossover. " + config.effectLong);
     relay.dataset.relay = config.relay;
     append(relay,
-      document.createTextNode(config.name + ": " + (state.relay[config.relay] ? "CROSSED" : "STRAIGHT")),
+      document.createTextNode(config.name + " INSULATED CROSSOVER: " + (state.relay[config.relay] ? "CROSSED" : "STRAIGHT")),
       el("small", null, config.effectLong)
     );
     relay.addEventListener("click", () => {
@@ -264,7 +264,7 @@
     if (state.phase === "before") {
       const switchboard = el("div", "switchboard");
       append(switchboard,
-        el("p", "switch-help", "Each semantic tap reads the TOP rail. A crossover swaps both source rails for every tap downstream from it. There is no correct pattern."),
+        el("p", "switch-help", "Each semantic tap reads the TOP rail. These are insulated two-channel crossovers: the rails exchange position without mixing. A crossover changes every tap downstream from it. There is no correct pattern."),
         contextCards()
       );
 
