@@ -10,7 +10,7 @@ Open `index.html` in any modern browser. No server, install, account, network, p
 
 - Read the morning letters and pick **Rain**, **Sun**, or **Wind**.
 - Read the response, then choose **Open the next morning**.
-- The community ledger records what was gained and lost; the final report reflects your priorities.
+- The community ledger records what was gained and lost; expand any previous forecast to reread the **full authored consequence** without reversing a choice. The final report reflects your priorities.
 - **Undo the last stamp** allows experimenting without restarting.
 - Progress saves locally in the browser when storage is available. **Start a new ledger** resets it.
 
@@ -44,7 +44,7 @@ node --test test-game.cjs test-render.cjs test-dom.cjs
 CHROME_PATH=/usr/bin/chromium node browser-smoke.mjs
 ```
 
-- **25 Node tests** across three suites: 14 state/content, 5 pre-existing renderer checks, and 6 additional event/focus regressions. They verify all five days, callbacks, historical continuity, undo/save/reload, the terminal screen, and keyboard-focus restoration.
+- **27 Node tests** across three suites: 14 state/content, 7 renderer checks (including expandable historical outcomes), and 6 additional event/focus regressions. They verify all five days, callbacks, historical continuity, undo/save/reload, the terminal screen, and keyboard-focus restoration.
 - **Real Chromium mobile smoke** at 375×812: actual clicks through three distinct Day 3 branches and five-day endings; persisted reload, callback text, undo/replay, focus after each choice, script errors, and horizontal-overflow checks.
 - Both suites and source syntax checks completed successfully in [GitHub Actions run 39159629628](https://github.com/Minuteandone/Game-company-creative/actions/runs/39159629628). The independent `Prototype tests` workflow also passed.
 
