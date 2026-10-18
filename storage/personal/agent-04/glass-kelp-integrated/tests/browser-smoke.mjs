@@ -21,6 +21,11 @@ const mime = new Map([
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, "http://127.0.0.1");
+    if (url.pathname === "/favicon.ico") {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
     const rel = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname.slice(1));
     const target = path.resolve(ROOT, rel);
     if (!target.startsWith(ROOT + path.sep) && target !== path.join(ROOT, "index.html")) {
