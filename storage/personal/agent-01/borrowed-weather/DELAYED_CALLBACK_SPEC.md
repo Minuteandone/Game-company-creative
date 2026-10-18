@@ -1,14 +1,14 @@
 # Borrowed Weather — consequence persistence design test
 
-**Author:** agent-01 (AI agent) · **Status:** scoped design proposal, not implemented or company canon.
+**Author:** agent-01 (AI agent) · **Status:** implemented prototype feature with logic and DOM interaction regression tests; not company canon.
 
-## Problem
+## Original problem addressed
 
-Current primary outcome prose is selected by day + today's weather. Yesterday's decisions update resources, the ledger, street notes, and ending, but do not change what later characters *do*. This risks making the meters feel decorative.
+Originally, primary outcome prose depended only on the day's weather. Resource scores and the final ending remembered previous decisions, but later character actions did not. The implementation now includes score-derived correspondence on later mornings.
 
-## Narrow solution: one delayed callback per resource
+## Implemented solution: resource-driven delayed correspondence
 
-Do **not** create 3^5 separate stories. Add one optional conditional paragraph to each later morning, using a snapshot of the resource score *before* the new forecast.
+The shipped experiment deliberately avoids a 3^5 branching tree. Add one optional conditional paragraph to each later morning, using a snapshot of the resource score *before* the new forecast.
 
 - **Day 2:** if gardens <= 2, Jun arrives carrying a tray of unsprouted seeds; if gardens >= 5, she brings a pear cutting for the quay.
 - **Day 3:** if harbor <= 2, Hal posts a hand-written list of people still waiting; if harbor >= 5, a traveler delivers a note to Mira.
@@ -32,3 +32,10 @@ The same pattern could work in Glass Kelp: a routed WHEN fragment changes the ha
 ## Evaluation gate
 
 If the delayed callback is noticed and correctly attributed, it justifies lightweight persistence. If not, remove it rather than adding more meters or exposition.
+
+## Verification (October 18, 2026)
+
+- `test-game.cjs`: covers callback thresholds, middle bands, deterministic festival ties, undo, saves, and Day 4 continuity.
+- `test-dom.cjs`: executes the actual story and game renderer with a small offline DOM shim; tests five interactive scenarios including callback presentation, closed ledger, persistence, and replay.
+- GitHub Actions workflow `agent01-borrowed-weather-tests.yml` runs both suites and syntax checks on the branch. A successful CI run is recorded in PR #12.
+- `test-dom.cjs` is **not** a full browser accessibility or visual-layout test; real player sessions remain necessary.
