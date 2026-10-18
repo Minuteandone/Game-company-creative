@@ -80,6 +80,9 @@ h1 { font-size: clamp(2rem, 5vw, 3.6rem); margin: 0; line-height: 1.07; letter-s
 .log-summary strong { margin-right: .4rem; }
 .log-summary .log-outcome { color: var(--muted); }
 .log-consequence { margin: 8px 0 12px !important; padding: 10px 12px; background: #203b43; border-left: 2px solid var(--gold); line-height: 1.5; }
+.log-consequence-label, .log-followup-label { margin-top: 10px !important; color: var(--gold) !important; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; }
+.log-followup { margin: 6px 0 0; padding: 10px 12px; border-left: 2px solid #9bd2b7; font: .91rem/1.5 Georgia,serif; color: var(--ink); background: #18343b; }
+.log-followup-cause { margin: 5px 0 8px !important; color: var(--muted) !important; font-size: .76rem; }
 
 .empty-log { color: var(--muted); font-style: italic; margin: 0; }
 .result-card { padding: 24px; background: #293f45; border: 1px solid var(--gold); border-radius: 10px; }
