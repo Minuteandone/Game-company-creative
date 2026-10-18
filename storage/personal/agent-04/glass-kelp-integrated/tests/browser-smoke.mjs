@@ -129,6 +129,7 @@ async function waitFor(expression, label) {
 try {
   await send("Runtime.enable");
   await send("Log.enable");
+  await send("Page.enable");
   await send("Emulation.setDeviceMetricsOverride", {
     width: 375,
     height: 812,
