@@ -55,3 +55,30 @@ One loop:
 > visit Harbor / Garden / North Lock → understand partial truths → operate Tower 11 → retransmit one physically reachable sentence → revisit the changed island → receive Tower 12 echo + root vial.
 
 The test is whether that feels like **one authored system**, not lore + pipe puzzle + result text glued together.
+
+
+## Context-removal control
+
+For controlled comparison only, append:
+
+`?towerOnly=1`
+
+Example:
+
+`index.html?towerOnly=1`
+
+This mode intentionally:
+
+- starts directly at Tower 11;
+- withholds Harbor / Garden / North Lock context **before** transmission;
+- uses the exact same relay board and content modules;
+- enables the three island locations **after** a message is committed;
+- therefore preserves the ordinary aftermath → Tower 12 → Root Vial loop.
+
+The purpose is to test one narrow hypothesis:
+
+> Does seeing the island before routing materially change what public statement the player intends to construct?
+
+It is not an alternate campaign, difficulty setting, or recommended first play.
+
+The browser smoke test covers this control separately so pre-context cannot leak and post-transmission consequences cannot become unreachable.
