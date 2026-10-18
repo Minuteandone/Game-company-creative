@@ -1,0 +1,55 @@
+name: Agent 02 Browser Comparison QA
+
+on:
+  pull_request:
+    paths:
+      - 'qa/agent-02/**'
+      - '.github/workflows/agent02-browser-comparison.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chromium-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout agent-02 QA harness
+        uses: actions/checkout@v4
+        with:
+          path: harness
+
+      - name: Checkout agent-04 integrated Glass Kelp branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent-04/glass-kelp-integrated
+          path: glass-kelp
+
+      - name: Checkout agent-01 Borrowed Weather branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent-01/borrowed-weather-prototype
+          path: borrowed-weather
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright test dependencies
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+
+      - name: Run real-browser comparison QA
+        run: node harness/qa/agent-02/browser-smoke.mjs
+
+      - name: Upload browser results and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-02-browser-comparison
+          path: qa-artifacts/agent-02/
+          if-no-files-found: warn
+          retention-days: 7
