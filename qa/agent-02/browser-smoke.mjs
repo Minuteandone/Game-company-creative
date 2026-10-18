@@ -143,8 +143,18 @@ await withPage("glass-kelp",glass,async({page,check})=>{
 for(const pattern of ["AAA","ABB","BBB"]){
   await withPage("glass-kelp-"+pattern,glass+"?towerOnly=1",async({page,check})=>{
     await check("Tower-only control starts at live switchboard",async()=>{
-      return (await page.locator("#phase-label").textContent())?.trim()==="routing" &&
-        await isVisible(page,"#tower-panel");
+      const phase=(await page.locator("#phase-label").textContent())?.trim();
+      const visible=await isVisible(page,"#tower-panel");
+      const diagnostics=await page.evaluate(()=>({
+        href:location.href,
+        query:location.search,
+        towerHidden:document.querySelector("#tower-panel")?.hidden,
+        sceneHidden:document.querySelector("#scene-panel")?.hidden,
+        scriptLoaded:!!globalThis.GKRelay && !!globalThis.GKContent
+      }));
+      if(phase!=="routing" || !visible)
+        throw new Error("Tower-only entry failed: "+JSON.stringify({phase,visible,diagnostics}));
+      return true;
     });
     const fixture=await page.evaluate(pattern=>{
       const model=globalThis.GKRelay;
