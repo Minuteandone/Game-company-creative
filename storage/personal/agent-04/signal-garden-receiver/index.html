@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signal Garden — receiver toy (agent-04)</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --ink:#eef8ea; --dim:#8aa394; --panel:#13221e; --line:#29453b;
+    --glow:#a8ffce; --warn:#ffd486; --bg:#08110f;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; display:grid; place-items:center;
+    background:
+      radial-gradient(circle at 20% 10%, #17352c 0, transparent 38%),
+      radial-gradient(circle at 90% 80%, #172534 0, transparent 42%),
+      var(--bg);
+    color:var(--ink); font:16px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  main{width:min(900px,94vw); padding:28px 0 44px}
+  header{display:flex;gap:18px;align-items:end;justify-content:space-between;margin-bottom:14px}
+  h1{font-size:clamp(22px,5vw,44px);line-height:1;margin:0;letter-spacing:-.04em}
+  .eyebrow{color:var(--glow);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+  .card{background:color-mix(in srgb,var(--panel) 90%,transparent);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 80px #0008;overflow:hidden}
+  .scope{height:190px;position:relative;background:#07100e;border-bottom:1px solid var(--line)}
+  canvas{width:100%;height:100%;display:block}
+  .scope-label{position:absolute;top:12px;left:14px;color:var(--dim);font-size:12px}
+  .meter{padding:18px 20px;border-bottom:1px solid var(--line)}
+  .meter-top{display:flex;justify-content:space-between;gap:14px;align-items:center}
+  .meter strong{font-size:14px}
+  .percent{font-size:28px;color:var(--glow)}
+  .bar{height:10px;background:#07100e;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin-top:9px}
+  .fill{height:100%;width:0;background:linear-gradient(90deg,#527e68,var(--glow));transition:width .12s linear}
+  .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+  .control{background:var(--panel);padding:18px}
+  .control label{display:flex;justify-content:space-between;gap:12px;font-weight:700}
+  .readout{color:var(--glow)}
+  input[type=range]{width:100%;margin:18px 0 8px;accent-color:var(--glow)}
+  .hint{font-size:12px;color:var(--dim);min-height:34px}
+  .broadcast{padding:20px;min-height:170px}
+  .broadcast h2{font-size:13px;text-transform:uppercase;letter-spacing:.16em;color:var(--dim);margin:0 0 12px}
+  #message{font-family:Georgia,serif;font-size:clamp(19px,3vw,27px);line-height:1.45;margin:0;white-space:pre-wrap}
+  .scramble{color:#799184;text-shadow:0 0 8px #a8ffce33}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;padding:0 20px 20px}
+  button{appearance:none;border:1px solid #44695a;border-radius:999px;background:#102a21;color:var(--ink);padding:10px 15px;font:inherit;cursor:pointer}
+  button:hover,button:focus-visible{border-color:var(--glow);outline:none}
+  button.primary{background:var(--glow);color:#06110d;border-color:var(--glow);font-weight:800}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .choice{display:none;padding:0 20px 22px}
+  .choice.show{display:block}
+  .choice p{color:var(--warn)}
+  footer{color:var(--dim);font-size:12px;margin-top:12px}
+  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#596e63;margin-right:7px;box-shadow:0 0 0 transparent}
+  .status-dot.live{background:var(--glow);box-shadow:0 0 15px var(--glow)}
+  @media(max-width:680px){.controls{grid-template-columns:1fr}.scope{height:150px}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <div class="eyebrow">agent-04 mechanic test / disposable prototype</div>
+      <h1>Signal Garden: Receiver 04</h1>
+    </div>
+    <button id="audioBtn">power audio</button>
+  </header>
+
+  <section class="card" aria-label="strange signal receiver">
+    <div class="scope">
+      <canvas id="scope" width="900" height="190" aria-hidden="true"></canvas>
+      <div class="scope-label"><span id="dot" class="status-dot"></span>ARCHIPELAGO BAND / UNKNOWN ORIGIN</div>
+    </div>
+
+    <div class="meter">
+      <div class="meter-top">
+        <strong>COHERENCE</strong>
+        <span id="pct" class="percent">0%</span>
+      </div>
+      <div class="bar"><div id="fill" class="fill"></div></div>
+    </div>
+
+    <div class="controls">
+      <div class="control">
+        <label for="carrier">CARRIER <span id="carrierOut" class="readout">12</span></label>
+        <input id="carrier" type="range" min="0" max="100" value="12">
+        <div id="carrierHint" class="hint">the voice is buried below the band</div>
+      </div>
+      <div class="control">
+        <label for="pulse">PULSE <span id="pulseOut" class="readout">82</span></label>
+        <input id="pulse" type="range" min="0" max="100" value="82">
+        <div id="pulseHint" class="hint">the rhythm is running too fast</div>
+      </div>
+      <div class="control">
+        <label for="aperture">APERTURE <span id="apertureOut" class="readout">18</span></label>
+        <input id="aperture" type="range" min="0" max="100" value="18">
+        <div id="apertureHint" class="hint">too narrow; the edges are clipping</div>
+      </div>
+    </div>
+
+    <div class="broadcast">
+      <h2>decoded broadcast</h2>
+      <p id="message" class="scramble">••• / carrier absent / •••</p>
+    </div>
+
+    <div class="actions">
+      <button id="nudgeBtn">diagnostic ping</button>
+      <button id="resetBtn">lose the signal</button>
+      <button id="nextBtn" disabled>find another broadcast</button>
+    </div>
+
+    <div id="choice" class="choice">
+      <p>The tower is asking where to send the recovered message.</p>
+      <button data-route="harbor">retransmit toward the harbor</button>
+      <button data-route="hills">retransmit toward the hills</button>
+      <div id="consequence" class="hint" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <footer>
+    Goal: tune by sight, text cues, and optionally sound. No realistic radio knowledge required.
+  </footer>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const controls = ["carrier","pulse","aperture"];
+  const presets = [
+    {
+      target:{carrier:71,pulse:36,aperture:79},
+      fragments:[
+        "••• / wind / nine bells / •••",
+        "Weather station Nine to anyone still listening: the rain has begun falling upward.",
+        "Weather station Nine to anyone still listening: the rain has begun falling upward. Keep the blue flowers covered.",
+        "Weather station Nine to anyone still listening:\n\nThe rain has begun falling upward. Keep the blue flowers covered. Do not follow any gull that knows your name."
+      ]
+    },
+    {
+      target:{carrier:28,pulse:67,aperture:43},
+      fragments:[
+        "••• / kitchen light / return / •••",
+        "Mara, leave the kitchen light on. I can see the island again.",
+        "Mara, leave the kitchen light on. I can see the island again, but it is on the wrong side of the sea.",
+        "Mara, leave the kitchen light on.\n\nI can see the island again, but it is on the wrong side of the sea. I will come home when the tide remembers which way to go."
+      ]
+    },
+    {
+      target:{carrier:84,pulse:22,aperture:61},
+      fragments:[
+        "••• / ferry / passenger zero / •••",
+        "Attention ferry crews: do not collect a ticket from Passenger Zero.",
+        "Attention ferry crews: do not collect a ticket from Passenger Zero. There is no fare for a journey already taken.",
+        "Attention ferry crews:\n\nDo not collect a ticket from Passenger Zero. There is no fare for a journey already taken. If they thank you, dock at the next sunrise."
+      ]
+    }
+  ];
+
+  let presetIndex = 0;
+  let solved = false;
+  let audioOn = false;
+  let ctx, oscA, oscB, gainA, gainB, noise, noiseGain, filter;
+  const cvs = $("scope"), g = cvs.getContext("2d");
+
+  function scoreFor(key){
+    const v = +$(key).value, t = presets[presetIndex].target[key];
+    return Math.max(0, 1 - Math.abs(v-t)/55);
+  }
+  function coherence(){
+    const parts = controls.map(scoreFor);
+    return Math.pow(parts.reduce((a,b)=>a*b,1), 1/parts.length);
+  }
+  function direction(key){
+    const v=+$(key).value, t=presets[presetIndex].target[key], d=t-v;
+    if(Math.abs(d)<=3) return "locked";
+    const words={
+      carrier:d>0?"the voice is above this band":"the voice is below this band",
+      pulse:d>0?"the rhythm is dragging":"the rhythm is running too fast",
+      aperture:d>0?"too narrow; the edges are clipping":"too wide; static is flooding in"
+    };
+    return words[key];
+  }
+  function reveal(c){
+    const f=presets[presetIndex].fragments;
+    if(c>.965) return f[3];
+    if(c>.78) return f[2];
+    if(c>.56) return f[1];
+    if(c>.32) return f[0];
+    return "••• / carrier absent / •••";
+  }
+  function update(){
+    controls.forEach(k=>{
+      $(k+"Out").textContent=$(k).value.padStart(2,"0");
+      $(k+"Hint").textContent=direction(k);
+    });
+    const c=coherence();
+    const p=Math.round(c*100);
+    $("pct").textContent=p+"%";
+    $("fill").style.width=p+"%";
+    $("message").textContent=reveal(c);
+    $("message").classList.toggle("scramble", c<.78);
+    if(c>.965 && !solved){
+      solved=true;
+      $("choice").classList.add("show");
+      $("nextBtn").disabled=false;
+      $("dot").classList.add("live");
+    }
+    updateAudio(c);
+  }
+
+  function diagnostic(){
+    controls.forEach(k=>{
+      const s=scoreFor(k);
+      $(k+"Hint").textContent = s>.94 ? "ping: stable lock" : s>.72 ? "ping: close" : s>.45 ? "ping: drifting" : "ping: almost no match";
+    });
+    setTimeout(update,1100);
+  }
+
+  function scramble(){
+    solved=false;
+    $("choice").classList.remove("show");
+    $("consequence").textContent="";
+    $("nextBtn").disabled=true;
+    $("dot").classList.remove("live");
+    controls.forEach((k,i)=>{
+      const t=presets[presetIndex].target[k];
+      let v=(t+38+(i*17))%101;
+      if(Math.abs(v-t)<22) v=(v+35)%101;
+      $(k).value=v;
+    });
+    update();
+  }
+
+  function next(){
+    presetIndex=(presetIndex+1)%presets.length;
+    scramble();
+  }
+
+  function route(which){
+    $("consequence").textContent = which==="harbor"
+      ? "A distant harbor beacon answers once. Somewhere, a foghorn changes its melody."
+      : "Three hilltop lights wake in sequence. The last one was not there before.";
+  }
+
+  function powerAudio(){
+    if(!audioOn){
+      ctx=new (window.AudioContext||window.webkitAudioContext)();
+      oscA=ctx.createOscillator(); oscB=ctx.createOscillator();
+      gainA=ctx.createGain(); gainB=ctx.createGain();
+      filter=ctx.createBiquadFilter();
+      noiseGain=ctx.createGain();
+      const buf=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate);
+      const data=buf.getChannelData(0);
+      for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*.45;
+      noise=ctx.createBufferSource(); noise.buffer=buf; noise.loop=true;
+      oscA.type="sine"; oscB.type="triangle";
+      gainA.gain.value=.045; gainB.gain.value=.03; noiseGain.gain.value=.02;
+      oscA.connect(gainA).connect(ctx.destination);
+      oscB.connect(gainB).connect(ctx.destination);
+      noise.connect(filter).connect(noiseGain).connect(ctx.destination);
+      oscA.start(); oscB.start(); noise.start();
+      audioOn=true; $("audioBtn").textContent="mute audio";
+      update();
+    }else{
+      const muted=gainA.gain.value>0;
+      gainA.gain.value=muted?0:.045;
+      gainB.gain.value=muted?0:.03;
+      noiseGain.gain.value=muted?0:.02;
+      $("audioBtn").textContent=muted?"unmute audio":"mute audio";
+    }
+  }
+
+  function updateAudio(c){
+    if(!audioOn || gainA.gain.value===0) return;
+    const cv=+$("carrier").value, pv=+$("pulse").value, av=+$("aperture").value;
+    const target=presets[presetIndex].target;
+    const now=ctx.currentTime;
+    const base=150 + target.carrier*2.8;
+    const detune=Math.abs(cv-target.carrier)*2.2;
+    oscA.frequency.setTargetAtTime(base,now,.03);
+    oscB.frequency.setTargetAtTime(base+detune+1,now,.03);
+    oscB.detune.setTargetAtTime((pv-target.pulse)*4,now,.03);
+    filter.type="lowpass";
+    filter.frequency.setTargetAtTime(500+av*35,now,.03);
+    noiseGain.gain.setTargetAtTime(.006+(1-c)*.055,now,.05);
+  }
+
+  function draw(t){
+    const w=cvs.width,h=cvs.height,c=coherence();
+    g.clearRect(0,0,w,h);
+    g.strokeStyle="#17372d"; g.lineWidth=1;
+    for(let x=0;x<w;x+=45){g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke()}
+    for(let y=0;y<h;y+=38){g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke()}
+    const err=(1-c);
+    g.beginPath();
+    for(let x=0;x<w;x++){
+      const wave=Math.sin(x*.035+t*.0024)*(22-err*6);
+      const beat=Math.sin(x*.006+t*.0011)*err*28;
+      const noise=Math.sin(x*.19+t*.013)*err*13;
+      const y=h/2+wave+beat+noise;
+      if(x===0) g.moveTo(x,y); else g.lineTo(x,y);
+    }
+    g.strokeStyle=c>.965?"#d7ffe7":"#a8ffce";
+    g.lineWidth=2; g.shadowBlur=14; g.shadowColor="#a8ffce"; g.stroke(); g.shadowBlur=0;
+    requestAnimationFrame(draw);
+  }
+
+  controls.forEach(k=>$(k).addEventListener("input",update));
+  $("nudgeBtn").addEventListener("click",diagnostic);
+  $("resetBtn").addEventListener("click",scramble);
+  $("nextBtn").addEventListener("click",next);
+  $("audioBtn").addEventListener("click",powerAudio);
+  document.querySelectorAll("[data-route]").forEach(b=>b.addEventListener("click",()=>route(b.dataset.route)));
+
+  scramble();
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
