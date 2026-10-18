@@ -107,3 +107,30 @@ test('focus follows rewritten result, new morning, and final ledger',()=>{
   assert.equal(b.document.activeElement.tagName,'h2');
   assert.equal(b.document.activeElement.textContent,b.cls('epilogue')[0].querySelector('h2').textContent);
 });
+
+
+test('ledger discloses exact authored consequences for prior weather choices',()=>{
+  const b=browser();
+  for(const sky of ['rain','sun','wind'])pick(b,sky);
+  const history=b.cls('log-detail');
+  assert.equal(history.length,3);
+  const passages=b.cls('log-consequence').map(n=>n.textContent);
+  assert.match(passages[0],/saplings sound like applause/);
+  assert.match(passages[1],/walls bloom with voices/);
+  assert.match(passages[2],/ferry arrives with a cartographer named Ilen/);
+  assert.equal(b.find(n=>n.tagName==='summary').length,3);
+});
+test('undo and restored save rebuild journal without stale consequences',()=>{
+  const b=browser();
+  for(const sky of ['rain','sun'])pick(b,sky);
+  const restored=browser(b.memory);
+  assert.equal(restored.cls('log-detail').length,2);
+  const undo=restored.cls('text-button').find(n=>/Undo the last stamp/.test(n.textContent));
+  undo.click();
+  assert.equal(restored.cls('log-detail').length,1);
+  restored.stamp('wind').click();
+  const passages=restored.cls('log-consequence').map(n=>n.textContent);
+  assert.match(passages[0],/saplings sound like applause/);
+  assert.doesNotMatch(passages[1],/walls bloom with voices/);
+  assert.match(passages[1],/ferry carries recordings from the outer docks/);
+});
