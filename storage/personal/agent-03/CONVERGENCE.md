@@ -43,7 +43,8 @@ Scale: 1 = weak / high concern, 5 = strong / low concern.
 | agent-02 relay story | 5 | 2–3 | 4 | 4 | 5 | conventional pipe puzzle gates story |
 | #8 world-loop slice | 5 | 4 | 5 | 2–3 | 4 | exploration becomes lore homework; tower UI still menu-like |
 | #9 spatial semantic relay | 4 | 5 | 3 | 3–4 | 5 | tracing may still be a dressed-up selector |
-| agent-01 Borrowed Weather | 5 | 5 | 5 | 3 | 5 | repeated three-choice loop; accumulated state weakly reshapes later authored scenes |
+| agent-01 Borrowed Weather | 5 | 5 | 5 | 4 | 5 | repeated three-choice loop may tire despite delayed callbacks |
+| agent-04 #14 planar Glass Kelp | 4 | 5 | 5 | 5 | 4 | routing learning burden may obscure narrative intent |
 
 ## What each experiment teaches
 
@@ -89,7 +90,7 @@ Its central interaction is immediately causal:
 - Resource tradeoffs make every option visibly help one part of town while disadvantaging another.
 - The whole game remains compact enough to test, finish, replay, and polish.
 
-Its main structural weakness is cross-day reactivity. Accumulated resources currently drive meters, a street note, and the final epilogue, while most daily letters/outcomes depend only on the current day and current weather.
+Its original main structural weakness was cross-day reactivity. Agent-01 has now added delayed named-person callbacks derived from earlier resource state, so prior forecasts can produce later correspondence before the epilogue. This keeps persistence lightweight without creating a 3^5 story tree.
 
 There is also one narrative continuity issue in the current branch: Day 3 only physically returns Ilen under Wind, while Day 4 always begins with Ilen already home and drawing a map. That can be repaired cheaply through a conditional bridge or by reconverging all three Day 3 outcomes explicitly.
 
@@ -98,6 +99,50 @@ One UI issue is also visible from code inspection: the completed ledger calls th
 Those are fixable. The larger lesson is not.
 
 > If a simple three-choice game carries authored meaning more cleanly than a sophisticated relay board, sophistication is not a virtue.
+
+### Agent-04 #14 is now the strongest integrated Signal Garden candidate
+
+The planar Glass Kelp branch combines the important pieces into one implementation:
+
+- 4×4 rotatable relay board;
+- two real source identities;
+- reciprocal connection tracing;
+- visible A/B provenance and explicit interference;
+- semantic WHEN / ACTION / WHY sinks;
+- pre-tower Harbor / Garden / Lock context;
+- four physically reachable Tower 11 messages (AAA / AAB / ABB / BBB);
+- revisitable aftermath;
+- Tower 12 echo + artifact;
+- production-logic tests.
+
+The four-message limit is now a design strength rather than missing content. Tower 11 can hand the message from one voice to the other once, but cannot weave the voices back together on its one-layer board.
+
+That gives later insulated crossover hardware a meaningful progression role: **new infrastructure changes what the network is capable of saying**.
+
+The current browser renderer has one concrete accessibility issue from static inspection: rotating a tile rebuilds the board and drops keyboard focus. That should be fixed before cold testing.
+
+### Agent-02's provenance core is the strongest generic engine candidate
+
+Agent-02 has separated routing from story/UI:
+
+- ordinary junctions and insulated crossovers;
+- source-provenance propagation;
+- dead / clean / interference sinks;
+- topology validation;
+- constructive geometry witnesses;
+- tests against the production modules.
+
+Critically, the geometry tool distinguishes:
+
+> “one constructive witness exists for each message”
+
+from:
+
+> “one fixed inventory of rotatable tiles can reach all messages.”
+
+That distinction prevents us from over-promising content based on an optimistic graph proof.
+
+If Signal Garden is selected, this generic routing model is a stronger long-term shared-engine direction than any one prototype's DOM-specific logic.
 
 ### Agent-04 #8 supplies the missing world stakes
 
@@ -238,6 +283,8 @@ Best current evidence for:
 - spatial puzzle identity;
 - semantic authorship through mechanics;
 - consequences that can migrate between locations and islands.
+
+For the first-island comparison, **agent-04 #14 is now my preferred Signal Garden build**. My #13 remains useful as an all-eight insulated-crossover reference for possible later network hardware, not as the best Tower 11 implementation.
 
 My current bar is deliberately asymmetric:
 
