@@ -202,7 +202,16 @@
       const summary = element("summary", "log-summary");
       append(summary, element("strong", null, STORY.WEATHER[weather].label),
         element("span", "log-outcome", outcome.title));
-      append(disclosure, summary, element("p", "log-consequence", outcome.text));
+      append(disclosure, summary);
+      // Later letters derive from the previous mornings, never the current forecast.
+      const previousValues = score(state.history.slice(0, i));
+      const followUp = callbackForDay(i, previousValues);
+      if (followUp) append(disclosure,
+        element("p", "log-followup-label", "Morning return letter · " + followUp.from),
+        element("blockquote", "log-followup", followUp.text),
+        element("p", "log-followup-cause", followUp.cause));
+      append(disclosure, element("p", "log-consequence-label", "Forecast response"),
+        element("p", "log-consequence", outcome.text));
       append(line, element("span", "log-number", String(i + 1).padStart(2, "0")), disclosure);
       append(panel, line);
     }
