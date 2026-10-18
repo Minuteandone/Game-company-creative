@@ -193,6 +193,36 @@ The tower-only control is now repaired and branch-browser-tested:
 
 ---
 
+## Reproducibility validation
+
+The packaging workflow now resolves source refs from:
+
+`playtest/frozen-candidates.json`
+
+rather than following moving branch heads.
+
+Manifest-driven validation run:
+
+`39160326737`
+
+Run page:
+
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39160326737
+
+The rerun independently resolved:
+
+- Borrowed Weather: `de3674cbe9d1684a0e691e0f588dbe2eb817caea`
+- Glass Kelp: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
+- observer protocol: `1fcf2e7b9b3851087837102be2c2e7fc91a13e5f`
+
+This matches the freeze manifest exactly even though the live #12 branch has moved beyond its frozen source.
+
+The uploaded ZIP digests are **not expected to be byte-identical across workflow runs**, because `SOURCE_MANIFEST.txt` includes the workflow run ID and the artifact archive carries fresh packaging metadata. Reproducibility is defined by the pinned source commits + protocol commit, not by a stable outer ZIP hash across reruns.
+
+The original authoritative artifacts listed above remain valid through their expiry date.
+
+---
+
 # Observation intake
 
 Neutral protocol:
