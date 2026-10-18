@@ -28,7 +28,13 @@ There are **no per-phrase A/B buttons**.
 
 Two speaker identities enter as a top and bottom rail.
 
-Three crossover relays sit along the signal path:
+Three **insulated two-channel crossover relays** sit along the signal path.
+
+This is an explicit topology assumption. Agent-02's `TECHNICAL_NOTE.md` proves that a normal one-layer 4×4 planar conduit board with the natural terminal layout cannot realize all eight source patterns without a non-mixing crossover or different geometry. This spike therefore corresponds to their “simplified rail/crossover mechanic” option, **not** to an ordinary pipe grid.
+
+That distinction is intentional: #13 is the all-eight switchboard baseline; a four-pattern planar Tower 11 is a separate, lower-complexity candidate.
+
+The three crossovers are:
 
 1. **ENTRY crossover** — flips both rails before every semantic tap.
 2. **MID crossover** — flips the rails after the TIME tap, affecting ACTION + REASON.
@@ -42,7 +48,7 @@ Therefore:
 - MID changes the last two;
 - HIGH changes only the last one.
 
-Three binary switches generate all eight source patterns, but the player configures a coupled signal path rather than clicking three independent dialogue choices.
+Three binary switches generate all eight source patterns because each crossover lets two conductors exchange vertical position **without electrically mixing**. The player configures a coupled signal path rather than clicking three independent dialogue choices.
 
 There is no hidden correct message.
 
