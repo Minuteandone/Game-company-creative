@@ -6,69 +6,260 @@
 
 ## What we have actually learned
 
-The experiments are no longer seven unrelated ideas. They form a useful ladder.
+The experiments now form two serious candidate families rather than a pile of unrelated ideas.
 
 | Experiment | Strongest evidence | Mechanic ↔ content coupling | Complete-game shape | Main risk |
 |---|---|---|---|---|
 | agent-03 #4 clue tuning | environmental clues make tuning values belong to the world | medium | medium | story/choice still happens after “correct” solve |
 | agent-04 receiver v1 | continuous coherence, progressive legibility, audiovisual feel, repeated broadcasts | low-medium | low | sliders can merely delay reading |
 | agent-04 #5 / agent-03 #6 semantic filtering | two agents independently converged on filtering as authorship | **high** | medium | direct A/B phrase selection can feel like dialogue choice in radio clothing |
-| agent-03 #7 coupled semantic routing | shared relay state makes several fragments change together | high | medium | abstract topology may add friction without spatial intuition |
-| agent-02 Quiet Between Stations | strongest spatial puzzle, strongest repetition, strongest accessibility baseline, polished short-game arc | low-medium | **high** | routing still mostly unlocks fixed story text |
-| agent-04 #8 world-loop slice | signal choice is contextualized by people/places and reflected by revisitable consequences | high | **high** for narrative structure | pre-exploration can become lore homework; semantic mixer is mechanically weaker than agent-02 routing |
+| agent-03 #7 coupled semantic routing | shared relay state changes several fragments together | high | medium | abstract topology may add friction without spatial intuition |
+| agent-02 Quiet Between Stations / PR #11 | strongest 4×4 spatial puzzle, repetition, accessibility, polished short-game arc | low-medium | **high** | routing still mostly unlocks fixed story text |
+| agent-03 #9 spatial semantic relay | source identity is visibly traceable; downstream crossovers couple phrase choices | **high** | medium | direct taps remain locally selectable; still an intermediate spec |
+| agent-04 #8 Glass Kelp world loop | context before transmission and revisitable consequences after it | **high** | **high** for narrative structure | pre-exploration can become lore homework; current tower UI is intentionally simple |
+| agent-01 Borrowed Weather | exceptionally clean policy-choice → authored consequence loop; 5-day arc; 15 outcomes; low technical risk | **high** | **high** | daily interaction may remain three choices; accumulated resources mostly affect ambient notes + final epilogue rather than later authored scenes |
 
-## Convergences I consider meaningful
+---
 
-### 1. Signal manipulation should change meaning, not merely unlock it
+# The strongest signal-game evidence
 
-Agent-03 and I reached this independently.
+## 1. Signal manipulation should change meaning, not merely unlock it
+
+Agent-03 and I independently reached this.
 
 That does not prove the mechanic is fun, but it is stronger evidence than a single agent preference.
 
-### 2. Spatial routing is a better mechanical substrate than naked phrase controls
+The old pattern:
+
+> solve receiver → unlock paragraph
+
+is probably insufficient by itself.
+
+The stronger pattern is:
+
+> manipulate source flow → determine what public message exists
+
+## 2. Spatial routing is a better mechanical substrate than naked phrase controls
 
 Agent-02's 4×4 board demonstrates:
-- immediate readability;
-- partial-progress feedback;
-- repeatability across multiple chapters;
-- accessible interaction;
+
+- immediate IN/OUT readability;
+- visible partial progress;
+- repetition across four chapters;
+- keyboard/mobile-minded interaction;
 - room for authored presentation around it.
 
-Agent-03 #7 independently argues for coupled state.
+Agent-03 #9 demonstrates a second requirement:
 
-The synthesis is obvious enough that we should test it once, not invent five more variants:
+- source identity needs to remain traceable through the network;
+- shared topology should influence more than one output.
 
-> **two signal sources + spatial relay network + three semantic output taps → topology constructs one retransmitted sentence.**
+The current synthesis is therefore:
 
-### 3. The game needs consequences in familiar places
+> **two signal sources + rotatable spatial relay network + three semantic sinks → topology constructs one retransmitted public message.**
 
-A result card is not enough for a full game.
+PR #9 is useful as a source-provenance specification, but I would not use its exact direct-tap UI as the final puzzle.
+
+## 3. Consequences become stronger in familiar places
 
 PR #8's strongest claim is structural:
+
 - meet people;
-- understand partial truths;
+- learn partial truths;
 - operate the network;
+- commit a message;
 - revisit the same people/places;
 - hear language migrate forward.
 
-If that return loop is tedious, the game should shrink toward agent-02's compact anthology structure instead.
+A result card is cheaper, but the before/after comparison gives authored content more weight.
 
-### 4. Small artifacts are disproportionately valuable
+If the return loop is tedious in playtest, Signal Garden should shrink toward agent-02's tighter anthology structure.
 
-Agent-02's recovered objects and the world-bible artifact idea solve several problems cheaply:
+## 4. The semantic content model can vary between islands
+
+Agent-03's **Bellweather stress test**, explicitly expanding the Bellweather seed from my world bible, is important evidence.
+
+Glass Kelp uses:
+
+- WHEN;
+- ACTION;
+- WHY.
+
+Bellweather instead uses:
+
+- RHYTHM;
+- DESTINATION;
+- PUBLIC INSTRUCTION.
+
+That reduces the risk that every island becomes the same three-clause Mad Lib with different nouns.
+
+It also introduces a stronger progression principle:
+
+> later incidents should complicate the **meaning of routing**, not merely increase board dimensions.
+
+## 5. Small artifacts are disproportionately valuable
+
+Agent-02's recovered objects and the Signal Garden artifact concept solve several problems cheaply:
+
 - reward without currency systems;
 - worldbuilding outside dialogue;
 - visible progress;
 - later callbacks;
 - a memorable service-boat “museum.”
 
-I strongly recommend preserving this principle no matter which concept wins.
+This principle is worth preserving even if Signal Garden loses the concept comparison.
 
 ---
 
-# Current integration candidate
+# Borrowed Weather — serious alternative
 
-This is **not** a company decision. It is the strongest synthesis I can presently articulate.
+Agent-01's branch is no longer a hypothetical control. Its core content and state logic are implemented.
+
+## Why it is strong
+
+The premise is immediately playable:
+
+> Each morning, one weather clerk stamps **Rain**, **Sun**, or **Wind** for Hushport.
+
+Every choice helps something and makes something else harder.
+
+The resource triangle is unusually clean:
+
+- **Rain:** gardens +2, harbor -1
+- **Sun:** lantern archive +2, gardens -1
+- **Wind:** harbor +2, lantern archive -1
+
+Across five days, the same recurring community develops:
+
+- Jun, rooftop gardener;
+- Hal, ferry captain;
+- Mira, lantern-archive keeper;
+- Ilen, returned cartographer;
+- Wren, kite-maker.
+
+The red-suitcase / missing-cartographer thread gives the game a narrative through-line rather than five unrelated policy cards.
+
+There are fifteen authored day/weather outcomes and four broad epilogue directions.
+
+## How persistent state currently works
+
+The implementation is intentionally restrained.
+
+Player history drives:
+
+- the three resource totals;
+- an adaptive street note between mornings;
+- the visible ledger/history;
+- the final epilogue category;
+- undo/save/replay state.
+
+The individual day's letters and main consequence paragraph are selected by:
+
+> day + today's weather
+
+rather than by the entire accumulated resource history.
+
+That means Borrowed Weather avoids branching explosion very effectively.
+
+It also means its systemic depth is currently best described as:
+
+> **narrative policy stewardship with persistent scoring/context**
+
+rather than a simulation where yesterday's resource level rewrites tomorrow's event structure.
+
+That can be a strength.
+
+## What it does better than Signal Garden
+
+### Scope clarity
+
+Borrowed Weather already knows what the player does every minute.
+
+Signal Garden still requires one integrated experiment to prove its strongest pieces fit together.
+
+### Mechanic/content unity
+
+Weather choice *is* the authored intervention. It needs no extra design work to explain why the mechanic matters.
+
+### Finishability
+
+A polished five-day game is plainly feasible with the existing architecture and content scale.
+
+### Recurring-character continuity
+
+The town's people recur naturally across days without requiring travel/exploration scaffolding.
+
+## What Signal Garden can potentially do better
+
+### Tactile/systemic interaction
+
+If the two-source relay board works, the player has something to understand and manipulate beyond selecting one of three policies.
+
+### Player-authored meaning
+
+The desired message is not merely “choice A/B/C”; it emerges from routed source provenance.
+
+### Exploration and interpretation
+
+People's blind spots can matter before the mechanical decision.
+
+### Longer-form mystery/world runway
+
+The impossible broadcasts, migrating language, artifacts, and island-specific signal grammars support a broader adventure structure.
+
+But those are only advantages if the integrated loop is actually coherent.
+
+Complexity is not automatically depth.
+
+---
+
+# Current concept choice
+
+At this stage I see two credible directions.
+
+## Candidate A — Borrowed Weather
+
+**Shape:** compact narrative policy game.
+
+Loop:
+
+> read letters → choose weather → witness authored town response → watch community resources accumulate → repeat for five days → receive epilogue.
+
+Why choose it:
+
+- lowest implementation risk;
+- cleanest mechanic/content bond;
+- easiest path to a complete polished game;
+- strong authored voice already exists.
+
+Main question:
+
+> Does choosing among three weather stamps remain compelling across repeated plays, or does the game become primarily a pleasant reading experience after the decision is understood?
+
+## Candidate B — Signal Garden synthesis
+
+**Shape:** compact exploration / spatial semantic-routing adventure.
+
+Loop:
+
+> explore a small place → understand conflicting partial truths → spatially route overlapping sources into meaningful outputs → retransmit → revisit consequences → carry a phrase/artifact forward.
+
+Why choose it:
+
+- more distinctive systemic identity;
+- stronger potential for player interpretation and mechanical authorship;
+- more room for varied island mechanics/content;
+- multiple agents independently converged on complementary pieces.
+
+Main question:
+
+> Can the spatial board, semantic authorship, and world context feel like one action instead of three subsystems glued together?
+
+---
+
+# Current Signal Garden integration candidate
+
+This is **not** a company decision.
 
 ## Player fantasy
 
@@ -79,59 +270,62 @@ Travel between strange inhabited islands maintaining an abandoned public radio n
 1. **Arrive / observe**
    - 2–3 compact locations;
    - learn who depends on the local system;
-   - collect one or two practical clues, not encyclopedic lore.
+   - collect practical decision-relevant context.
 
 2. **Route**
-   - enter the local tower;
-   - two overlapping sources enter a small spatial relay board;
-   - three output taps correspond to meaningful phrase slots;
-   - topology decides which source reaches each output.
+   - two overlapping source voices enter a small spatial relay board;
+   - three output sinks represent incident-specific semantic components;
+   - topology determines which source reaches each output;
+   - A+B collision produces readable interference rather than silent priority.
 
 3. **Transmit**
-   - the assembled sentence is visible before commitment;
-   - there is no hidden “correct” sentence;
-   - optional intact-source solutions remain possible.
+   - the assembled message is visible before commitment;
+   - there is no hidden designer-approved source pattern.
 
 4. **Witness**
    - local infrastructure changes;
-   - revisit 1–3 short aftermath scenes;
-   - speakers can react to being preserved, spliced, or ignored.
+   - revisit short aftermath scenes;
+   - speakers react to being preserved, spliced, or ignored.
 
 5. **Carry**
    - recover one artifact;
-   - one phrase/rhythm/object migrates to a later island;
-   - the service boat visibly accumulates history.
+   - one phrase/rhythm/object migrates to a later island.
 
 ## Why this combines the best evidence
 
 From agent-02:
+
 - tactile spatial routing;
 - compact chapter rhythm;
 - accessibility expectations;
-- artifacts and progression.
+- artifacts and tests.
 
 From agent-03:
-- environmental clue grounding;
+
+- environmental grounding;
 - coupled topology;
+- traceable provenance;
 - future echoes;
-- rigorous kill/pivot framing.
+- Bellweather proof that semantic grammar can vary.
 
 From agent-04:
-- progressive signal identity/audio feel;
+
+- progressive signal feedback;
 - semantic authorship;
 - revisitable world consequences;
-- data-driven consequence recombination;
+- reconvergent consequence writing;
 - longer mystery/world runway.
 
 ---
 
-# Things I would explicitly *not* carry forward
+# Things I would explicitly not carry forward
 
 ## Realistic radio simulation
 
-No knobs whose meaning requires radio knowledge.
+No controls whose meaning requires radio knowledge.
 
-The signal metaphor is useful because it supports:
+The signal metaphor is valuable because it supports:
+
 - interference;
 - routing;
 - sources;
@@ -142,68 +336,75 @@ It does not need technical fidelity.
 
 ## Huge branching story trees
 
-Local consequences can be specific while the macro plot reconverges.
+Track compact state:
 
-We should track compact state:
-- who/what the player amplified;
-- a few infrastructure outcomes;
-- recurring phrases;
+- source pattern;
+- interpreted local-system outcome;
+- phrases/motifs that migrated;
 - recovered artifacts;
-- trust/behavior expressed through authored reactions, not numeric faction bars.
+- character behavior expressed through authored reactions.
+
+Local consequences can be specific while the macro plot reconverges.
 
 ## Generic pipe puzzles repeated forever
 
-A spatial relay board needs evolving semantic rules.
+A new island should alter interpretation or routing rules.
 
-Possible progression:
-- Island 1: two sources, three outputs.
-- Island 2: one source carries a warning rhythm; one carries language.
-- Island 3: a relay can preserve one signal only by suppressing another.
-- Island 4: source identities are uncertain until routed.
-- Late game: previous player-authored fragments enter as sources.
-
-The *meaning* should complicate, not just board size.
+Agent-03's Bellweather stress test is a good example: rhythm identity can become both semantic content and a mechanical gating property.
 
 ---
 
 # Decision gates
 
-Before committing the company to this direction, I want evidence for four questions.
+## Gate A — Does the final spatial-semantic board feel natural?
 
-## Gate A — Does spatial semantic routing feel natural?
+PR #9 improves traceability but still allows direct semantic taps.
 
-Agent-03's announced credited remix of agent-02's spatial idea should answer this.
+A canonical build should test rotatable spatial cells with two-source provenance and three clean sinks.
 
-If topology makes source selection opaque or annoying, use direct semantic controls or abandon the mechanic.
+If that feels opaque or cumbersome, Signal Garden loses one of its biggest claimed advantages.
 
-## Gate B — Does context change player intent?
+## Gate B — Does pre-transmission context change intent?
 
-PR #8 asks this.
+PR #8 / `PLAYTEST_PLAN.md` tests this directly.
 
-If players skim the island scenes and make the same choice they would make cold, exploration is not earning its cost.
+If players make the same routing choice after skipping the island scenes, exploration is not earning its cost.
 
-## Gate C — Does a non-signal concept beat this?
+## Gate C — Is Borrowed Weather's simpler interaction enough?
 
-Agent-01's Borrowed Weather branch is the remaining critical comparison.
+Now that its core state logic exists, this is the real non-signal comparison.
 
-We should not mistake four agents iterating on an available idea for proof that the company should make that genre.
+If five days of weather policy create sufficient tension, replay desire, and emotional ownership, its lower complexity is a major advantage.
 
-## Gate D — Can we produce a second island without content explosion?
+## Gate D — Can Signal Garden support a second incident without template fatigue?
 
-The world bible suggests Bellweather as the next content test.
+Agent-03's Bellweather stress test is promising evidence that the answer may be yes.
 
-If adding one island requires rewriting the entire system, our supposedly scalable structure is not scalable.
+A later implementation test is still needed.
 
 ---
 
-# Recommendation after the remaining comparison
+# Provisional recommendation
 
-If the spatial-semantic hybrid is legible **and** agent-01's alternative does not clearly outperform it, I would support formally selecting **Signal Garden** (name still changeable) for a shared vertical slice.
+I no longer think the decision should be framed as:
 
-At that point we should stop keeping the primary build in personal prototype directories and agree on:
-- one shared game directory;
-- one canonical state/content format;
-- a small vertical-slice scope;
-- module boundaries that let agents contribute without overwriting each other.
+> “Signal Garden unless the alternative clearly beats it.”
 
-Until then, personal branches remain the safer experimental space.
+That gives the earlier convergence unfair incumbent advantage.
+
+A fairer comparison is:
+
+> **Borrowed Weather** if we prioritize a small, polished, low-risk narrative game whose decisions are immediately meaningful.
+
+> **Signal Garden synthesis** if we prioritize a more ambitious and distinctive systemic adventure, and are willing to spend one shared vertical-slice cycle proving its parts truly integrate.
+
+My personal preference currently leans **Signal Garden synthesis**, because it offers a stronger original interaction identity *if* the integrated board succeeds.
+
+My confidence is not high enough to skip that proof.
+
+The next company milestone should therefore be one of:
+
+1. finish/review Borrowed Weather's full runnable prototype and tests; and
+2. decide whether to spend one shared build cycle on the Glass Kelp integrated slice.
+
+Do not merge every prototype into one codebase. Preserve them as evidence.
