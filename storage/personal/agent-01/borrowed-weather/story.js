@@ -48,15 +48,14 @@
     },
     {
       title: "A map of ordinary miracles",
-      intro: "Ilen begins drawing a map of Hushport. Instead of roads, they mark the places where somebody made room for somebody else.",
+      intro: "A map of Hushport begins circulating. Instead of roads, it marks the places where somebody made room for somebody else. No one agrees who drew the first line.",
       letters: [
-        { from: "Ilen • returned cartographer", text: "Maps usually show how to get somewhere. Mine will show why anybody would want to." },
         { from: "Wren • kite-maker", text: "If you lend us wind, I can fly notes above the harbor. Every house could see a message meant for them." }
       ],
       outcomes: {
-        rain: { title: "The map grows roots", text: "Jun turns the rooftop paths into a public garden. Ilen draws tiny green constellations where strangers have shared umbrellas." },
-        sun: { title: "The map glows", text: "Mira projects Ilen's map on the archive wall. For the first time, the town sees itself from the inside, outlined in ordinary kindnesses." },
-        wind: { title: "A sky full of handwriting", text: "Wren's kites cross the inlet carrying notes in every color. Ilen draws their strings as roads that did not exist yesterday." }
+        rain: { title: "The map grows roots", text: "Jun turns the rooftop paths into a public garden. The map fills with tiny green constellations where strangers have shared umbrellas." },
+        sun: { title: "The map glows", text: "Mira projects the town's map on the archive wall. For the first time, the town sees itself from the inside, outlined in ordinary kindnesses." },
+        wind: { title: "A sky full of handwriting", text: "Wren's kites cross the inlet carrying notes in every color. Their strings become roads on a map that keeps changing." }
       }
     },
     {
@@ -74,9 +73,24 @@
       }
     }
   ]);
+  // Day four responds to whether Ilen physically returned on day three.
+  const DAY4_ENTRIES = Object.freeze({
+    rain: {
+      intro: "The ferry has not brought Ilen home. Jun begins a map anyway, drawing the places where somebody made room for somebody else.",
+      letter: { from: "Jun • rooftop gardener", text: "I drew a little map on a seed packet. It doesn't show roads. It shows every door I can knock on when somebody needs help." }
+    },
+    sun: {
+      intro: "Mira finds an unfinished map behind an old lantern recording. The handwriting may belong to Ilen, still waiting across the inlet.",
+      letter: { from: "Mira • keeper of the lanterns", text: "I think the map has room for everybody's story, even the people who haven't found their way back yet." }
+    },
+    wind: {
+      intro: "Ilen is home. The returned cartographer begins drawing a map of Hushport, marking favors and reunions instead of roads.",
+      letter: { from: "Ilen • returned cartographer", text: "Maps usually show how to get somewhere. Mine will show why anybody would want to." }
+    }
+  });
   const EPILOGUES = Object.freeze({
     balanced: { title: "A forecast made of neighbors", text: "The garden, harbor, and archive endure together. Hushport stops asking for perfect weather. Instead, people begin asking which neighbors need help carrying tomorrow." },
-    gardens: { title: "The city with roots in its roof", text: "Jun's pear trees grow above the chimneys. Even on dry days, neighbors pass buckets from door to door. Ilen marks every new garden on the map." },
+    gardens: { title: "The city with roots in its roof", text: "Jun's pear trees grow above the chimneys. Even on dry days, neighbors pass buckets from door to door. Neighbors mark every new garden on the town map." },
     harbor: { title: "The city that learned to arrive", text: "The ferries keep the inlet stitched together. People return, parcels find their owners, and an empty chair at the harbor table becomes a local tradition." },
     lanterns: { title: "The city of borrowed voices", text: "Mira opens the archive after sunset. People bring their memories and borrow one another's light. The old stories stop being locked behind glass." }
   });
@@ -92,8 +106,8 @@
       high: { from: "Hal • three mornings later", text: "One of the travelers finally crossed. They carried a letter for Mira: a voice she thought was lost still remembers the way home." }
     },
     lanterns: {
-      low: { from: "Mira • four mornings later", text: "The glass was too dim to play the recording, so I sat with Ilen and wrote the old song down from memory. It belongs to us even without light." },
-      high: { from: "Mira • four mornings later", text: "An archive lantern played the red-suitcase song before Ilen even asked. Hal stopped on the archive steps to listen beside them." }
+      low: { from: "Mira • four mornings later", text: "The glass was too dim to play the recording, so I sat with Jun and wrote the old song down from memory. It belongs to us even without light." },
+      high: { from: "Mira • four mornings later", text: "An archive lantern played the red-suitcase song. Hal stopped on the archive steps to listen beside Mira." }
     },
     festival: {
       gardens: { from: "Jun • preparing the festival", text: "The rooftop beds need extra hands, so I am bringing empty pots to the quay. People can take a cutting and help the garden grow tomorrow." },
@@ -101,5 +115,5 @@
       lanterns: { from: "Mira • preparing the festival", text: "The archive cannot carry every voice tonight. I have asked everyone to bring one story they can tell aloud; we will keep the circle open." }
     }
   });
-  global.BW_STORY = Object.freeze({ WEATHER, DAYS, EPILOGUES, CALLBACKS });
+  global.BW_STORY = Object.freeze({ WEATHER, DAYS, DAY4_ENTRIES, EPILOGUES, CALLBACKS });
 })(globalThis);
