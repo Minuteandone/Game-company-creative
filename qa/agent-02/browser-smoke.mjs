@@ -138,6 +138,53 @@ await withPage("glass-kelp",glass,async({page,check})=>{
   await check("Restart restores visible keyboard focus",()=>focusIs(page,"scene-title"));
 });
 
+// Each supported first-island source pattern must survive the COMPLETE browser path.
+// The towerOnly mode omits pre-context solely to reduce automated repetition.
+for(const pattern of ["AAA","ABB","BBB"]){
+  await withPage("glass-kelp-"+pattern,glass+"?towerOnly=1",async({page,check})=>{
+    await check("Tower-only control starts at live switchboard",async()=>{
+      return (await page.locator("#phase-label").textContent())?.trim()==="routing" &&
+        await isVisible(page,"#tower-panel");
+    });
+    const fixture=await page.evaluate(pattern=>{
+      const model=globalThis.GKRelay;
+      return {start:[...model.PUZZLE_START],end:[...model.SOLUTION_FIXTURES[pattern]]};
+    },pattern);
+    for(let cell=0;cell<16;cell++){
+      const turns=(fixture.end[cell]-fixture.start[cell]+4)%4;
+      for(let i=0;i<turns;i++)
+        await page.locator('.relay-tile[data-cell="'+cell+'"]').click();
+    }
+    await check("Fully routed "+pattern+" is transmit-ready",async()=>{
+      return await isEnabled(page,"#transmit-button") &&
+        (await page.locator("#pattern-note").textContent())?.includes(pattern);
+    });
+    await check("Preview exactly matches authored "+pattern+" sentence",async()=>{
+      const wanted=await page.evaluate(p=>globalThis.GKContent.sentenceFor(p),pattern);
+      return (await page.locator("#assembled-sentence").textContent())?.trim()===wanted;
+    });
+    await page.locator("#transmit-button").click();
+    for(const place of ["harbor","garden","lock"]){
+      await page.locator('.place-button[data-place="'+place+'"]').click();
+      await check(pattern+" consequence shown at "+place,async()=>{
+        const expected=await page.evaluate(([location,p])=>globalThis.GKContent.afterScene(location,p).title,[place,pattern]);
+        return (await page.locator("#scene-title").textContent())?.trim()===expected;
+      });
+    }
+    await page.locator("#tower-button").click();
+    await check(pattern+" has its own echo",async()=>{
+      const expected=await page.evaluate(p=>globalThis.GKContent.ECHOES[p].title,pattern);
+      return await isVisible(page,"#echo-panel") &&
+        (await page.locator("#echo-title").textContent())?.trim()===expected;
+    });
+    await check(pattern+" has specific benefit and strain",async()=>{
+      const expected=await page.evaluate(p=>globalThis.GKContent.IMPACTS[p],pattern);
+      return (await page.locator("#impact-benefit").textContent())?.trim()===expected.benefit &&
+        (await page.locator("#impact-strain").textContent())?.trim()===expected.strain;
+    });
+  });
+}
+
 await withPage("glass-kelp",glass,async({page,check})=>{
   await check("Mobile landing area readable",()=>isVisible(page,"#scene-title"));
   await check("Tower initially locked on mobile",async()=>!(await isEnabled(page,"#tower-button")));
