@@ -139,22 +139,21 @@ await withPage("glass-kelp",glass,async({page,check})=>{
 });
 
 // Each supported first-island source pattern must survive the COMPLETE browser path.
-// The towerOnly mode omits pre-context solely to reduce automated repetition.
+// All patterns use the normal full-context route to verify actual integration.
 for(const pattern of ["AAA","ABB","BBB"]){
-  await withPage("glass-kelp-"+pattern,glass+"?towerOnly=1",async({page,check})=>{
-    await check("Tower-only control starts at live switchboard",async()=>{
-      const phase=(await page.locator("#phase-label").textContent())?.trim();
-      const visible=await isVisible(page,"#tower-panel");
-      const diagnostics=await page.evaluate(()=>({
-        href:location.href,
-        query:location.search,
-        towerHidden:document.querySelector("#tower-panel")?.hidden,
-        sceneHidden:document.querySelector("#scene-panel")?.hidden,
-        scriptLoaded:!!globalThis.GKRelay && !!globalThis.GKContent
-      }));
-      if(phase!=="tower-only control" || !visible)
-        throw new Error("Tower-only entry failed: "+JSON.stringify({phase,visible,diagnostics}));
-      return true;
+  await withPage("glass-kelp-"+pattern,glass,async({page,check})=>{
+    await check("Additional pattern begins with ordinary arrival",async()=>{
+      return (await page.locator("#phase-label").textContent())?.trim()==="context" &&
+        !(await isEnabled(page,"#tower-button"));
+    });
+    // These are COMPLETE game paths. Do not depend on towerOnly's intentionally
+    // withheld-context controls or its known disabled-after-commit bug.
+    for(const place of ["harbor","garden","lock"])
+      await page.locator('.place-button[data-place="'+place+'"]').click();
+    await page.locator("#tower-button").click();
+    await check("Three places unlock the switchboard",async()=>{
+      return await isVisible(page,"#tower-panel") &&
+        await page.locator(".relay-tile").count()===16;
     });
     const fixture=await page.evaluate(pattern=>{
       const model=globalThis.GKRelay;
