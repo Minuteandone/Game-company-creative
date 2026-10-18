@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071517">
+  <meta name="description" content="Signal Garden: Glass Kelp Island integrated vertical-slice experiment.">
+  <title>Signal Garden — Glass Kelp Island</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="relay.js"></script>
+  <script defer src="content.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="sea-haze" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="hero">
+      <p class="eyebrow">agent-04 integrated evidence build / Tower 11</p>
+      <h1>Signal Garden</h1>
+      <p class="lede">Two people are speaking through the same dead public network. Walk Glass Kelp Island first. Then decide what its old switchboard is physically capable of saying.</p>
+      <div class="status-row">
+        <span class="pill">phase <strong id="phase-label">context</strong></span>
+        <span class="pill">places <strong id="visit-label">0 / 3</strong></span>
+        <span class="pill">tower <strong id="tower-label">locked</strong></span>
+      </div>
+    </header>
+
+    <div id="transmission-banner" class="banner" hidden></div>
+
+    <main class="workspace">
+      <nav class="island-map panel" aria-label="Glass Kelp Island locations">
+        <p class="eyebrow">Glass Kelp Island</p>
+        <h2>Field route</h2>
+
+        <button class="place-button" data-place="harbor" type="button">
+          <span class="place-name">⚓ Harbor <span id="mark-harbor" class="mark"></span></span>
+          <span class="place-sub">tide gauge · ferries · Mara</span>
+        </button>
+
+        <button class="place-button" data-place="garden" type="button">
+          <span class="place-name">⌂ Glass Garden <span id="mark-garden" class="mark"></span></span>
+          <span class="place-sub">root beds · Keeper Iona</span>
+        </button>
+
+        <button class="place-button" data-place="lock" type="button">
+          <span class="place-name">▤ North Lock <span id="mark-lock" class="mark"></span></span>
+          <span class="place-sub">pressure room · Operator Orren</span>
+        </button>
+
+        <button id="tower-button" class="place-button tower-button" data-place="tower" type="button" disabled>
+          <span class="place-name">⌁ Tower 11 <span id="mark-tower" class="mark"></span></span>
+          <span id="tower-sub" class="place-sub">visit all three locations first</span>
+        </button>
+
+        <div class="map-note">
+          <strong>No reputation meter.</strong>
+          <span>The useful information is in what each person can and cannot see.</span>
+        </div>
+      </nav>
+
+      <section id="scene-panel" class="scene panel" aria-live="polite">
+        <div class="scene-visual">
+          <p id="scene-eyebrow" class="eyebrow">arrival / service path</p>
+          <h2 id="scene-title">The island is listening.</h2>
+        </div>
+        <div class="scene-copy">
+          <div id="scene-text">
+            <p>Three short paths leave Tower 11. Nobody agrees on what the tower should repeat, only that it has started receiving voices again.</p>
+            <p>Visit the Harbor, Glass Garden, and North Lock before touching the receiver.</p>
+          </div>
+          <blockquote id="scene-quote">“If the tower is going to speak for us, it should at least know where we live.” — handwritten note on the service gate</blockquote>
+          <div id="scene-fact" class="decision-fact">The tower unlocks after you gather local context.</div>
+          <p id="scene-next" class="scene-next">Choose a location from the field route.</p>
+        </div>
+      </section>
+
+      <section id="tower-panel" class="tower panel" hidden>
+        <header class="tower-header">
+          <div>
+            <p class="eyebrow">Tower 11 / one-layer municipal switchboard</p>
+            <h2>Route the voices</h2>
+          </div>
+          <div class="move-counter"><span id="move-count">0</span> rotations</div>
+        </header>
+
+        <div class="source-cards">
+          <article class="source-card source-a">
+            <span class="source-id">A</span>
+            <div>
+              <strong>Iona Vale · Garden Keeper</strong>
+              <p>“At dusk / open / so the garden can drink.”</p>
+            </div>
+          </article>
+          <article class="source-card source-b">
+            <span class="source-id">B</span>
+            <div>
+              <strong>Orren Pike · Reservoir Operator</strong>
+              <p>“Before sunrise / seal / or the garden will drown.”</p>
+            </div>
+          </article>
+        </div>
+
+        <p class="tower-instruction">
+          Rotate tiles clockwise. A path only conducts when neighboring ports face each other.
+          A and B may branch, but if they join the same component they interfere. Tower 11's planar board can splice from A to B once; it cannot weave back.
+        </p>
+
+        <div class="relay-stage">
+          <div class="input-labels" aria-hidden="true">
+            <span class="input-a">A IN</span>
+            <span class="input-b">B IN</span>
+          </div>
+
+          <div id="relay-grid" class="relay-grid" aria-label="4 by 4 rotatable relay board"></div>
+
+          <div class="sink-stack" aria-label="Semantic outputs">
+            <article id="sink-when" class="sink-card">
+              <span class="sink-label">WHEN</span>
+              <strong class="sink-source">unresolved</strong>
+              <p class="sink-fragment">—</p>
+            </article>
+            <article id="sink-action" class="sink-card">
+              <span class="sink-label">ACTION</span>
+              <strong class="sink-source">unresolved</strong>
+              <p class="sink-fragment">—</p>
+            </article>
+            <article id="sink-why" class="sink-card">
+              <span class="sink-label">WHY</span>
+              <strong class="sink-source">unresolved</strong>
+              <p class="sink-fragment">—</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="sentence-panel">
+          <p class="eyebrow">what the island will hear</p>
+          <p id="assembled-sentence" class="assembled-sentence">Three clear outputs are required before Tower 11 can retransmit.</p>
+          <p id="pattern-note" class="pattern-note">There is no hidden correct message.</p>
+        </div>
+
+        <div class="tower-actions">
+          <button id="reset-board" class="secondary-button" type="button">Reset switchboard</button>
+          <button id="leave-tower" class="secondary-button" type="button">Return to island</button>
+          <button id="transmit-button" class="primary-button" type="button" disabled>Retransmit assembled message</button>
+        </div>
+
+        <div class="operator-note">
+          <strong>Operator note:</strong>
+          <span id="operator-hint">Colored tiles show source provenance. Unlit tiles are disconnected; striped static means both voices have collided.</span>
+        </div>
+      </section>
+    </main>
+
+    <section id="echo-panel" class="echo-panel panel" hidden aria-live="polite">
+      <p class="eyebrow">tomorrow / Tower 12 echo</p>
+      <h2 id="echo-title"></h2>
+      <p id="echo-text"></p>
+      <blockquote id="echo-line"></blockquote>
+
+      <article class="artifact-card">
+        <div class="artifact-icon" aria-hidden="true">⌇</div>
+        <div>
+          <p class="eyebrow">recovered object</p>
+          <h3 id="artifact-name"></h3>
+          <p id="artifact-before"></p>
+          <p id="artifact-after" class="artifact-change"></p>
+        </div>
+      </article>
+
+      <div class="echo-actions">
+        <button id="restart-button" class="secondary-button" type="button">Restart Glass Kelp Island</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Disposable integration proof · no external assets or network calls</span>
+      <span>Any clean reachable message may be committed.</span>
+    </footer>
+
+    <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  </div>
+</body>
+</html>
