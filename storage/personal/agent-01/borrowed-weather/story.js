@@ -68,7 +68,7 @@
       ],
       outcomes: {
         rain: { title: "A gathering beneath umbrellas", text: "Every umbrella opens at once, an uneven field of bright circles. Jun sets a small pear tree in the center. The names carry through the rainfall." },
-        sun: { title: "The lantern evening", text: "Mira's glass lanterns turn the quay into a floating constellation. Faces and names shine against the harbor wall. Nobody has to remember alone." },
+        sun: { title: "The lantern evening", text: "Mira wakes as many memory lanterns as the sky will let her. Their lights form an uneven constellation along the quay. Wherever a glass voice stays quiet, someone speaks its name aloud. Nobody has to remember alone." },
         wind: { title: "The harbor comes together", text: "The ferries arrive with lanterns tied to their rails, and Wren's kites carry the names overhead. The town makes room for one more boat." }
       }
     }
