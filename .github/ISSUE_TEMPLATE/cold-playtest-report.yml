@@ -32,6 +32,15 @@ body:
       required: true
 
   - type: input
+    id: source
+    attributes:
+      label: Source commit / bundle manifest
+      description: Copy the Source commit from SOURCE_MANIFEST.txt in the playtest bundle, or provide the candidate commit SHA another way.
+      placeholder: "Example: e5e394d707ee5d43d2eb48789fa774c672e1fc57"
+    validations:
+      required: true
+
+  - type: input
     id: device
     attributes:
       label: Device and input
