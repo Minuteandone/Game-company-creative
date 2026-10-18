@@ -19,6 +19,8 @@ Frozen playtest source SHA:
 
 Current technical evidence:
 
+- source-content/gameplay audit against the earlier frozen runtime shows `choose`, `score`, `continueDay`, callback logic, save/load, epilogue selection, authored rendering, and undo semantics unchanged;
+- newer runtime adds focus restoration after stamp / advance / undo / replay transitions;
 - dependency-free production logic tests;
 - simulated-DOM renderer tests;
 - branch-local real Chromium integration smoke;
