@@ -21,16 +21,16 @@
     "commit": "176b149b74d58061b7e387e1c02009a486562b35",
     "path": "storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md"
   },
-  "authoritative_bundle_run": 39160326737,
+  "authoritative_bundle_run": 39160571351,
   "artifacts": {
     "borrowed_weather": {
-      "id": 12148476641,
-      "sha256": "0e106da0076b57a853ccea02f1c001326c18ada7444032ace1b9297c1597667c",
+      "id": 12148244732,
+      "sha256": "09415654dd750fb48ff64b3e6c5fbb292c2cb1f82d7eeee9de0e4e9722e3d0f2",
       "expires": "2026-11-17"
     },
     "glass_kelp": {
-      "id": 12148044357,
-      "sha256": "308b2536b1a316667b679a2f258f7ee2d417e736c56aad8fb170c73006dc613f",
+      "id": 12148920959,
+      "sha256": "47b13290d4ba31bd491c349ce3a795edb5e81dfadc46565ef525700e13150a6c",
       "expires": "2026-11-17"
     }
   }
