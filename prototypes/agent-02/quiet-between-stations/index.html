@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1022">
+  <meta name="description" content="An original short story told through a playable signal-routing puzzle.">
+  <title>The Quiet Between Stations — agent-02 prototype</title>
+  <style>
+    :root{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eff7ff;background:#0a1020;--accent:#7df8d6;--warm:#ffd58b;--muted:#a7b7cb}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -25%,#31446c 0,transparent 52%),radial-gradient(ellipse at 5% 95%,#173b4d 0,transparent 42%),#0a1020;line-height:1.5}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.15;background-image:radial-gradient(#c7f1ff 1px,transparent 1px);background-size:29px 31px;mask-image:linear-gradient(#000,transparent 88%)}
+    button{font:inherit;cursor:pointer}
+    button:focus-visible{outline:3px solid var(--warm);outline-offset:4px}
+    button:disabled{cursor:default}
+    a{color:var(--accent)}
+    .shell{max-width:1150px;margin:0 auto;padding:25px clamp(16px,4vw,48px) 42px;position:relative}
+    .masthead{display:flex;justify-content:space-between;align-items:start;gap:18px;margin:0 0 26px}
+    .eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:800}
+    h1{font-size:clamp(2rem,5vw,4rem);line-height:1.06;letter-spacing:-.045em;margin:6px 0 10px;font-weight:850}
+    .sub{color:var(--muted);max-width:54ch;margin:0;font-size:.95rem}
+    .sound{background:#17233a;border:1px solid #42577b;color:#e4eeff;border-radius:999px;padding:9px 14px;white-space:nowrap;font-size:.81rem}
+    .sound:hover{background:#263656}
+    .layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(270px,.8fr);gap:18px;align-items:start}
+    .panel{background:linear-gradient(145deg,rgba(24,36,62,.95),rgba(13,22,40,.97));border:1px solid #35455f;border-radius:25px;box-shadow:0 18px 60px #03070e66}
+    .board-panel{padding:clamp(17px,3vw,28px)}
+    .panel-top{display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .chapter-number{font-size:.76rem;color:var(--warm);font-weight:800;letter-spacing:.15em}
+    .turns{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.79rem}
+    h2{font-size:clamp(1.35rem,3vw,1.85rem);letter-spacing:-.02em;margin:9px 0 7px}
+    .instruction{font-size:.86rem;color:var(--muted);margin:0 0 16px}
+    .port-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.73rem;color:#cad8e9;margin:0 0 16px}
+    .port-legend span:before{content:"";width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;background:var(--warm)}
+    .port-legend span:last-child:before{background:var(--accent)}
+    .board-frame{border-radius:20px;background:#0b162c;border:1px solid #354962;padding:12px;box-shadow:inset 0 6px 22px #0005}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;max-width:520px;margin:auto}
+    .tile{position:relative;aspect-ratio:1;min-width:0;border:1px solid #3a5272;border-radius:13px;background:#192640;color:#6b8aab;padding:4px;display:grid;place-items:center;transition:background .14s,border-color .14s,transform .12s}
+    .tile:hover:not(:disabled){background:#294163;transform:translateY(-1px)}
+    .tile svg{display:block;width:100%;height:100%;overflow:visible}
+    .tile path{stroke:currentColor;stroke-width:14;stroke-linecap:round;fill:none}
+    .tile circle{fill:currentColor}
+    .tile.powered{background:#153d48;border-color:#4fd5b8;color:var(--accent);box-shadow:0 0 16px #65ebc122}
+    .tile.source{border-color:var(--warm)}
+    .tile.sink{border-color:#ffac94}
+    .port-marker{position:absolute;top:3px;left:5px;font-weight:900;font-size:clamp(.45rem,1.15vw,.65rem);letter-spacing:.03em;color:var(--warm);z-index:1}
+    .tile.sink .port-marker{color:#ffbba8}
+    .status{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:16px;font-size:.84rem;color:#dbe8fa}
+    .pill{display:inline-block;border:1px solid #466080;border-radius:999px;padding:5px 10px;color:#b9d3e5;font-size:.72rem}
+    .pill.complete{color:#103528;background:var(--accent);border-color:var(--accent);font-weight:800}
+    .controls{display:flex;justify-content:space-between;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap}
+    .secondary{background:transparent;border:1px solid #506681;border-radius:10px;padding:9px 12px;color:#d3e4f7;font-size:.83rem}
+    .secondary:hover{background:#263650}
+    .controls small{font-size:.73rem;color:var(--muted)}
+    .story-panel{padding:clamp(18px,3vw,28px)}
+    .station{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--warm)}
+    .broadcast{padding:17px 0 20px;min-height:180px}
+    .signal-heading{font-size:.76rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin:13px 0 5px}
+    .signal-body{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.1rem,2.1vw,1.36rem);line-height:1.65;margin:7px 0 0;color:#e6eefb}
+    .signal-body.dormant{color:#8ea5b9;font-style:italic}
+    .voice{color:#bcd3e6;font-size:.81rem;margin:5px 0}
+    .reveal{border-top:1px solid #3b4e65;padding-top:18px;animation:appear .4s ease}
+    .reveal[hidden],.endings[hidden]{display:none}
+    .artifact{font-size:.8rem;color:var(--warm);margin:7px 0 17px}
+    .primary{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);border:1px solid var(--accent);color:#092b2b;border-radius:11px;padding:12px 16px;font-weight:850;line-height:1.25}
+    .primary:hover{filter:brightness(1.08)}
+    .next{width:100%}
+    .progress{border-top:1px solid #3b4e65;margin-top:23px;padding-top:17px}
+    .progress h3{font-size:.7rem;letter-spacing:.17em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+    .log{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .log-node{background:#172841;border-radius:9px;text-align:center;color:#90a7c0;font-size:.71rem;padding:8px 2px;border:1px solid #3c4b60}
+    .log-node.current{border-color:var(--warm);color:var(--warm)}
+    .log-node.done{background:#155044;border-color:var(--accent);color:#baffec}
+    .endings{animation:appear .4s ease}
+    .endings h3{font-size:1.25rem;letter-spacing:-.025em}
+    .endings p{font-family:Georgia,serif;line-height:1.7;color:#e3edfb}
+    .ending-buttons{display:grid;gap:10px;margin-top:16px}
+    .ending-buttons button{background:#253b59;border:1px solid #607596;border-radius:12px;color:#f2f6ff;padding:12px;text-align:left}
+    .ending-buttons button:hover{border-color:var(--accent);background:#315073}
+    .footer{color:#8da4bb;text-align:center;font-size:.75rem;margin:24px auto 0;max-width:80ch}
+    @keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.masthead{flex-wrap:wrap}.grid{gap:6px}.board-frame{padding:9px}.story-panel{min-height:0}.broadcast{min-height:unset}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">A playable short story · agent-02 concept lab</div>
+        <h1>The Quiet<br>Between Stations<span aria-hidden="true"> ✦</span></h1>
+        <p class="sub">At 00:13, the lights went out. The old relay board still works. Four strangers are trying to reach one another.</p>
+      </div>
+      <button id="sound" class="sound" type="button" aria-pressed="false">♫ Sound off</button>
+    </header>
+
+    <div class="layout">
+      <section class="panel board-panel" aria-labelledby="puzzle-title">
+        <div class="panel-top">
+          <span id="chapter-number" class="chapter-number">CIRCUIT 01 / 04</span>
+          <span id="turns" class="turns">0 rotations</span>
+        </div>
+        <h2 id="puzzle-title">Initializing relay…</h2>
+        <p class="instruction">Rotate nodes with a click, tap, Enter, or Space. Adjacent wire ends must meet. Carry the signal from <strong>IN</strong> to <strong>OUT</strong>.</p>
+        <div class="port-legend"><span>IN = incoming signal</span><span>OUT = listening station</span></div>
+        <div class="board-frame"><div id="board" class="grid" role="group" aria-label="4 by 4 rotatable relay board"></div></div>
+        <div class="status" role="status" aria-live="polite" aria-atomic="true">
+          <span id="status-text">Searching for a signal…</span>
+          <span id="network" class="pill">0 / 16 connected</span>
+        </div>
+        <div class="controls">
+          <button id="reset" type="button" class="secondary">↺ Reset this circuit</button>
+          <small>No timer. No move limit. Just listen.</small>
+        </div>
+      </section>
+
+      <aside class="panel story-panel" aria-label="Transmission and story">
+        <div id="station" class="station">DISTRICT: UNKNOWN</div>
+        <div class="broadcast">
+          <div id="signal-heading" class="signal-heading">NO CARRIER</div>
+          <p id="signal-body" class="signal-body dormant">A faint voice is waiting beyond the static.</p>
+          <p id="voice" class="voice"></p>
+        </div>
+        <div id="reveal" class="reveal" hidden>
+          <div id="artifact" class="artifact"></div>
+          <button id="next" class="primary next" type="button">Tune next station →</button>
+        </div>
+        <div id="endings" class="endings" hidden>
+          <h3>Four voices. One remaining switch.</h3>
+          <p>The city's emergency transmitter has enough charge for one final action. Which future should these messages enter?</p>
+          <div class="ending-buttons">
+            <button type="button" id="air">📡 Broadcast the stories to every rooftop</button>
+            <button type="button" id="archive">🗃️ Preserve the stories for tomorrow</button>
+          </div>
+        </div>
+        <div class="progress">
+          <h3>Recovered transmissions</h3>
+          <div id="log" class="log" aria-label="Four story chapters"></div>
+        </div>
+      </aside>
+    </div>
+    <p class="footer">An original, dependency-free mechanics study by agent-02 (AI agent). This prototype is a proposal, not the company's agreed game. Everything works offline in one HTML file.</p>
+  </main>
+
+  <script>
+    "use strict";
+    const chapters = [
+      {
+        title:"Bells for Nobody",
+        district:"BELLWARD · 00:13",
+        clue:"Someone keeps striking an old warning bell. No alarms have been scheduled.",
+        voice:"Niko — bellkeeper, northern platform",
+        message:"“At first I rang the bell to find out who was still awake. The power cut my answer short. Then seven windows opened, one after another. I have never heard a louder silence.”",
+        artifact:"RECOVERED: A bell rope tied in seven little knots.",
+        path:[0,1,2,6,10,11,15], sourcePort:3, sinkPort:2
+      },
+      {
+        title:"The Ticket Machine",
+        district:"GLASS MARKET · 00:28",
+        clue:"A disused ticket kiosk is sending botanical codes.",
+        voice:"Oru — gardener, glass market",
+        message:"“We planted beans where tickets used to print. Tonight the machine tried to issue me a fare. Destination: SPRING. I put the paper under a pot so the sprouts would know where to go.”",
+        artifact:"RECOVERED: A ticket stamped with a hand-drawn leaf.",
+        path:[3,7,6,5,9,13,14,15], sourcePort:0, sinkPort:1
+      },
+      {
+        title:"The Last Tram",
+        district:"LOW CANAL · 01:02",
+        clue:"An empty passenger tram is still reporting arrivals.",
+        voice:"Fara — driver, route zero",
+        message:"“The timetable says CANCELLED. But the bakery still has tea for the nurses, and the nurses still have blankets for the dock crew. Nobody buys a ticket. I keep arriving anyway.”",
+        artifact:"RECOVERED: A paper route map with no stops crossed out.",
+        path:[12,8,4,5,6,2,3], sourcePort:3, sinkPort:0
+      },
+      {
+        title:"A Different Kind of Grid",
+        district:"CENTRAL ARCHIVE · 01:19",
+        clue:"The blackout report has been overwritten by an unauthorized poem.",
+        voice:"Arlo — municipal archivist",
+        message:"“They ask me which parts of our infrastructure survived. I could list the substations, but from the rooftop I can see hundreds of hands holding doors open. Our finest network never needed a wire.”",
+        artifact:"RECOVERED: A maintenance report with every number replaced by a name.",
+        path:[0,4,8,9,5,1,2,6,10,11,15], sourcePort:0, sinkPort:2
+      }
+    ];
+
+    const directionNames=["north","east","south","west"];
+    const offsets=[-4,1,4,-1];
+    const vectorEnds=[[50,7],[93,50],[50,93],[7,50]];
+    const decoys=[[0,2],[0,1],[0,1,2],[1,3],[1,2],[0,2,3]];
+    const $=id=>document.getElementById(id);
+    const state={chapter:0,tiles:[],turns:0,solved:false,sound:false,completed:0,finished:false,audio:null};
+
+    function direction(a,b){
+      if(b===a-4)return 0;
+      if(b===a+1&&Math.floor(a/4)===Math.floor(b/4))return 1;
+      if(b===a+4)return 2;
+      if(b===a-1&&Math.floor(a/4)===Math.floor(b/4))return 3;
+      throw new Error("The chapter route contains a non-adjacent step: "+a+" -> "+b);
+    }
+    function neighbor(i,d){
+      const next=i+offsets[d];
+      if(next<0||next>=16)return -1;
+      if((d===1||d===3)&&Math.floor(i/4)!==Math.floor(next/4))return -1;
+      return next;
+    }
+    function ports(i){const t=state.tiles[i];return t.base.map(d=>(d+t.rotation)%4);}
+    function network(){
+      const c=chapters[state.chapter],source=c.path[0],target=c.path[c.path.length-1];
+      const reached=new Set();
+      if(!ports(source).includes(c.sourcePort))return {reached,connected:false};
+      reached.add(source);
+      const queue=[source];
+      for(let q=0;q<queue.length;q++){
+        const i=queue[q];
+        for(const d of ports(i)){
+          const n=neighbor(i,d);
+          if(n===-1||reached.has(n)||!ports(n).includes((d+2)%4))continue;
+          reached.add(n);queue.push(n);
+        }
+      }
+      return {reached,connected:reached.has(target)&&ports(target).includes(c.sinkPort)};
+    }
+    function buildTiles(){
+      const c=chapters[state.chapter];
+      state.tiles=Array.from({length:16},(_,i)=>({
+        base:decoys[(i*3+state.chapter+i%4)%decoys.length].slice(),
+        rotation:(i*7+state.chapter*3+1)%4
+      }));
+      c.path.forEach((cell,i)=>{
+        const incoming=i===0?c.sourcePort:direction(cell,c.path[i-1]);
+        const outgoing=i===c.path.length-1?c.sinkPort:direction(cell,c.path[i+1]);
+        state.tiles[cell]={base:[incoming,outgoing],rotation:(cell*7+state.chapter*5+1)%4};
+      });
+      // A generated board must not accidentally begin in its winning state.
+      if(network().connected)state.tiles[c.path[0]].rotation=(state.tiles[c.path[0]].rotation+1)%4;
+    }
+    function playNote(frequency){
+      if(!state.sound)return;
+      try{
+        const Context=window.AudioContext||window.webkitAudioContext;
+        if(!Context)return;
+        state.audio=state.audio||new Context();
+        if(state.audio.state==="suspended")state.audio.resume();
+        const o=state.audio.createOscillator(),g=state.audio.createGain();
+        const start=state.audio.currentTime;
+        o.type="sine";o.frequency.setValueAtTime(frequency,start);
+        g.gain.setValueAtTime(.025,start);g.gain.exponentialRampToValueAtTime(.001,start+.13);
+        o.connect(g);g.connect(state.audio.destination);o.start(start);o.stop(start+.14);
+      }catch(_error){/* Audio is entirely optional. */}
+    }
+    function drawBoard(focusIndex){
+      const c=chapters[state.chapter],net=network();
+      const fragment=document.createDocumentFragment();
+      state.tiles.forEach((_tile,i)=>{
+        const button=document.createElement("button");
+        button.type="button";
+        button.className="tile"+(net.reached.has(i)?" powered":"")+
+          (i===c.path[0]?" source":"")+
+          (i===c.path[c.path.length-1]?" sink":"");
+        button.disabled=state.solved;
+        button.setAttribute("aria-label","Row "+(Math.floor(i/4)+1)+", column "+(i%4+1)+
+          (i===c.path[0]?", input":i===c.path[c.path.length-1]?", output":"")+
+          ". Relay with "+ports(i).map(d=>directionNames[d]).join(" and ")+" connections. Rotate clockwise.");
+        const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+        svg.setAttribute("viewBox","0 0 100 100");
+        svg.setAttribute("aria-hidden","true");
+        ports(i).forEach(d=>{
+          const line=document.createElementNS("http://www.w3.org/2000/svg","path");
+          line.setAttribute("d","M 50 50 L "+vectorEnds[d][0]+" "+vectorEnds[d][1]);
+          svg.appendChild(line);
+        });
+        const center=document.createElementNS("http://www.w3.org/2000/svg","circle");
+        center.setAttribute("cx","50");center.setAttribute("cy","50");center.setAttribute("r","9");
+        svg.appendChild(center);button.appendChild(svg);
+        if(i===c.path[0]||i===c.path[c.path.length-1]){
+          const marker=document.createElement("span");
+          marker.className="port-marker";
+          marker.textContent=i===c.path[0]?"IN":"OUT";
+          button.appendChild(marker);
+        }
+        button.addEventListener("click",()=>rotate(i));
+        fragment.appendChild(button);
+      });
+      $("board").replaceChildren(fragment);
+      if(Number.isInteger(focusIndex)&&!state.solved)$("board").children[focusIndex].focus();
+      $("network").textContent=net.reached.size+" / 16 energized";
+      $("network").classList.toggle("complete",net.connected);
+      $("status-text").textContent=net.connected?"Signal acquired. A voice comes through.":net.reached.size?
+        "Signal reaches "+net.reached.size+" relay node"+(net.reached.size===1?"":"s")+".":"Turn the IN node to admit a signal.";
+      return net.connected;
+    }
+    function drawLog(){
+      $("log").replaceChildren();
+      chapters.forEach((_chapter,i)=>{
+        const cell=document.createElement("div");
+        cell.className="log-node"+(i<state.completed?" done":i===state.chapter&&!state.finished?" current":"");
+        cell.textContent=i<state.completed?"✓ "+(i+1):"0"+(i+1);
+        cell.setAttribute("aria-label","Transmission "+(i+1)+(i<state.completed?" recovered":i===state.chapter&&!state.finished?" current":" locked"));
+        $("log").appendChild(cell);
+      });
+    }
+    function rotate(index){
+      if(state.solved||state.finished)return;
+      state.tiles[index].rotation=(state.tiles[index].rotation+1)%4;
+      state.turns++;
+      $("turns").textContent=state.turns+" rotation"+(state.turns===1?"":"s");
+      playNote(210+(index%4)*46+(Math.floor(index/4))*19);
+      if(drawBoard(index))completeChapter();
+    }
+    function completeChapter(){
+      state.solved=true;state.completed=Math.max(state.completed,state.chapter+1);
+      const c=chapters[state.chapter];
+      $("signal-heading").textContent="TRANSMISSION RECOVERED";
+      $("signal-body").textContent=c.message;
+      $("signal-body").classList.remove("dormant");
+      $("voice").textContent=c.voice;
+      $("artifact").textContent=c.artifact;
+      $("reveal").hidden=false;
+      $("next").textContent=state.chapter===chapters.length-1?"Finish the final transmission →":"Tune next station →";
+      $("status-text").textContent="Connection established. "+c.voice+" is speaking.";
+      drawLog();drawBoard();
+      playNote(660);
+      $("next").focus();
+    }
+    function openChapter(index){
+      state.chapter=index;state.solved=false;state.turns=0;
+      const c=chapters[index];
+      $("chapter-number").textContent="CIRCUIT 0"+(index+1)+" / 0"+chapters.length;
+      $("puzzle-title").textContent=c.title;
+      $("station").textContent=c.district;
+      $("signal-heading").textContent="SIGNAL LOST";
+      $("signal-body").textContent=c.clue;
+      $("signal-body").classList.add("dormant");
+      $("voice").textContent="Unknown caller · Attempting to reconnect";
+      $("turns").textContent="0 rotations";
+      $("reveal").hidden=true;$("endings").hidden=true;
+      buildTiles();drawBoard();drawLog();
+    }
+    function ending(which){
+      if(state.finished)return;
+      state.finished=true;
+      $("endings").replaceChildren();
+      const heading=document.createElement("h3");
+      const p=document.createElement("p");
+      const restart=document.createElement("button");
+      restart.type="button";restart.className="primary next";restart.textContent="↺ Hear the city again";
+      if(which==="air"){
+        heading.textContent="ENDING: THE ANSWERING CITY";
+        p.textContent="Arlo opens the transmitter. Across the rooftops, people hear about the bell, the impossible ticket, the tram, and the open doors. Lights do not return tonight. Answers do. One window at a time, the city begins talking back.";
+      }else{
+        heading.textContent="ENDING: THE MEMORY VAULT";
+        p.textContent="Arlo saves four recordings in the city's oldest archive. By morning, the power company will call the outage a failure. But the archive will hold another record: seven open windows, one sprouting ticket, a tram full of tea, and a thousand uncounted acts of care.";
+      }
+      restart.addEventListener("click",()=>{
+        state.finished=false;state.completed=0;
+        openChapter(0);$("puzzle-title").focus();
+      });
+      $("endings").append(heading,p,restart);
+      $("reveal").hidden=true;$("endings").hidden=false;
+      $("station").textContent="CITYWIDE · DAWN";
+      $("signal-heading").textContent="ALL FREQUENCIES CLEAR";
+      $("signal-body").textContent="Four people reached one another because you kept the relays alive.";
+      $("voice").textContent="A complete short story · Thank you for listening.";
+      drawLog();heading.setAttribute("tabindex","-1");heading.focus();
+    }
+    $("reset").addEventListener("click",()=>{
+      if(state.finished)return;
+      state.turns=0;state.solved=false;
+      $("turns").textContent="0 rotations";
+      $("reveal").hidden=true;
+      if(state.completed===state.chapter+1)state.completed=state.chapter;
+      const c=chapters[state.chapter];
+      $("signal-heading").textContent="SIGNAL LOST";
+      $("signal-body").textContent=c.clue;
+      $("signal-body").classList.add("dormant");
+      $("voice").textContent="Unknown caller · Attempting to reconnect";
+      buildTiles();drawBoard();drawLog();$("board").children[0].focus();
+    });
+    $("next").addEventListener("click",()=>{
+      if(!state.solved)return;
+      if(state.chapter===chapters.length-1){
+        $("reveal").hidden=true;$("endings").hidden=false;
+        $("endings").querySelector("h3").focus?.();
+        $("air").focus();return;
+      }
+      openChapter(state.chapter+1);
+      $("board").children[0].focus();
+    });
+    $("air").addEventListener("click",()=>ending("air"));
+    $("archive").addEventListener("click",()=>ending("archive"));
+    $("sound").addEventListener("click",()=>{
+      state.sound=!state.sound;
+      $("sound").textContent=state.sound?"♫ Sound on":"♫ Sound off";
+      $("sound").setAttribute("aria-pressed",String(state.sound));
+      playNote(440);
+    });
+    openChapter(0);
+  </script>
+</body>
+</html>
