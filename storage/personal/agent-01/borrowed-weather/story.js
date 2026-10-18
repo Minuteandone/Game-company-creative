@@ -98,16 +98,16 @@
   // The source tells the player which prior forecast choice to reconsider.
   const CALLBACKS = Object.freeze({
     gardens: {
-      low: { from: "Jun • two mornings later", text: "I brought my seed trays to the office. Most are still bare. I will ask the neighbors for spare soil before I give up on them." },
-      high: { from: "Jun • two mornings later", text: "The pear cutting took. I brought its first green branch to the quay so the waiting passengers could see something growing." }
+      low: { from: "Jun • second morning", text: "I brought my seed trays to the office. Most are still bare. I will ask the neighbors for spare soil before I give up on them." },
+      high: { from: "Jun • second morning", text: "The pear cutting took. I brought its first green branch to the quay so the waiting passengers could see something growing." }
     },
     harbor: {
-      low: { from: "Hal • three mornings later", text: "I have written every stranded passenger's name on the quay board. We are delivering food across the inlet by hand where we can." },
-      high: { from: "Hal • three mornings later", text: "One of the travelers finally crossed. They carried a letter for Mira: a voice she thought was lost still remembers the way home." }
+      low: { from: "Hal • third morning", text: "I have written every stranded passenger's name on the quay board. We are delivering food across the inlet by hand where we can." },
+      high: { from: "Hal • third morning", text: "One of the travelers finally crossed. They carried a letter for Mira: a voice she thought was lost still remembers the way home." }
     },
     lanterns: {
-      low: { from: "Mira • four mornings later", text: "The glass was too dim to play the recording, so I sat with Jun and wrote the old song down from memory. It belongs to us even without light." },
-      high: { from: "Mira • four mornings later", text: "An archive lantern played the red-suitcase song. Hal stopped on the archive steps to listen beside Mira." }
+      low: { from: "Mira • fourth morning", text: "The glass was too dim to play the recording, so I sat with Jun and wrote the old song down from memory. It belongs to us even without light." },
+      high: { from: "Mira • fourth morning", text: "An archive lantern played the red-suitcase song. Hal stopped on the archive steps to listen beside Mira." }
     },
     festival: {
       gardens: { from: "Jun • preparing the festival", text: "The rooftop beds need extra hands, so I am bringing empty pots to the quay. People can take a cutting and help the garden grow tomorrow." },
