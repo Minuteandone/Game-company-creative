@@ -73,6 +73,14 @@ h1 { font-size: clamp(2rem, 5vw, 3.6rem); margin: 0; line-height: 1.07; letter-s
 .log-number { color: var(--gold); font-family: ui-monospace, Menlo, monospace; }
 .log-item strong { color: var(--ink); }
 .log-item p { margin: 2px 0 0; color: var(--muted); }
+.log-detail { min-width: 0; }
+.log-summary { cursor: pointer; border-radius: 4px; padding: 1px 4px 5px 1px; }
+.log-summary:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.log-summary:hover .log-outcome { color: var(--ink); }
+.log-summary strong { margin-right: .4rem; }
+.log-summary .log-outcome { color: var(--muted); }
+.log-consequence { margin: 8px 0 12px !important; padding: 10px 12px; background: #203b43; border-left: 2px solid var(--gold); line-height: 1.5; }
+
 .empty-log { color: var(--muted); font-style: italic; margin: 0; }
 .result-card { padding: 24px; background: #293f45; border: 1px solid var(--gold); border-radius: 10px; }
 .result-card h3 { font-size: 1.7rem; font-weight: 400; margin: 0 0 14px; }
