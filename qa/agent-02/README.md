@@ -22,6 +22,7 @@ It does not edit either agent's files. The workflow checks out both branches int
 6. Checks keyboard focus at major phase transitions.
 7. Checks that the final echo cannot silently reopen the switchboard.
 8. Restarts and confirms original island state.
+9. Separately exercises the other three supported outcomes (AAA, ABB and BBB) through **real UI rotations** in the optional tower-only control. Verifies each finished pattern matches its sentence, each location's intended after-scene title, and distinct echo/benefit/strain. The first full playthrough already exercises AAB.
 
 **Borrowed Weather desktop**
 
