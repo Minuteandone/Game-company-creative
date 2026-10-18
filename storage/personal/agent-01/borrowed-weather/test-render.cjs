@@ -1,0 +1,79 @@
+// Dependency-free smoke tests for the actual Borrowed Weather browser renderer.
+// Usage: node --test test-render.cjs
+const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const story=fs.readFileSync(path.join(__dirname,'story.js'),'utf8');
+const game=fs.readFileSync(path.join(__dirname,'game.js'),'utf8');
+function browser(previousStorage){
+  const memory=previousStorage || new Map();
+  function node(tag){
+    return {
+      tagName:tag,className:'',textContent:'',dataset:{},attributes:{},style:{},children:[],listeners:{},
+      appendChild(child){this.children.push(child);return child},
+      replaceChildren(...items){this.children=[...items]},
+      addEventListener(event,fn){this.listeners[event]=fn},
+      setAttribute(key,value){this.attributes[key]=value},
+      click(){assert.ok(this.listeners.click,'missing click event on '+this.tagName);this.listeners.click()}
+    };
+  }
+  const ids=Object.fromEntries(['game-root','day-ticket','announcer','reset-button'].map(id=>[id,node('div')]));
+  const document={getElementById:id=>ids[id],createElement:node};
+  const storage={getItem:key=>memory.get(key)||null,setItem:(key,value)=>memory.set(key,value)};
+  const context=vm.createContext({document,localStorage:storage,confirm:()=>true});
+  vm.runInContext(story,context,{filename:'story.js'});
+  vm.runInContext(game,context,{filename:'game.js'});
+  const find=(predicate,parent=ids['game-root'])=>{
+    const result=[];
+    (function visit(n){if(predicate(n))result.push(n);n.children.forEach(visit)})(parent);
+    return result;
+  };
+  const cls=c=>find(n=>n.className.split(' ').includes(c));
+  const stamp=w=>cls('stamp').find(n=>n.dataset.weather===w);
+  const next=()=>cls('primary-button').find(n=>/Open the next morning|Read the closing ledger/.test(n.textContent));
+  return {ids,memory,find,cls,stamp,next,core:context.BorrowedWeatherCore};
+}
+function pick(b,w){const btn=b.stamp(w);assert.ok(btn,'weather stamp '+w+' missing');btn.click();assert.ok(b.cls('result-card').length);const n=b.next();assert.ok(n);n.click();}
+test('five-day renderer has no inert sixth stamp after ending',()=>{
+  const b=browser();
+  for(const w of ['rain','wind','sun','rain','wind'])pick(b,w);
+  assert.equal(b.ids['day-ticket'].textContent,'LEDGER COMPLETE');
+  assert.equal(b.stamp('rain'),undefined);
+  assert.equal(b.stamp('sun'),undefined);
+  assert.equal(b.stamp('wind'),undefined);
+  assert.equal(b.cls('epilogue').length,1);
+  assert.equal(b.cls('log-item').length,5);
+});
+test('Day 4 incoming letter reflects whether the Day 3 ferry returned Ilen',()=>{
+  for(const [sky,person] of [['rain','Jun'],['sun','Mira'],['wind','Ilen']]){
+    const b=browser();
+    for(const w of ['rain','sun',sky])pick(b,w);
+    const from=b.cls('from').map(n=>n.textContent).join(' | ');
+    assert.match(from,new RegExp(person));
+    if(sky!=='wind')assert.doesNotMatch(from,/Ilen • returned cartographer/);
+    else assert.match(from,/Ilen • returned cartographer/);
+  }
+});
+test('undo from finished ledger restores stamps and next choice',()=>{
+  const b=browser();
+  for(const w of ['wind','wind','wind','wind','wind'])pick(b,w);
+  assert.equal(b.stamp('rain'),undefined);
+  const undo=b.cls('text-button').find(n=>/Undo the last stamp/.test(n.textContent));
+  assert.ok(undo);undo.click();
+  assert.ok(b.stamp('rain'));
+  assert.equal(b.cls('epilogue').length,0);
+  pick(b,'sun');
+  assert.equal(b.cls('epilogue').length,1);
+});
+test('save/reload preserves both current day and result-screen phase',()=>{
+  let b=browser();
+  b.stamp('rain').click();
+  let restored=browser(b.memory);
+  assert.ok(restored.cls('result-card').length);
+  restored.next().click();
+  const dayTwo=browser(b.memory);
+  assert.match(dayTwo.ids['day-ticket'].textContent,/DAY 02/);
+  assert.ok(dayTwo.stamp('wind'));
+});
