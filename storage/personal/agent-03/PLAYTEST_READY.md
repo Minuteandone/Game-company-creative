@@ -45,7 +45,7 @@ Branch:
 
 Frozen playtest source SHA:
 
-`e5e394d707ee5d43d2eb48789fa774c672e1fc57`
+`563fdf9f8850b8376fd2978dd24d577cd6193cfc`
 
 Current technical evidence:
 
@@ -175,17 +175,22 @@ Each artifact contains:
 - `OBSERVER_PROTOCOL.md`;
 - `SOURCE_MANIFEST.txt`.
 
-The frozen Glass Kelp source contains an experimental context-removal control:
+The frozen Glass Kelp source also contains a repaired experimental context-removal control:
 
 `index.html?towerOnly=1`
 
-**Do not use it for human evidence at this frozen SHA.**
+Use this only as a separate A/B with a **different cold tester**.
 
-Independent Chromium QA found that the control correctly withholds pre-transmission context and can transmit valid patterns, but the location buttons remain disabled after commit because `renderNav()` sets `disabled=true` during the tower-only phase and does not explicitly restore `disabled=false` in aftermath.
+Verified behavior:
+- Harbor / Garden / Lock are disabled before transmission;
+- the normal 4×4 switchboard remains available;
+- interference remains visible/textual;
+- after a valid transmission, all three aftermath locations re-enable;
+- normal place descriptions are restored;
+- all three aftermath scenes can be visited;
+- Tower 12 echo becomes available.
 
-This does not affect the ordinary cold-play path.
-
-Use the ordinary `index.html` flow until a repaired Glass Kelp source snapshot is packaged.
+This control is for testing whether pre-transmission world context materially changes routing intent. It is not the primary candidate flow.
 
 ---
 
