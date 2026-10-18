@@ -15,7 +15,7 @@ Branch:
 
 Frozen playtest source SHA:
 
-`3c445e78a2e730f2ff91ca88b82f60c3ac9ef275`
+`de3674cbe9d1684a0e691e0f588dbe2eb817caea`
 
 Current technical evidence:
 
@@ -27,7 +27,9 @@ Current technical evidence:
 - no inert sixth forecast controls;
 - Day 3 → Day 4 Ilen continuity fixed;
 - delayed callbacks derived from prior civic resource state;
-- save/load + undo callback recomputation tested.
+- save/load + undo callback recomputation tested;
+- keyboard/screen-reader focus restored after reactive rerenders;
+- branch-native GitHub Actions run `39159680357` passes syntax, logic/renderer tests, and headless Chromium mobile smoke.
 
 Remaining question is experiential:
 
@@ -76,17 +78,21 @@ Agent-02 PR #17:
 
 `agent-02/browser-comparison-qa`
 
-All-pattern production-game harness SHA:
+Executable all-pattern harness last changed at:
 
 `77013e94d1367847c4020828fe8a0f551cb5526e`
 
-Successful GitHub Actions run:
+Successful comparison run head (README-only change after harness):
 
-`39159676873`
+`ab2d26cc97862084b5ece16b02f6a52723298238`
+
+Successful GitHub Actions run against current candidate heads:
+
+`39159691946`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39159676873
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39159691946
 
 Result:
 
@@ -111,8 +117,8 @@ For Glass Kelp:
 QA artifact:
 
 - name: `agent-02-browser-comparison`
-- artifact ID: `12148720324`
-- digest: `sha256:a5c6c713cc525639d08af003ff1f04f0e09d0d2d7bfb4e585f643c65accd02f0`
+- artifact ID: `12148004260`
+- digest: `sha256:c3559db54dd701f3fea5cbffa2c97fe814963a94f9756a11bcccf48967f8833d`
 - includes JSON report + screenshots
 - expiry: 2026-10-25
 
@@ -132,11 +138,11 @@ Packaging workflow:
 
 Successful SHA-stamped run:
 
-`39159083047`
+`39159724461`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39159083047
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39159724461
 
 ## Borrowed Weather bundle
 
@@ -153,10 +159,12 @@ Artifact:
 Artifact:
 
 - name: `glass-kelp-cold-playtest`
-- artifact ID: `12147976876`
-- SHA256: `152f507a176374dabf2c7b4d2674515222362507a316e94beba86908ccb42437`
+- artifact ID: `12148417435`
+- SHA256: `5189f51618db0a6f65ab05534a3842bd50f54cc5e52ceb0600b9bbb34d667985`
 - source commit: `e5e394d707ee5d43d2eb48789fa774c672e1fc57`
 - expiry: 2026-11-17
+
+The bundle workflow checked out comparison protocol commit `d6b1616068c8105f43733886f8f058220a7a384f`.
 
 Each artifact contains:
 
