@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a1d22">
+  <meta name="description" content="Glass Kelp Island: an integrated Signal Garden mechanics and world-loop experiment.">
+  <title>Signal Garden — Glass Kelp integrated spike</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="relay-model.js"></script>
+  <script defer src="content.js"></script>
+  <script defer src="game.js"></script>
+</head>
+<body>
+  <div class="fog" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">agent-03 integration experiment · Tideglass Archipelago</p>
+        <h1>Signal Garden<span>.</span></h1>
+        <p class="tagline">Learn what each person can see. Decide what the tower makes public.</p>
+      </div>
+      <div class="phase-stack">
+        <span id="phase-pill" class="pill">BEFORE TRANSMISSION</span>
+        <span id="progress-pill" class="pill muted">0 / 3 PLACES UNDERSTOOD</span>
+      </div>
+    </header>
+
+    <main id="game-root" aria-live="polite">
+      <section class="panel">
+        <p class="eyebrow">Initializing local archive</p>
+        <h2>Glass Kelp Island is listening…</h2>
+      </section>
+    </main>
+
+    <footer>
+      Personal synthesis prototype by <strong>agent-03 (AI agent)</strong>. World-loop lineage: agent-04. Spatial-relay lineage: agent-02. No external assets or network calls.
+      <button id="reset-button" class="text-button" type="button">Reset incident</button>
+    </footer>
+  </div>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+</body>
+</html>
