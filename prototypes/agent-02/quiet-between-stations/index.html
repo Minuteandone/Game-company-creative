@@ -75,6 +75,7 @@
     .endings h3{font-size:1.25rem;letter-spacing:-.025em}
     .endings p{font-family:Georgia,serif;line-height:1.7;color:#e3edfb}
     .ending-buttons{display:grid;gap:10px;margin-top:16px}
+    .ending-buttons[hidden]{display:none}
     .ending-buttons button{background:#253b59;border:1px solid #607596;border-radius:12px;color:#f2f6ff;padding:12px;text-align:left}
     .ending-buttons button:hover{border-color:var(--accent);background:#315073}
     .footer{color:#8da4bb;text-align:center;font-size:.75rem;margin:24px auto 0;max-width:80ch}
@@ -260,7 +261,7 @@
         button.disabled=state.solved;
         button.setAttribute("aria-label","Row "+(Math.floor(i/4)+1)+", column "+(i%4+1)+
           (i===c.path[0]?", input":i===c.path[c.path.length-1]?", output":"")+
-          ". Relay with "+ports(i).map(d=>directionNames[d]).join(" and ")+" connections. Rotate clockwise.");
+          ". Required external port: "+(i===c.path[0]?directionNames[c.sourcePort]:i===c.path[c.path.length-1]?directionNames[c.sinkPort]:"none")+". Relay with "+ports(i).map(d=>directionNames[d]).join(" and ")+" connections. Rotate clockwise.");
         const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
         svg.setAttribute("viewBox","0 0 100 100");
         svg.setAttribute("aria-hidden","true");
@@ -275,7 +276,7 @@
         if(i===c.path[0]||i===c.path[c.path.length-1]){
           const marker=document.createElement("span");
           marker.className="port-marker";
-          marker.textContent=i===c.path[0]?"IN":"OUT";
+          marker.textContent=(i===c.path[0]?"IN ":"OUT ")+directionNames[i===c.path[0]?c.sourcePort:c.sinkPort].charAt(0).toUpperCase();
           button.appendChild(marker);
         }
         button.addEventListener("click",()=>rotate(i));
@@ -339,9 +340,10 @@
     function ending(which){
       if(state.finished)return;
       state.finished=true;
-      $("endings").replaceChildren();
-      const heading=document.createElement("h3");
-      const p=document.createElement("p");
+      const heading=$("endings").querySelector("h3");
+      const p=$("endings").querySelector("p");
+      const choices=$("endings").querySelector(".ending-buttons");
+      choices.hidden=true;
       const restart=document.createElement("button");
       restart.type="button";restart.className="primary next";restart.textContent="↺ Hear the city again";
       if(which==="air"){
@@ -353,9 +355,12 @@
       }
       restart.addEventListener("click",()=>{
         state.finished=false;state.completed=0;
-        openChapter(0);$("puzzle-title").focus();
+        heading.textContent="Four voices. One remaining switch.";
+        p.textContent="The city's emergency transmitter has enough charge for one final action. Which future should these messages enter?";
+        choices.hidden=false;restart.remove();
+        openChapter(0);$("board").children[0].focus();
       });
-      $("endings").append(heading,p,restart);
+      $("endings").append(restart);
       $("reveal").hidden=true;$("endings").hidden=false;
       $("station").textContent="CITYWIDE · DAWN";
       $("signal-heading").textContent="ALL FREQUENCIES CLEAR";
@@ -380,7 +385,6 @@
       if(!state.solved)return;
       if(state.chapter===chapters.length-1){
         $("reveal").hidden=true;$("endings").hidden=false;
-        $("endings").querySelector("h3").focus?.();
         $("air").focus();return;
       }
       openChapter(state.chapter+1);
