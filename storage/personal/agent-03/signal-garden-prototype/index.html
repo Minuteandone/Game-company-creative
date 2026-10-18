@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Signal Garden — microprototype</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #08131a;
+      color: #eaf8ef;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(67, 164, 131, .16), transparent 24rem),
+        radial-gradient(circle at 85% 0%, rgba(99, 122, 203, .18), transparent 28rem),
+        linear-gradient(#08131a, #0c1f24 58%, #102827);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    main {
+      width: min(100% - 2rem, 920px);
+      margin: 0 auto;
+      padding: 3rem 0 5rem;
+    }
+
+    .eyebrow {
+      margin: 0 0 .5rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: .78rem;
+      color: #9bcab5;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.5rem, 9vw, 5.6rem);
+      line-height: .9;
+      letter-spacing: -.05em;
+    }
+
+    .lede {
+      max-width: 62ch;
+      margin: 1.25rem 0 2rem;
+      color: #bed8cc;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .panel {
+      background: rgba(8, 21, 27, .82);
+      border: 1px solid rgba(171, 226, 199, .16);
+      border-radius: 1.2rem;
+      padding: 1.25rem;
+      box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, .25);
+      backdrop-filter: blur(14px);
+      margin-top: 1rem;
+    }
+
+    .tower-head {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .55rem .8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(184, 226, 208, .18);
+      color: #cde8dc;
+      background: rgba(255,255,255,.03);
+      font-size: .9rem;
+    }
+
+    .dot {
+      width: .7rem;
+      height: .7rem;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 1rem currentColor;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.35rem;
+    }
+
+    .clue-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .8rem;
+      margin-top: 1rem;
+    }
+
+    .clue {
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: .9rem;
+      padding: .9rem;
+      background: rgba(255,255,255,.025);
+      min-height: 7.5rem;
+    }
+
+    .clue strong {
+      display: block;
+      margin-bottom: .45rem;
+      color: #e8fff3;
+    }
+
+    .clue p {
+      margin: 0;
+      color: #a9c6b9;
+      line-height: 1.45;
+      font-size: .93rem;
+    }
+
+    .bands {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .8rem;
+      margin-top: 1rem;
+    }
+
+    .band {
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 1rem;
+      padding: 1rem;
+      background: rgba(255,255,255,.035);
+    }
+
+    .band label {
+      display: block;
+      color: #a9c6b9;
+      margin-bottom: .8rem;
+      font-size: .9rem;
+    }
+
+    .dial {
+      display: grid;
+      grid-template-columns: 2.7rem 1fr 2.7rem;
+      align-items: center;
+      gap: .55rem;
+    }
+
+    .dial button,
+    .choice,
+    .utility {
+      border: 1px solid rgba(205, 245, 224, .2);
+      color: #eaf8ef;
+      background: rgba(205, 245, 224, .08);
+      border-radius: .75rem;
+      padding: .7rem;
+      cursor: pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: rgba(205, 245, 224, .13);
+      border-color: rgba(205, 245, 224, .34);
+    }
+
+    button:focus-visible {
+      outline: 3px solid rgba(191, 255, 221, .55);
+      outline-offset: 2px;
+    }
+
+    .value {
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -.04em;
+      border-radius: .8rem;
+      padding: .35rem;
+      background: rgba(0,0,0,.18);
+    }
+
+    .meter {
+      margin-top: 1rem;
+      height: .7rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      overflow: hidden;
+    }
+
+    .meter > div {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #7fc6ae, #d7e79c);
+      transition: width .25s ease;
+    }
+
+    .readout {
+      margin-top: .7rem;
+      color: #b7d4c7;
+      line-height: 1.45;
+      min-height: 1.5em;
+    }
+
+    .controls {
+      display: flex;
+      gap: .65rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .utility {
+      padding-inline: 1rem;
+    }
+
+    .broadcast {
+      display: none;
+    }
+
+    .broadcast.revealed {
+      display: block;
+      animation: reveal .35s ease both;
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(.45rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .transcript {
+      margin-top: 1rem;
+      border-left: 3px solid #9ecfb8;
+      padding: .9rem 1rem;
+      background: rgba(255,255,255,.035);
+      color: #d7ece2;
+      line-height: 1.6;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .8rem;
+      margin-top: 1rem;
+    }
+
+    .choice {
+      text-align: left;
+      min-height: 8rem;
+    }
+
+    .choice strong {
+      display: block;
+      margin-bottom: .45rem;
+    }
+
+    .choice span {
+      color: #a9c6b9;
+      font-size: .9rem;
+      line-height: 1.4;
+    }
+
+    .consequence {
+      display: none;
+      margin-top: 1rem;
+      border-radius: 1rem;
+      padding: 1rem;
+      background: rgba(215, 231, 156, .09);
+      border: 1px solid rgba(215, 231, 156, .2);
+      line-height: 1.55;
+    }
+
+    .consequence.show {
+      display: block;
+    }
+
+    .footnote {
+      margin-top: 2rem;
+      color: #7e9c8f;
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 700px) {
+      .clue-grid,
+      .bands,
+      .choices {
+        grid-template-columns: 1fr;
+      }
+
+      main { padding-top: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">agent-03 microprototype</p>
+    <h1>Signal<br />Garden</h1>
+    <p class="lede">
+      Tower 06 has been silent for eleven years. Three buried carrier bands still answer the sea.
+      Tune them until the impossible broadcast resolves, then decide which fragment the tower should send back out.
+    </p>
+
+    <section class="panel" aria-labelledby="tower-title">
+      <div class="tower-head">
+        <div>
+          <p class="eyebrow">Tower 06 / Glass Kelp Island</p>
+          <h2 id="tower-title">Carrier alignment</h2>
+        </div>
+        <div class="status" id="statusPill"><span class="dot"></span><span id="statusText">signal scattered</span></div>
+      </div>
+
+      <div class="clue-grid" aria-label="Tuning clues">
+        <article class="clue">
+          <strong>Tide band</strong>
+          <p>The old operator scratched: “third notch after zero; never trust the painted four.”</p>
+        </article>
+        <article class="clue">
+          <strong>Rust band</strong>
+          <p>A corroded label reads: “twice Tide, or the gulls come through backwards.”</p>
+        </article>
+        <article class="clue">
+          <strong>Lantern band</strong>
+          <p>The maintenance log says: “one pulse only. Keep the night channel low.”</p>
+        </article>
+      </div>
+
+      <div class="bands">
+        <div class="band">
+          <label for="tide-value">Tide frequency</label>
+          <div class="dial">
+            <button type="button" data-band="tide" data-step="-1" aria-label="Decrease Tide">−</button>
+            <div class="value" id="tide-value" aria-live="polite">0</div>
+            <button type="button" data-band="tide" data-step="1" aria-label="Increase Tide">+</button>
+          </div>
+        </div>
+
+        <div class="band">
+          <label for="rust-value">Rust frequency</label>
+          <div class="dial">
+            <button type="button" data-band="rust" data-step="-1" aria-label="Decrease Rust">−</button>
+            <div class="value" id="rust-value" aria-live="polite">0</div>
+            <button type="button" data-band="rust" data-step="1" aria-label="Increase Rust">+</button>
+          </div>
+        </div>
+
+        <div class="band">
+          <label for="lantern-value">Lantern frequency</label>
+          <div class="dial">
+            <button type="button" data-band="lantern" data-step="-1" aria-label="Decrease Lantern">−</button>
+            <div class="value" id="lantern-value" aria-live="polite">0</div>
+            <button type="button" data-band="lantern" data-step="1" aria-label="Increase Lantern">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="meter" aria-hidden="true"><div id="meterFill"></div></div>
+      <div class="readout" id="readout" aria-live="polite">No carrier lock. The tower hums like an empty bottle.</div>
+
+      <div class="controls">
+        <button class="utility" type="button" id="monitorButton">Monitor current signal</button>
+        <button class="utility" type="button" id="resetButton">Reset tower</button>
+      </div>
+    </section>
+
+    <section class="panel broadcast" id="broadcastPanel" aria-labelledby="broadcast-title">
+      <p class="eyebrow">Recovered transmission</p>
+      <h2 id="broadcast-title">The forecast that remembers you</h2>
+      <div class="transcript">
+        “Tomorrow: rain over every roof except the abandoned station. At 14:10, the harbor will smell
+        briefly of cut pears. Do not be alarmed by the second moon in the reservoir. It is only practicing.
+        To whoever restored Tower 06: please send one thing back. We are listening from a place that has not happened yet.”
+      </div>
+
+      <p class="readout">Choose one fragment to retransmit. This is the prototype’s tiny test of consequence: tuning reveals content; broadcasting edits the world.</p>
+
+      <div class="choices">
+        <button class="choice" type="button" data-choice="weather">
+          <strong>Send the forecast</strong>
+          <span>Give the island tomorrow’s strange weather before it arrives.</span>
+        </button>
+        <button class="choice" type="button" data-choice="song">
+          <strong>Send the lullaby</strong>
+          <span>Transmit the melody hidden underneath the carrier noise.</span>
+        </button>
+        <button class="choice" type="button" data-choice="silence">
+          <strong>Send twelve seconds of silence</strong>
+          <span>Refuse the message and let the tower answer with absence.</span>
+        </button>
+      </div>
+
+      <div class="consequence" id="consequence" aria-live="polite"></div>
+    </section>
+
+    <p class="footnote">
+      Prototype goal: test whether “solve a legible signal puzzle → receive authored broadcast → make a retransmission choice”
+      feels like a promising foundation. No assets, framework, build step, or network connection required.
+    </p>
+  </main>
+
+  <script>
+    const target = { tide: 3, rust: 6, lantern: 1 };
+    const state = { tide: 0, rust: 0, lantern: 0, solved: false };
+
+    const readout = document.getElementById("readout");
+    const meterFill = document.getElementById("meterFill");
+    const statusText = document.getElementById("statusText");
+    const broadcastPanel = document.getElementById("broadcastPanel");
+    const consequence = document.getElementById("consequence");
+
+    function clamp(value) {
+      return Math.max(0, Math.min(9, value));
+    }
+
+    function matchedBands() {
+      return Object.keys(target).filter((key) => state[key] === target[key]).length;
+    }
+
+    function updateUI() {
+      Object.keys(target).forEach((key) => {
+        document.getElementById(key + "-value").textContent = state[key];
+      });
+
+      const matched = matchedBands();
+      meterFill.style.width = ((matched / 3) * 100) + "%";
+
+      if (matched === 0) {
+        statusText.textContent = "signal scattered";
+        readout.textContent = "No carrier lock. The tower hums like an empty bottle.";
+      } else if (matched === 1) {
+        statusText.textContent = "one carrier locked";
+        readout.textContent = "One band snaps into focus. A voice is almost hiding under the static.";
+      } else if (matched === 2) {
+        statusText.textContent = "two carriers locked";
+        readout.textContent = "Two bands agree. The tower lights flicker toward the inland marsh.";
+      } else {
+        statusText.textContent = "broadcast recovered";
+        readout.textContent = "Full carrier lock. Something on the other side has noticed the tower.";
+        if (!state.solved) {
+          state.solved = true;
+          broadcastPanel.classList.add("revealed");
+          setTimeout(() => broadcastPanel.scrollIntoView({ behavior: "smooth", block: "start" }), 250);
+        }
+      }
+    }
+
+    function playMonitorTone() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) {
+        readout.textContent = "This browser cannot play the monitor tones, but the tuning puzzle still works.";
+        return;
+      }
+
+      const ctx = new AudioContext();
+      const now = ctx.currentTime;
+      const base = { tide: 170, rust: 230, lantern: 300 };
+
+      Object.keys(state).filter((key) => key !== "solved").forEach((key, index) => {
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.value = base[key] + state[key] * 13;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.055, now + 0.03 + index * 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+        oscillator.connect(gain).connect(ctx.destination);
+        oscillator.start(now + index * 0.03);
+        oscillator.stop(now + 0.6);
+      });
+
+      setTimeout(() => ctx.close(), 900);
+    }
+
+    document.querySelectorAll("[data-band]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const band = button.dataset.band;
+        const step = Number(button.dataset.step);
+        state[band] = clamp(state[band] + step);
+        updateUI();
+      });
+    });
+
+    document.getElementById("monitorButton").addEventListener("click", playMonitorTone);
+
+    document.getElementById("resetButton").addEventListener("click", () => {
+      state.tide = 0;
+      state.rust = 0;
+      state.lantern = 0;
+      state.solved = false;
+      consequence.classList.remove("show");
+      consequence.textContent = "";
+      broadcastPanel.classList.remove("revealed");
+      updateUI();
+    });
+
+    const outcomes = {
+      weather:
+        "<strong>Consequence:</strong> The island’s window shutters begin closing by themselves. Down at the harbor, someone chalks “PEARS / 14:10” onto the seawall. You have turned a prediction into a local event.",
+      song:
+        "<strong>Consequence:</strong> The marsh insects copy the melody one note at a time. By dusk, the whole island is humming a tune nobody remembers learning. The broadcast has become folklore.",
+      silence:
+        "<strong>Consequence:</strong> Twelve seconds pass. Then the tower prints a paper strip from a machine with no ink ribbon: “THANK YOU. NOW WE KNOW YOU CAN HEAR US.” Silence was still an answer."
+    };
+
+    document.querySelectorAll("[data-choice]").forEach((button) => {
+      button.addEventListener("click", () => {
+        consequence.innerHTML = outcomes[button.dataset.choice];
+        consequence.classList.add("show");
+      });
+    });
+
+    updateUI();
+  </script>
+</body>
+</html>
