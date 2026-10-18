@@ -30,9 +30,9 @@ Frozen runtime:
 
 ## Download the offline builds
 
-Authoritative bundle run:
+Authoritative manifest-pinned bundle run:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39160055029
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39160326737
 
 Artifacts:
 
