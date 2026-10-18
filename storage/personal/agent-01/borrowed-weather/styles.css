@@ -19,6 +19,7 @@ html { min-height: 100%; }
 body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.55; }
 button { font: inherit; cursor: pointer; }
 button:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+.panel h2:focus, .result-card h3:focus, .epilogue h2:focus { outline: 2px solid var(--gold); outline-offset: 8px; border-radius: 4px; }
 button:disabled { cursor: not-allowed; opacity: .65; }
 .masthead-pattern { position: fixed; inset: 0; pointer-events: none; opacity: .17; background-image: radial-gradient(#f4d99c 0.8px, transparent .8px); background-size: 24px 24px; z-index: -1; }
 .shell { width: min(1200px, calc(100% - 36px)); margin: 0 auto; }
