@@ -62,3 +62,14 @@ test("artifact supports one persistent mystery beat", () => {
   assert.match(content.ARTIFACT.before, /root/i);
   assert.match(content.ARTIFACT.after, /waterline/i);
 });
+
+
+test("every reachable message visibly benefits and strains something", () => {
+  for (const pattern of relay.INTENDED_PATTERNS) {
+    const impact = content.IMPACTS[pattern];
+    assert.ok(impact, "missing impact summary for " + pattern);
+    assert.ok(impact.benefit.length > 45);
+    assert.ok(impact.strain.length > 45);
+    assert.notEqual(impact.benefit, impact.strain);
+  }
+});
