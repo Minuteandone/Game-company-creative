@@ -47,6 +47,8 @@ function finish(h){
   h.get('transmitButton').click();
   h.places.slice(0,3).forEach(place=>place.click());
   h.places[3].click();
+  assert.equal(h.taps.every(t=>t.disabled),true, 'sent source taps must freeze');
+  assert.equal(h.get('cross1').disabled,true, 'sent relays must freeze');
   assert.equal(h.get('ending').classList.contains('show'),true);
   assert.match(h.get('endingEcho').textContent,/TOWER 12/);
   assert.match(h.get('rootVial').textContent,/ROOT VIAL/);
@@ -94,4 +96,14 @@ test('rail inputs expose source identities in their accessible names',()=>{
   h.get('cross1').click();
   assert.match(h.taps[1].attrs['aria-label'],/ACTION tap.*Voice B/);
   assert.equal(h.get('cross1').attrs['aria-pressed'],'true');
+});
+
+test('returning to island before broadcast retains relay position',()=>{
+  const h=harness();visitAll(h);h.places[3].click();
+  h.taps[2].click();
+  assert.match(h.get('railSummary').textContent,/Voice A \/ Voice A \/ Voice B/);
+  h.get('returnButton').click();
+  h.places[3].click();
+  assert.match(h.get('railSummary').textContent,/Voice A \/ Voice A \/ Voice B/);
+  assert.equal(h.taps[2].disabled,false);
 });
