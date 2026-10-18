@@ -42,6 +42,10 @@ h1 { font-size: clamp(2rem, 5vw, 3.6rem); margin: 0; line-height: 1.07; letter-s
 .letter::before { content: "✳"; position: absolute; right: 19px; top: 12px; opacity: .27; font-size: 26px; }
 .letter .from { text-transform: uppercase; font-weight: 800; font-size: .68rem; letter-spacing: .11em; padding-right: 24px; }
 .letter blockquote { font-size: 1.05rem; line-height: 1.46; padding: 0; margin: 13px 0 0; }
+.callback-letter { margin: 0 0 19px; border-left: 5px solid #496c6f; transform: none; background: #e7ebdd; }
+.callback-letter .eyebrow { color: #42686a; font-size: .67rem; letter-spacing: .11em; margin-bottom: 10px; }
+.callback-letter .callback-cause { color: #485d5c; border-top: 1px solid #afc0b6; margin: 15px 0 0; padding-top: 11px; font-size: .79rem; font-family: system-ui, sans-serif; }
+
 .desk-panel { background: #152830; }
 .meters { display: grid; gap: 15px; margin: 18px 0 28px; }
 .meter-top { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; margin-bottom: 7px; font-size: .9rem; }
