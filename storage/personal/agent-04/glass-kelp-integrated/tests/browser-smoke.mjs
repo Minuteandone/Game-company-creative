@@ -215,6 +215,37 @@ try {
 
   assert(runtimeErrors.length === 0, "Browser runtime errors:\n" + runtimeErrors.join("\n"));
 
+
+  await send("Page.navigate", {url: pageUrl + "?towerOnly=1"});
+  await waitFor(
+    `document.readyState === "complete" &&
+     document.querySelector("#phase-label")?.textContent === "tower-only control" &&
+     document.querySelector("#tower-panel")?.hidden === false`,
+    "tower-only control mode"
+  );
+
+  assert(await evaluate(`document.querySelector("#visit-label").textContent === "context withheld"`),
+    "Tower-only mode should label context as withheld");
+  assert(await evaluate(`["harbor","garden","lock"].every(p =>
+    document.querySelector('[data-place="' + p + '"]').disabled)`),
+    "Tower-only mode should disable pre-transmission context locations");
+  assert((await evaluate(`document.querySelectorAll(".relay-tile").length`)) === 16,
+    "Tower-only mode should start directly on the same relay board");
+
+  const collisionTurns = [1,0,0,1, 0,1,0,0, 0,1,2,2, 0,3,1,2];
+  for (let cell = 0; cell < collisionTurns.length; cell++) {
+    for (let turn = 0; turn < collisionTurns[cell]; turn++) {
+      await evaluate(`document.querySelector('.relay-tile[data-cell="${cell}"]').click(); true`);
+    }
+  }
+  assert(await evaluate(`document.querySelectorAll(".sink-card.interference").length > 0`),
+    "Known collision state did not render sink interference");
+  assert(await evaluate(`[...document.querySelectorAll(".sink-card.interference .sink-source")]
+    .some(el => el.textContent.includes("A + B / static"))`),
+    "Interference was not labeled in text");
+
+  assert(runtimeErrors.length === 0, "Browser runtime errors after tower-only mode:\\n" + runtimeErrors.join("\\n"));
+
   console.log("Glass Kelp browser smoke passed:", {
     viewport: "375x812",
     pattern: "AAB",
