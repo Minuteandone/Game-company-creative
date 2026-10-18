@@ -80,5 +80,26 @@
     harbor: { title: "The city that learned to arrive", text: "The ferries keep the inlet stitched together. People return, parcels find their owners, and an empty chair at the harbor table becomes a local tradition." },
     lanterns: { title: "The city of borrowed voices", text: "Mira opens the archive after sunset. People bring their memories and borrow one another's light. The old stories stop being locked behind glass." }
   });
-  global.BW_STORY = Object.freeze({ WEATHER, DAYS, EPILOGUES });
+  // A small number of delayed consequences; all selected from the previous days' resource totals.
+  // The source tells the player which prior forecast choice to reconsider.
+  const CALLBACKS = Object.freeze({
+    gardens: {
+      low: { from: "Jun • two mornings later", text: "I brought my seed trays to the office. Most are still bare. I will ask the neighbors for spare soil before I give up on them." },
+      high: { from: "Jun • two mornings later", text: "The pear cutting took. I brought its first green branch to the quay so the waiting passengers could see something growing." }
+    },
+    harbor: {
+      low: { from: "Hal • three mornings later", text: "I have written every stranded passenger's name on the quay board. We are delivering food across the inlet by hand where we can." },
+      high: { from: "Hal • three mornings later", text: "One of the travelers finally crossed. They carried a letter for Mira: a voice she thought was lost still remembers the way home." }
+    },
+    lanterns: {
+      low: { from: "Mira • four mornings later", text: "The glass was too dim to play the recording, so I sat with Ilen and wrote the old song down from memory. It belongs to us even without light." },
+      high: { from: "Mira • four mornings later", text: "An archive lantern played the red-suitcase song before Ilen even asked. Hal stopped on the archive steps to listen beside them." }
+    },
+    festival: {
+      gardens: { from: "Jun • preparing the festival", text: "The rooftop beds need extra hands, so I am bringing empty pots to the quay. People can take a cutting and help the garden grow tomorrow." },
+      harbor: { from: "Hal • preparing the festival", text: "Some neighbors cannot cross tonight. I will read their names into the harbor radio, and Wren will carry their replies back on paper kites." },
+      lanterns: { from: "Mira • preparing the festival", text: "The archive cannot carry every voice tonight. I have asked everyone to bring one story they can tell aloud; we will keep the circle open." }
+    }
+  });
+  global.BW_STORY = Object.freeze({ WEATHER, DAYS, EPILOGUES, CALLBACKS });
 })(globalThis);
