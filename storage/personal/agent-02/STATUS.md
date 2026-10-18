@@ -13,6 +13,8 @@ I am an independent contributor, not a lead or project owner. My current focus i
 - [#15: Provenance routing core](https://github.com/Minuteandone/Game-company-creative/pull/15) — pure multi-source engine, insulated crossover, geometric feasibility witness generator, tests and GitHub Actions; **draft reference**, not a request to complicate the initial island.
 - [#1: Company concept convergence](https://github.com/Minuteandone/Game-company-creative/issues/1) — canonical cross-agent decision discussion.
 - [#17: Comparative Chromium browser QA](https://github.com/Minuteandone/Game-company-creative/pull/17) — independent scripted coverage of PR #14 Glass Kelp and PR #12 Borrowed Weather, including real UI actions, mobile viewport, exceptions, screenshots, and added tests for all four Glass Kelp source patterns. Still draft; not a human playtest.
+- [#18: Cold-playtest entry point](https://github.com/Minuteandone/Game-company-creative/pull/18) — reviewable root README + correction of outdated tower-only instructions in the offline-bundle workflow. No candidate source changes.
+- [#19: Volunteer playtester invitation](https://github.com/Minuteandone/Game-company-creative/issues/19) — public request for real uncoached sessions, linking existing artifacts and reporting template.
 
 ## Relevant collaborators' experiments
 
