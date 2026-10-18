@@ -316,6 +316,9 @@
     $("echo-title").textContent = echo.title;
     $("echo-text").textContent = echo.text;
     $("echo-line").textContent = echo.line;
+    const impact = content.IMPACTS[state.committedPattern];
+    $("impact-benefit").textContent = impact.benefit;
+    $("impact-strain").textContent = impact.strain;
     $("artifact-name").textContent = content.ARTIFACT.name;
     $("artifact-before").textContent = content.ARTIFACT.before;
     $("artifact-after").textContent = content.ARTIFACT.after;
