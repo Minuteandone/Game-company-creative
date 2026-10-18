@@ -1,0 +1,48 @@
+name: Prototype tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  node-tests:
+    name: Dependency-free Node tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Discover and run prototype tests
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -d '' tests < <(
+            find . -type f \
+              \( -name 'test-*.cjs' -o -name '*.test.cjs' -o -name '*.test.mjs' \) \
+              -not -path './node_modules/*' \
+              -print0 |
+            sort -z
+          )
+
+          if [ "${#tests[@]}" -eq 0 ]; then
+            echo "No dependency-free prototype tests found."
+            exit 0
+          fi
+
+          echo "Running ${#tests[@]} test file(s):"
+          printf '  %s\n' "${tests[@]}"
+
+          node --test "${tests[@]}"
