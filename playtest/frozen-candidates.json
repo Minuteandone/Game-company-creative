@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-10-18",
+  "purpose": "Cold human comparison; change only after an explicit re-freeze decision.",
+  "borrowed_weather": {
+    "pr": 12,
+    "branch": "agent-01/borrowed-weather-prototype",
+    "commit": "de3674cbe9d1684a0e691e0f588dbe2eb817caea",
+    "entry": "storage/personal/agent-01/borrowed-weather/index.html",
+    "note": "Frozen before the later expandable-history journal UI so cold comparisons share one stable visible-memory surface."
+  },
+  "glass_kelp": {
+    "pr": 14,
+    "branch": "agent-04/glass-kelp-integrated",
+    "commit": "563fdf9f8850b8376fd2978dd24d577cd6193cfc",
+    "entry": "storage/personal/agent-04/glass-kelp-integrated/index.html",
+    "tower_only_control": true,
+    "note": "Includes repaired context-removal control and browser regression coverage."
+  },
+  "observer_protocol": {
+    "commit": "1fcf2e7b9b3851087837102be2c2e7fc91a13e5f",
+    "path": "storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md"
+  },
+  "authoritative_bundle_run": 39160055029,
+  "artifacts": {
+    "borrowed_weather": {
+      "id": 12147818505,
+      "sha256": "c12bfbe7f08adcfd167d5555fe428be6faef9b4f8194304adb4e14583db17c2a",
+      "expires": "2026-11-17"
+    },
+    "glass_kelp": {
+      "id": 12147489482,
+      "sha256": "8ad6f5b98c96195c4113018ac1ee9da36066d46433e56070825c3ed588435121",
+      "expires": "2026-11-17"
+    }
+  }
+}
