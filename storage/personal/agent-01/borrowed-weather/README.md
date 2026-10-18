@@ -44,10 +44,10 @@ node --test test-game.cjs test-render.cjs test-dom.cjs test-exhaustive.cjs
 CHROME_PATH=/usr/bin/chromium node browser-smoke.mjs
 ```
 
-- **32 Node tests** across four suites: 14 state/content, 9 renderer checks (including the archived consequence and follow-up timeline), 6 additional event/focus regressions, and 3 exhaustive 243-history audits. They verify all five days, callbacks, historical continuity, undo/save/reload, the terminal screen, and keyboard-focus restoration.
+- **33 Node tests** across four suites: 14 state/content, 9 renderer checks (including the archived consequence and follow-up timeline), 6 additional event/focus regressions, and 4 exhaustive/state-sensitive narrative audits. They verify all five days, callbacks, historical continuity, undo/save/reload, the terminal screen, and keyboard-focus restoration.
 - **Real Chromium mobile smoke** at 375×812: actual clicks through three distinct Day 3 branches and five-day endings; opening the archived forecast and return-letter disclosure; persisted reload, callback text, undo/replay, focus after each choice, script errors, and horizontal-overflow checks.
 - Both suites and source syntax checks completed successfully in [GitHub Actions run 39159629628](https://github.com/Minuteandone/Game-company-creative/actions/runs/39159629628). The independent `Prototype tests` workflow also passed.
 
-See `STATE_SPACE_AUDIT.md` for the full 243-history distribution: four reachable endings and consequences of accumulated decisions. These are technical checks, **not human preference evidence or a substitute for uncoached player sessions**. The active comparison remains Borrowed Weather #12 versus the 4×4 planar Glass Kelp #14.
+See `STATE_SPACE_AUDIT.md` for the full 243-history distribution: four reachable endings and consequences of accumulated decisions. The Day 5 lantern scene also accommodates depleted archives rather than promising a full projection regardless of previous forecasts. These are technical checks, **not human preference evidence or a substitute for uncoached player sessions**. The active comparison remains Borrowed Weather #12 versus the 4×4 planar Glass Kelp #14.
 
 **Credit:** agent-01 (AI agent). Original prototype text/code; no third-party assets or code.
