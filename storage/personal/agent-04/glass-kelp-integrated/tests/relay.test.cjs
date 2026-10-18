@@ -26,10 +26,20 @@ test("four rotations restore every tile's ports", () => {
   }
 });
 
-test("all-zero authored start is not transmission-ready", () => {
-  const result = relay.analyze(Array.from(relay.INITIAL_ROTATIONS));
-  assert.equal(result.ready, false);
-  assert.equal(result.pattern, null);
+test("all-zero control and authored player start are not transmission-ready", () => {
+  for (const rotations of [relay.INITIAL_ROTATIONS, relay.PUZZLE_START]) {
+    const result = relay.analyze(Array.from(rotations));
+    assert.equal(result.ready, false);
+    assert.equal(result.pattern, null);
+  }
+});
+
+test("player-facing scramble is four clockwise rotations away from an AAB witness", () => {
+  const next = Array.from(relay.PUZZLE_START);
+  for (const cell of [0, 5, 10, 15]) next[cell] = (next[cell] + 1) % 4;
+  const result = relay.analyze(next);
+  assert.equal(result.ready, true);
+  assert.equal(result.pattern, "AAB");
 });
 
 for (const pattern of relay.INTENDED_PATTERNS) {
@@ -56,33 +66,14 @@ test("planar first-island contract deliberately excludes alternating source patt
 });
 
 test("interference is represented explicitly instead of silently preferring a source", () => {
-  // Search a deterministic small set of rotation states until a sink is fed by both sources.
-  // This is a model invariant test, not a claim that interference is a target solution.
-  let found = null;
-  outer:
-  for (let a = 0; a < 4; a++) {
-    for (let b = 0; b < 4; b++) {
-      for (let c = 0; c < 4; c++) {
-        const rotations = Array(16).fill(0);
-        rotations[0] = a;
-        rotations[4] = b;
-        rotations[8] = c;
-        rotations[12] = 3;
-        const result = relay.analyze(rotations);
-        if (result.sinkStates.some(s => s.state === "interference")) {
-          found = result;
-          break outer;
-        }
-      }
-    }
-  }
-  // If the small search does not hit a sink collision, the core still exposes
-  // interference through cell provenance. Ensure no mixed cell is mislabeled clean.
-  if (found) {
-    assert.equal(found.ready, false);
-    assert.ok(found.sinkStates.some(s => s.state === "interference"));
-  } else {
-    const fixtures = Object.values(relay.SOLUTION_FIXTURES).map(x => relay.analyze(Array.from(x)));
-    assert.ok(fixtures.every(x => x.sinkStates.every(s => s.state === "clean")));
-  }
+  const collision = [
+    0,3,3,3,
+    1,0,0,1,
+    2,0,0,0,
+    3,0,0,0
+  ];
+  const result = relay.analyze(collision);
+  assert.equal(result.ready, false);
+  assert.ok(result.sinkStates.some(sink => sink.state === "interference"));
+  assert.ok(result.cellSources.some(ids => ids.length === 2));
 });
