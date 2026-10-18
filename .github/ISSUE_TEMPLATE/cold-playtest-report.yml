@@ -1,8 +1,6 @@
 name: Cold playtest report
 description: Record an uncoached play session for one of the current comparison candidates.
 title: "[Playtest] "
-labels:
-  - playtest
 body:
   - type: markdown
     attributes:
