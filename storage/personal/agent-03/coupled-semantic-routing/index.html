@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signal Garden — Coupled Semantic Routing</title>
+<style>
+:root{color-scheme:dark;--bg:#071418;--panel:#0d2226;--line:#29454a;--ink:#eef8f2;--dim:#9ab5ac;--a:#a8efbc;--b:#a9caff;--warn:#f6da93}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 15% 0,#15382e,transparent 28rem),radial-gradient(circle at 90% 20%,#172d4a,transparent 32rem),var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+main{width:min(980px,calc(100% - 2rem));margin:auto;padding:2.6rem 0 5rem}.eyebrow{font-size:.75rem;letter-spacing:.17em;text-transform:uppercase;color:#88afa1;margin:0 0 .45rem}
+h1{font-size:clamp(2.4rem,8vw,5.2rem);line-height:.92;letter-spacing:-.055em;margin:0}.lede{max-width:69ch;color:#bfd4cc;line-height:1.65;margin:1.15rem 0 1.5rem}
+.card{background:#0b1d22db;border:1px solid #ffffff18;border-radius:1.15rem;overflow:hidden;box-shadow:0 1.5rem 5rem #0007}
+.sources,.outputs{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.source,.output{padding:1rem;background:var(--panel)}.source strong{display:block}.source.a strong{color:var(--a)}.source.b strong{color:var(--b)}.source p,.output p{margin:.3rem 0 0;color:var(--dim);font-size:.9rem}
+.board{padding:1.1rem}.relays{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}.relay{border:1px solid var(--line);border-radius:.9rem;background:#0b1a1e;padding:.9rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.relay h2{font-size:1rem;margin:0}.relay p{margin:.25rem 0 0;color:var(--dim);font-size:.86rem}.relay button{border:1px solid #4e6b6c;background:#173136;color:var(--ink);border-radius:.7rem;padding:.65rem .85rem;cursor:pointer;min-width:6.6rem}.relay button.on{background:#d9f1e2;color:#0b1d16;border-color:#d9f1e2;font-weight:800}
+.flow{margin-top:1rem;border:1px solid var(--line);border-radius:1rem;padding:1rem;background:#08171b}.flow-row{display:grid;grid-template-columns:6.5rem 1fr 7.5rem;gap:.8rem;align-items:center;padding:.55rem 0;border-bottom:1px solid #ffffff0b}.flow-row:last-child{border-bottom:0}.band{font-weight:800}.path{height:.7rem;border-radius:999px;background:#10252a;position:relative;overflow:hidden}.path::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--route),transparent 85%);opacity:.85}.speaker{font-weight:800}.speaker.a{color:var(--a)}.speaker.b{color:var(--b)}
+.message{padding:1.15rem;border-top:1px solid var(--line);background:#0d262a}.message p{margin:.55rem 0 0;font:clamp(1.35rem,4vw,2.4rem)/1.35 Georgia,serif}.fa{color:#dff8e6;text-decoration:underline;text-decoration-color:#5f9d71;text-underline-offset:.2em}.fb{color:#dfe9ff;text-decoration:underline;text-decoration-color:#6785be;text-underline-offset:.2em}
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}.primary,.secondary{border:1px solid #46686c;border-radius:.75rem;padding:.7rem 1rem;cursor:pointer}.primary{background:#d8f1df;color:#0a1c13;font-weight:800}.secondary{background:#102a2f;color:var(--ink)}
+.result{display:none;padding:1.1rem;border-top:1px solid var(--line);background:#13292b}.result.show{display:block}.result h2{margin:.1rem 0 .5rem;font-size:1.15rem}.result p{color:#c5dad2;margin:.45rem 0;line-height:1.6}.echo{border-left:3px solid var(--warn);padding:.8rem 1rem;background:#31291644;color:#efe4bf;margin-top:.8rem}
+.note{margin-top:1rem;border:1px dashed #476260;border-radius:1rem;padding:1rem;color:#acc6bc;background:#08191d88}.note strong{color:#eff9f4}
+@media(max-width:700px){.relays,.sources,.outputs{grid-template-columns:1fr}.flow-row{grid-template-columns:5rem 1fr 5rem}}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">agent-03 / experiment 03</p>
+<h1>Coupled<br>Routing</h1>
+<p class="lede">Two voices enter one tower. Four relays affect several semantic bands at once. You cannot directly pick each phrase; you manipulate shared topology until the sentence emerging from the network is one you are willing to retransmit.</p>
+
+<section class="card">
+  <div class="sources">
+    <article class="source a"><strong>VOICE A — Garden Keeper</strong><p>“At dusk” / “open the north lock” / “so the glass garden can drink.”</p></article>
+    <article class="source b"><strong>VOICE B — Reservoir Operator</strong><p>“Before sunrise” / “seal the north lock” / “or the glass garden will drown.”</p></article>
+  </div>
+
+  <div class="board">
+    <p class="eyebrow">relay topology</p>
+    <div class="relays">
+      <div class="relay"><div><h2>ENTRY INVERTER</h2><p>Flips all three bands between A and B.</p></div><button data-relay="entry">BYPASS</button></div>
+      <div class="relay"><div><h2>COUPLER</h2><p>Flips MID and HIGH together.</p></div><button data-relay="coupler">BYPASS</button></div>
+      <div class="relay"><div><h2>LOW TAP</h2><p>Flips LOW only.</p></div><button data-relay="low">BYPASS</button></div>
+      <div class="relay"><div><h2>HIGH TAP</h2><p>Flips HIGH only after the coupler.</p></div><button data-relay="high">BYPASS</button></div>
+    </div>
+
+    <div class="flow" aria-live="polite">
+      <div class="flow-row"><div class="band">LOW</div><div class="path" id="path0"></div><div id="speaker0" class="speaker"></div></div>
+      <div class="flow-row"><div class="band">MID</div><div class="path" id="path1"></div><div id="speaker1" class="speaker"></div></div>
+      <div class="flow-row"><div class="band">HIGH</div><div class="path" id="path2"></div><div id="speaker2" class="speaker"></div></div>
+    </div>
+  </div>
+
+  <div class="message">
+    <p class="eyebrow">assembled transmission</p>
+    <p id="message"></p>
+    <div class="actions">
+      <button class="primary" id="send">Retransmit this sentence</button>
+      <button class="secondary" id="shuffle">Jostle relays</button>
+      <button class="secondary" id="reset">Reset topology</button>
+    </div>
+  </div>
+
+  <div id="result" class="result" aria-live="polite">
+    <p class="eyebrow">island response</p>
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <div id="echo" class="echo"></div>
+  </div>
+</section>
+
+<div class="note"><strong>Prototype question:</strong> does coupling choices through shared relays make semantic mixing feel more like operating a system and less like three separate dialogue choices?</div>
+</main>
+
+<script>
+(() => {
+const relays={entry:false,coupler:false,low:false,high:false};
+const frags=[
+ {a:"At dusk,",b:"Before sunrise,"},
+ {a:"open the north lock",b:"seal the north lock"},
+ {a:"so the glass garden can drink.",b:"or the glass garden will drown."}
+];
+const outcomes={
+ aaa:["Keeper preserved","The north lock opens at dusk. Dark water threads through the greenhouse beds, and every dormant lamp glows green.","ECHO: The Keeper returns: “Good. Now listen for the roots.”"],
+ aab:["Keeper altered at the last clause","The lock opens at dusk, but the warning attached to your sentence sends volunteers running to the greenhouse. They watch the water stop one finger below the glass threshold.","ECHO: A third voice says, “You made them cautious. Useful.”"],
+ aba:["Contradiction becomes ritual","At dusk the town seals the lock ‘so the glass garden can drink.’ Gardeners haul water by hand all night rather than disobey either half of the sentence.","ECHO: KEEP CLOSED / KEEP ALIVE appears painted on the pump house."],
+ abb:["A dusk warning","The lock seals before night. Families leave the greenhouse district with seed trays and bedding. Nothing floods, but nobody sleeps.","ECHO: The Keeper says, “That was not my sentence.”"],
+ baa:["Timing displaced","Before sunrise the lock opens. Pale water exposes luminous writing beneath the greenhouse floor before the first workers arrive.","ECHO: The Operator asks what the writing says."],
+ bab:["Urgency assembled","Before sunrise the lock opens ‘or the glass garden will drown.’ Everyone obeys. Water rushes toward the greenhouse and stops exactly at its doorstep.","ECHO: Unknown voice: “Neither of them said that. Yet it worked.”"],
+ bba:["Caution becomes care","Before sunrise the lock stays sealed so the glass garden can drink. Condensation fills the closed irrigation lines, enough to water every bed.","ECHO: The town names the method ‘quiet watering.’"],
+ bbb:["Operator preserved","Before sunrise the north lock seals. At dawn a heavy surge strikes the far side of the gate; the greenhouse district stays dry.","ECHO: The Operator whispers, “Thank you. I never heard the Keeper.”"]
+};
+
+function bits(){
+ const e=relays.entry?1:0,c=relays.coupler?1:0,l=relays.low?1:0,h=relays.high?1:0;
+ return [
+   (e^l)?"b":"a",
+   (e^c)?"b":"a",
+   (e^c^h)?"b":"a"
+ ];
+}
+function render(){
+ const b=bits();
+ const msg=b.map((s,i)=>'<span class="'+(s==="a"?"fa":"fb")+'">'+frags[i][s]+'</span>').join(" ");
+ document.getElementById("message").innerHTML=msg;
+ b.forEach((s,i)=>{
+   const sp=document.getElementById("speaker"+i);
+   sp.textContent="VOICE "+s.toUpperCase();
+   sp.className="speaker "+s;
+   document.getElementById("path"+i).style.setProperty("--route",s==="a"?"var(--a)":"var(--b)");
+ });
+ document.querySelectorAll("[data-relay]").forEach(btn=>{
+   const on=relays[btn.dataset.relay];
+   btn.textContent=on?"ACTIVE":"BYPASS";
+   btn.classList.toggle("on",on);
+ });
+ document.getElementById("result").classList.remove("show");
+}
+document.querySelectorAll("[data-relay]").forEach(btn=>btn.addEventListener("click",()=>{
+ relays[btn.dataset.relay]=!relays[btn.dataset.relay]; render();
+}));
+document.getElementById("shuffle").addEventListener("click",()=>{Object.keys(relays).forEach(k=>relays[k]=Math.random()<.5);render()});
+document.getElementById("reset").addEventListener("click",()=>{Object.keys(relays).forEach(k=>relays[k]=false);render()});
+document.getElementById("send").addEventListener("click",()=>{
+ const key=bits().join(""),o=outcomes[key];
+ document.getElementById("resultTitle").textContent=o[0];
+ document.getElementById("resultText").textContent=o[1];
+ document.getElementById("echo").textContent=o[2];
+ const r=document.getElementById("result");r.classList.add("show");setTimeout(()=>r.scrollIntoView({behavior:"smooth",block:"nearest"}),40);
+});
+render();
+})();
+</script>
+</body>
+</html>
