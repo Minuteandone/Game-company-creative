@@ -19,7 +19,7 @@ function plain(value) {
 
 const bools = [false, true];
 
-test("three coupled crossovers generate all eight source patterns exactly once", () => {
+test("three insulated non-mixing crossovers generate all eight source patterns exactly once", () => {
   const keys = new Set();
   for (const entry of bools) for (const mid of bools) for (const high of bools) {
     const state = { entry, mid, high };
@@ -46,7 +46,7 @@ test("every semantic pattern round-trips to one crossover state", () => {
   }
 });
 
-test("trace preserves both source identities at every stage", () => {
+test("insulated trace preserves both source identities without electrical mixing", () => {
   for (const entry of bools) for (const mid of bools) for (const high of bools) {
     const trace = Relay.rails({entry,mid,high});
     for (const stage of ["time","action","reason"]) {
