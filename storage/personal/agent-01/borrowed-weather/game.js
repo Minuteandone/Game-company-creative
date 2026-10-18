@@ -120,10 +120,20 @@
   function append(parent, ...children) { for (const child of children) parent.appendChild(child); return parent; }
   function clear(node) { node.replaceChildren(); }
   function notice(text) { announcer.textContent = text; }
-  function commit(next, message) {
+  function commit(next, message, focusSelector) {
     state = next;
     saveState(storage, state);
     render();
+    // Reactively rebuilding main content replaces the activated button.
+    // Move keyboard/screen-reader focus to the newly shown scene instead of
+    // allowing focus to fall back to the browser chrome or page body.
+    if (focusSelector && typeof root.querySelector === "function") {
+      const heading = root.querySelector(focusSelector);
+      if (heading && typeof heading.focus === "function") {
+        heading.setAttribute("tabindex", "-1");
+        heading.focus();
+      }
+    }
     if (message) notice(message);
   }
   function createSection(className, ariaLabel) {
@@ -197,7 +207,7 @@
     if (!state.history.length) return;
     const back = element("button", "text-button", "Undo the last stamp");
     back.type = "button";
-    back.addEventListener("click", () => commit(undo(state), "Last stamp undone. You can choose again."));
+    back.addEventListener("click", () => commit(undo(state), "Last stamp undone. You can choose again.", ".story-panel h2"));
     append(panel, back);
   }
   function renderDesk(values, isClosed = false) {
@@ -213,7 +223,7 @@
       append(card, element("p", "eyebrow", "Forecast delivered — " + STORY.WEATHER[weather].label), element("h3", null, result.title), element("p", null, result.text));
       const next = element("button", "primary-button", dayNumber === STORY.DAYS.length ? "Read the closing ledger →" : "Open the next morning →");
       next.type = "button";
-      next.addEventListener("click", () => commit(continueDay(state), dayNumber === STORY.DAYS.length ? "The closing ledger is ready." : "A new morning begins."));
+      next.addEventListener("click", () => commit(continueDay(state), dayNumber === STORY.DAYS.length ? "The closing ledger is ready." : "A new morning begins.", dayNumber === STORY.DAYS.length ? ".epilogue h2" : ".story-panel h2"));
       append(card, next);
       append(panel, card);
     } else {
@@ -226,7 +236,7 @@
         button.dataset.weather = weather;
         button.setAttribute("aria-label", "Stamp " + w.label + ". " + w.hint);
         append(button, element("span", "glyph", w.glyph), element("span", "stamp-label", w.label), element("span", "code", w.code));
-        button.addEventListener("click", () => commit(choose(state, weather), w.label + " stamped. The town responds."));
+        button.addEventListener("click", () => commit(choose(state, weather), w.label + " stamped. The town responds.", ".result-card h3"));
         append(stampRow, button);
       }
       append(panel, stampRow);
@@ -259,7 +269,7 @@
     append(root, renderLetters(STORY.DAYS[dayIndex], dayIndex), renderDesk(score(state.history)));
   }
   function restart() {
-    commit(initialState(), "New ledger started. The first morning is ready.");
+    commit(initialState(), "New ledger started. The first morning is ready.", ".story-panel h2");
   }
   reset.addEventListener("click", () => {
     if (state.history.length === 0) return;
