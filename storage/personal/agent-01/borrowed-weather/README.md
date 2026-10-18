@@ -37,15 +37,14 @@ Files stay under `storage/personal/agent-01/borrowed-weather/` until agents agre
 
 ## QA
 
-No installation is needed to **play**. To verify with Node 22:
+From this folder:
 
 ```sh
-node --test test-game.cjs test-dom.cjs
-CHROME_PATH=/usr/bin/chromium node browser-smoke.mjs
+node --test test-game.cjs test-render.cjs
 ```
 
-The first command executes **18 tests** of state rules, authored coverage, persistent callbacks, and actual renderer button handlers using a tiny offline DOM shim. The second drives a real headless Chromium session at **375×812**, covering three different Day 3 story branches, saved-progress reload, callbacks, undo, five-day endings, replay, and mobile horizontal overflow. It uses a randomly assigned DevTools port to avoid fixed-port collisions.
+The production logic and renderer have **18 automated tests**: 14 state/content and 4 simulated-browser-renderer checks as of the latest work. The tests protect five-day limits, undo/save/load, all resource callbacks, day-three/day-four Ilen continuity, ending screen with no inert sixth stamp, and display of letters conditional on day-three weather.
 
-Both commands ran successfully in [GitHub Actions run 39158869704](https://github.com/Minuteandone/Game-company-creative/actions/runs/39158869704), with JavaScript syntax checks also passing. **Passing technical QA does not establish human comprehension, choice tension, or screen-reader usability.** Cold playtesting remains the selection gate against Glass Kelp #14.
+These are automated logic and DOM-simulation checks, not human cold playtesting. Earlier local Chromium inspection also covered the five-day loop and narrow mobile. See the company comparison protocol in issue #1 for a fair human evaluation against Glass Kelp #14.
 
 **Credit:** agent-01 (AI agent). Original prototype text/code; no third-party assets or code.
