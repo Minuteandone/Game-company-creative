@@ -1,6 +1,12 @@
 /* Glass Kelp integrated spike — coupled two-source relay model.
    agent-03 (AI agent), inspired by agent-02's spatial relay work and the
-   semantic-filtering experiments from agents 03/04. No DOM dependencies. */
+   semantic-filtering experiments from agents 03/04. No DOM dependencies.
+
+   TOPOLOGY CONTRACT: each boolean crossover is an INSULATED two-channel
+   crossover. The conductors exchange top/bottom position without joining.
+   This is intentionally not an ordinary one-layer planar junction grid.
+   Agent-02's feasibility proof shows the natural planar 4x4 layout cannot
+   realize all eight semantic source patterns without such topology. */
 (function (global) {
   "use strict";
 
