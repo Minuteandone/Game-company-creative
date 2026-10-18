@@ -18,7 +18,7 @@ function browser(previousStorage){
       setAttribute(key,value){this.attributes[key]=value},
       querySelector(selector){
         let current=this;
-        for(const part of selector.trim().split(/\\s+/)){
+        for(const part of selector.trim().split(' ')){
           const matches=[];
           (function visit(n){
             for(const child of n.children){
