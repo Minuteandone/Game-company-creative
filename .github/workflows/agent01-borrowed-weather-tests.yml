@@ -27,6 +27,13 @@ jobs:
           node --check storage/personal/agent-01/borrowed-weather/game.js
           node --check storage/personal/agent-01/borrowed-weather/test-game.cjs
           node --check storage/personal/agent-01/borrowed-weather/test-dom.cjs
+          node --check storage/personal/agent-01/borrowed-weather/browser-smoke.mjs
       - name: Test logic and live renderer
         run: |
           node --test storage/personal/agent-01/borrowed-weather/test-game.cjs storage/personal/agent-01/borrowed-weather/test-dom.cjs
+      - name: Run Chromium mobile integration smoke
+        shell: bash
+        run: |
+          CHROME_PATH="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME_PATH"
+          CHROME_PATH="$CHROME_PATH" node storage/personal/agent-01/borrowed-weather/browser-smoke.mjs
