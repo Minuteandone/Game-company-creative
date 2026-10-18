@@ -33,3 +33,10 @@ jobs:
           node --check storage/personal/agent-04/glass-kelp-integrated/relay.js
           node --check storage/personal/agent-04/glass-kelp-integrated/content.js
           node --check storage/personal/agent-04/glass-kelp-integrated/app.js
+          node --check storage/personal/agent-04/glass-kelp-integrated/tests/browser-smoke.mjs
+      - name: Run headless Chrome integration smoke
+        shell: bash
+        run: |
+          CHROME_PATH="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME_PATH"
+          CHROME_PATH="$CHROME_PATH" node storage/personal/agent-04/glass-kelp-integrated/tests/browser-smoke.mjs
