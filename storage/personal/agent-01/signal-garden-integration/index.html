@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Signal Garden — Glass Kelp Island</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#071215;--panel:#0d1d21;--panel2:#11272a;--line:#29464a;
+  --ink:#eefaf4;--dim:#91aaa4;--green:#acf5c6;--blue:#b8c8ff;--gold:#ffd992;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  background:
+    radial-gradient(circle at 15% 5%,#15392c 0,transparent 30rem),
+    radial-gradient(circle at 90% 75%,#17294b 0,transparent 34rem),
+    linear-gradient(180deg,#071215,#0a191c 58%,#0b2020);
+  font:16px/1.55 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button{font:inherit}
+main{width:min(1100px,94vw);margin:auto;padding:34px 0 70px}
+.eyebrow{font-size:.75rem;letter-spacing:.17em;text-transform:uppercase;color:var(--dim);margin:0 0 .35rem}
+h1{font-size:clamp(2.7rem,8vw,6rem);line-height:.9;letter-spacing:-.06em;margin:0}
+.lede{max-width:72ch;color:#bfd2cd;font-size:1.04rem;margin:1rem 0 1.6rem}
+.topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:1rem 0}
+.pill{border:1px solid var(--line);border-radius:999px;padding:.42rem .7rem;background:#09191c;color:#b7cbc5;font-size:.82rem}
+.pill strong{color:var(--ink)}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:14px}
+.map,.scene,.tower,.ending{
+  background:#0b1a1ecc;border:1px solid var(--line);border-radius:20px;
+  box-shadow:0 22px 80px #0008;overflow:hidden;
+}
+.map{padding:14px;align-self:start;position:sticky;top:12px}
+.map-title{padding:6px 6px 12px}
+.place{
+  width:100%;text-align:left;margin:6px 0;border:1px solid #284247;border-radius:14px;
+  padding:13px 14px;background:#0d2024;color:var(--ink);cursor:pointer;transition:.12s ease;
+}
+.place:hover,.place:focus-visible{transform:translateY(-1px);border-color:#6c9188;outline:none}
+.place.active{border-color:var(--green);box-shadow:0 0 0 1px #7bcf9b55 inset}
+.place.locked{opacity:.45;cursor:not-allowed}
+.place .name{display:flex;justify-content:space-between;gap:12px;font-weight:800}
+.place .sub{display:block;color:var(--dim);font-size:.8rem;margin-top:3px}
+.check{color:var(--green)}
+.scene-head{min-height:190px;padding:22px;display:flex;flex-direction:column;justify-content:end;
+  background:
+    linear-gradient(180deg,transparent,#081315ee),
+    radial-gradient(circle at 70% 20%,#2a5147 0,transparent 18rem),
+    #10262a;
+}
+.scene-head.harbor{background:linear-gradient(180deg,transparent,#081315ee),radial-gradient(circle at 70% 15%,#35506f 0,transparent 19rem),#10262a}
+.scene-head.garden{background:linear-gradient(180deg,transparent,#081315ee),radial-gradient(circle at 72% 20%,#395f3c 0,transparent 18rem),#10262a}
+.scene-head.lock{background:linear-gradient(180deg,transparent,#081315ee),radial-gradient(circle at 70% 20%,#665035 0,transparent 18rem),#10262a}
+.scene-head.tower-bg{background:linear-gradient(180deg,transparent,#081315ee),radial-gradient(circle at 75% 15%,#4a426c 0,transparent 20rem),#10262a}
+.scene-head h2{font-size:clamp(1.8rem,4vw,3rem);margin:.25rem 0 0;letter-spacing:-.04em}
+.scene-body{padding:22px}
+.scene-body p{max-width:72ch}
+.quote{border-left:3px solid var(--green);padding:.8rem 1rem;margin:1rem 0;background:#102722;color:#dcefe6}
+.fact{border:1px dashed #41615e;border-radius:12px;padding:.8rem 1rem;color:#b6cbc4;background:#0a181b;margin-top:1rem}
+.next{margin-top:16px;color:var(--dim);font-size:.9rem}
+.tower{display:none}
+.tower.show{display:block}
+.voice-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.voice{padding:16px;background:var(--panel)}
+.voice.a strong{color:var(--green)} .voice.b strong{color:var(--blue)}
+.voice p{font-size:.88rem;color:var(--dim);margin:.3rem 0 0}
+.bands{display:grid;gap:1px;background:var(--line)}
+.band{background:var(--panel);padding:16px;display:grid;grid-template-columns:9rem 1fr;gap:16px}
+.band-name{font-weight:900}
+.band-name small{display:block;color:var(--dim);font-weight:500;margin-top:3px}
+.routes{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+.route{border:1px solid var(--line);border-radius:12px;background:#0a191c;color:var(--ink);text-align:left;padding:11px;cursor:pointer}
+.route:hover,.route:focus-visible{outline:none;border-color:#71948c}
+.route.a[aria-pressed="true"]{border-color:var(--green);background:#10261e}
+.route.b[aria-pressed="true"]{border-color:var(--blue);background:#121f34}
+.route strong{display:block;margin-bottom:3px}
+.route.a strong{color:var(--green)}.route.b strong{color:var(--blue)}
+.route span{color:#c4d5cf;font-family:Georgia,serif}
+.swap{align-self:center;color:#678780}
+.assembly{padding:20px;background:linear-gradient(180deg,#0c2024,#10292b)}
+.transcript{font:clamp(1.35rem,3.5vw,2.25rem)/1.4 Georgia,serif;margin:.5rem 0 0}
+.frag-a{text-decoration:underline;text-decoration-color:#6cc18a;text-underline-offset:.18em}
+.frag-b{text-decoration:underline;text-decoration-color:#7389ce;text-underline-offset:.18em}
+.context-note{color:var(--gold);font-size:.88rem;margin-top:.8rem}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.action{border:1px solid #476a63;border-radius:999px;background:#102a22;color:var(--ink);padding:10px 15px;cursor:pointer}
+.action.primary{background:#d8ffe6;color:#07130d;border-color:#d8ffe6;font-weight:850}
+.action:hover,.action:focus-visible{outline:none;filter:brightness(1.08)}
+.after-banner{display:none;border:1px solid #725f35;border-radius:14px;background:#2c251555;color:#f2dfb6;padding:12px 14px;margin-bottom:14px}
+.after-banner.show{display:block}
+.ending{display:none;margin-top:14px;padding:22px}
+.ending.show{display:block}
+.ending h2{font-size:clamp(1.6rem,4vw,2.5rem);margin:.2rem 0}
+.echo{border-left:3px solid var(--gold);padding:.85rem 1rem;background:#2b25154d;color:#f2e8ca;margin-top:1rem}
+.small{font-size:.84rem;color:var(--dim)}
+
+.rail-board{padding:18px;background:#0d2326;border-top:1px solid var(--line)}
+.rail-intro{max-width:68ch;font-size:.86rem;color:#c6d7d0;margin:0 0 14px}
+.rail-network{display:grid;grid-template-columns:minmax(5rem,.8fr) repeat(3,minmax(0,1fr));gap:8px}
+.rail-sources{display:grid;grid-template-rows:1fr 1fr;gap:8px}
+.rail-source{border:1px solid #45636a;background:#09191c;border-radius:9px;display:grid;place-content:center;text-align:center;font-size:.86rem;font-weight:800}
+.rail-source.a{color:var(--green)}.rail-source.b{color:var(--blue)}
+.rail-band{display:grid;grid-template-rows:auto 1fr auto 1fr;gap:6px;min-width:0;text-align:center}
+.rail-band strong{font-size:.8rem}.rail-band small{display:block;font-size:.67rem;color:var(--dim)}
+.rail-wire{height:12px;border-radius:999px;align-self:center;background:var(--rail,#456);box-shadow:0 0 12px var(--rail,#456)}
+.rail-tap{border:1px solid #527177;border-radius:11px;background:#152f31;color:var(--ink);min-height:88px;cursor:pointer;padding:5px 2px;display:grid;place-items:center;font-size:.77rem}
+.rail-tap.a{border-color:#6cba8d}.rail-tap.b{border-color:#94a4e9}
+.rail-tap:focus-visible,.rail-cross:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.rail-tap:disabled,.rail-cross:disabled{opacity:.8;cursor:default}
+.tap-arrow{font-size:1.6rem;font-weight:900}.tap-source{font-weight:800}
+.rail-crossovers{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.rail-cross{border:1px solid #527177;background:#122b2e;border-radius:11px;color:var(--ink);padding:10px;flex:1;min-width:145px;text-align:left;cursor:pointer}
+.rail-cross[aria-pressed=true]{border-color:var(--gold);background:#363022}
+.rail-cross strong{display:block;font-size:.85rem}.rail-cross small{display:block;font-size:.75rem;margin-top:3px;color:#b8d0c6}
+.rail-summary{font-size:.86rem;color:#e8d4aa;margin:12px 0 0}
+.root-vial{padding:14px;border:1px dashed #7bbca0;border-radius:11px;background:#102a24;margin-top:15px}
+@media(max-width:540px){.rail-board{padding:10px}.rail-network{gap:4px;grid-template-columns:minmax(3.7rem,.8fr) repeat(3,minmax(0,1fr))}.rail-source{font-size:.69rem}.rail-band strong{font-size:.67rem}.rail-tap{min-height:76px;font-size:.66rem}.rail-cross{min-width:125px}}
+
+@media(max-width:820px){
+  .grid{grid-template-columns:1fr}
+  .map{position:static}
+  .voice-grid{grid-template-columns:1fr}
+  .band{grid-template-columns:1fr}
+  .routes{grid-template-columns:1fr}
+  .swap{text-align:center;transform:rotate(90deg)}
+}
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">agent-01 integration · agent-04 world loop + agent-03 coupled semantic rails</p>
+  <h1>Signal Garden</h1>
+  <p class="lede">
+    Tower 11 is receiving two people at once. Before touching the receiver, walk the island and learn
+    what each place stands to lose. Then decide which pieces of each voice the tower will make true.
+  </p>
+
+  <div class="topbar">
+    <span class="pill">phase: <strong id="phaseLabel">before transmission</strong></span>
+    <span class="pill">places understood: <strong id="visitCount">0 / 3</strong></span>
+    <span class="pill">tower: <strong id="towerStatus">waiting for context</strong></span>
+  </div>
+
+  <div id="afterBanner" class="after-banner"></div>
+
+  <div class="grid">
+    <nav class="map" aria-label="Glass Kelp Island locations">
+      <div class="map-title">
+        <p class="eyebrow">island map</p>
+        <strong>Glass Kelp Island</strong>
+      </div>
+      <button class="place" data-place="harbor">
+        <span class="name">⚓ Harbor <span id="check-harbor"></span></span>
+        <span class="sub">ferries, seawall, tide gauge</span>
+      </button>
+      <button class="place" data-place="garden">
+        <span class="name">⌂ Glass Garden <span id="check-garden"></span></span>
+        <span class="sub">seed beds, glass roots, Keeper Iona</span>
+      </button>
+      <button class="place" data-place="lock">
+        <span class="name">▤ North Lock <span id="check-lock"></span></span>
+        <span class="sub">reservoir gate, pressure room</span>
+      </button>
+      <button id="towerButton" class="place locked" data-place="tower" disabled>
+        <span class="name">⌁ Tower 11 <span id="check-tower"></span></span>
+        <span class="sub" id="towerSub">visit all three places first</span>
+      </button>
+    </nav>
+
+    <section id="scene" class="scene">
+      <div id="sceneHead" class="scene-head harbor">
+        <p id="sceneEyebrow" class="eyebrow">arrival / low tide</p>
+        <h2 id="sceneTitle">The island is listening.</h2>
+      </div>
+      <div class="scene-body">
+        <div id="sceneText">
+          <p>Three footpaths leave the tower road. Nobody agrees on what Tower 11 should say, only that it has started receiving voices again.</p>
+          <p>Visit the island before you touch the receiver. The places are close enough that excuses will not save you.</p>
+        </div>
+        <div id="sceneFact" class="fact">The receiver remains locked while its local context archive is empty.</div>
+        <div id="sceneNext" class="next">Choose a place from the island map.</div>
+      </div>
+    </section>
+
+    <section id="tower" class="tower" aria-label="Tower 11 receiver">
+      <div class="scene-head tower-bg">
+        <p class="eyebrow">Tower 11 / split-channel receiver</p>
+        <h2>Two voices. Three bands. One sentence.</h2>
+      </div>
+
+      <div class="voice-grid">
+        <div class="voice a">
+          <strong>VOICE A — Iona Vale, Garden Keeper</strong>
+          <p>At the Glass Garden. She can see the beds and root channels, but not the pressure chamber.</p>
+        </div>
+        <div class="voice b">
+          <strong>VOICE B — Orren Pike, Reservoir Operator</strong>
+          <p>Below the North Lock. He can see the pressure gauges, but not what is happening inside the garden.</p>
+        </div>
+      </div>
+
+      <div class="rail-board" aria-label="Two-source network for Tower 11">
+        <p class="rail-intro">Iona enters on upper rail A; Orren enters on lower rail B. Change which rail each output hears. Crossovers swap both sources downstream: one control can alter several clauses.</p>
+        <div class="rail-network">
+          <div class="rail-sources"><div class="rail-source a">A<br>Iona</div><div class="rail-source b">B<br>Orren</div></div>
+          <div class="rail-band" data-band="0"><strong>LOW <small>WHEN</small></strong><div class="rail-wire" id="top0" aria-hidden="true"></div><button class="rail-tap" type="button" data-tap="0"><span>Tap 1</span><span class="tap-arrow">↑</span><span class="tap-source">Voice A</span></button><div class="rail-wire" id="bottom0" aria-hidden="true"></div></div>
+          <div class="rail-band" data-band="1"><strong>MID <small>ACTION</small></strong><div class="rail-wire" id="top1" aria-hidden="true"></div><button class="rail-tap" type="button" data-tap="1"><span>Tap 2</span><span class="tap-arrow">↑</span><span class="tap-source">Voice A</span></button><div class="rail-wire" id="bottom1" aria-hidden="true"></div></div>
+          <div class="rail-band" data-band="2"><strong>HIGH <small>WHY</small></strong><div class="rail-wire" id="top2" aria-hidden="true"></div><button class="rail-tap" type="button" data-tap="2"><span>Tap 3</span><span class="tap-arrow">↑</span><span class="tap-source">Voice A</span></button><div class="rail-wire" id="bottom2" aria-hidden="true"></div></div>
+        </div>
+        <div class="rail-crossovers">
+          <button id="cross1" class="rail-cross" aria-pressed="false" type="button"><strong>MID crossing: BYPASS</strong><small>Changes ACTION and WHY sources</small></button>
+          <button id="cross2" class="rail-cross" aria-pressed="false" type="button"><strong>HIGH crossing: BYPASS</strong><small>Changes WHY source</small></button>
+        </div>
+        <p id="railSummary" class="rail-summary" aria-live="polite">Low / mid / high: Voice A / A / A.</p>
+      </div>
+
+      <div class="assembly">
+        <p class="eyebrow">what the island will hear</p>
+        <div id="transcript" class="transcript"></div>
+        <div id="contextNote" class="context-note"></div>
+        <div class="actions">
+          <button id="transmitButton" class="action primary">Retransmit this sentence</button>
+          <button id="resetRelaysButton" class="action">reset rail switches</button>
+          <button id="returnButton" class="action">return to island</button>
+        </div>
+        <p class="small">No combination is marked correct. Your earlier visits are the only “hint system.”</p>
+      </div>
+    </section>
+  </div>
+
+  <section id="ending" class="ending" aria-live="polite">
+    <p class="eyebrow">tomorrow / tower echo</p>
+    <h2 id="endingTitle"></h2>
+    <p id="endingText"></p>
+    <div id="endingEcho" class="echo"></div>
+    <div id="rootVial" class="root-vial"></div>
+    <div class="actions">
+      <button id="resetButton" class="action">reset island</button>
+    </div>
+  </section>
+</main>
+
+<script src="relay-core.js"></script>
+<script>
+(() => {
+  const $=id=>document.getElementById(id);
+  const fragments=[
+    {a:"At dusk,",b:"Before sunrise,"},
+    {a:"open the north lock",b:"seal the north lock"},
+    {a:"so the glass garden can drink.",b:"or the glass garden will drown."}
+  ];
+
+  const state={
+    phase:"before",
+    visited:new Set(),
+    revisited:new Set(),
+    current:null,
+    picks:["a","a","a"],
+    relay:{tap:["top","top","top"],cross1:false,cross2:false},
+    transmitted:false
+  };
+
+  const beforeScenes={
+    harbor:{
+      eyebrow:"Harbor / tide gauge 4",
+      title:"Mara watches the seawall",
+      paragraphs:[
+        "The harbor is already low enough that the ferry ramp complains against its hinges. Mara Dey, the morning pilot, has chalked tomorrow's tide marks onto the wall.",
+        "She says the north lock can change the harbor by half a meter in twenty minutes. Opening it feeds inland channels. Sealing it holds the reservoir back but leaves the outer basin to the sea."
+      ],
+      quote:"“I don't care which expert wins. I care whether someone tells us when the water is going to move.” — Mara",
+      fact:"CONTEXT: timing matters to the harbor as much as open versus closed."
+    },
+    garden:{
+      eyebrow:"Glass Garden / seed hall",
+      title:"Iona has roots in jars",
+      paragraphs:[
+        "The greenhouse floor is webbed with transparent root channels. Half are dry. Half still hold last week's green reservoir water.",
+        "Keeper Iona Vale insists the garden needs another controlled drink. She points to silver-leaf seedlings whose roots curl away from empty glass."
+      ],
+      quote:"“At dusk the roots open. If we miss that window, we lose another bed.” — Iona",
+      fact:"CONTEXT: Iona can see the plants clearly, but she cannot see the reservoir pressure room."
+    },
+    lock:{
+      eyebrow:"North Lock / pressure room",
+      title:"Orren distrusts quiet gauges",
+      paragraphs:[
+        "The lock machinery is older than anyone who still knows how to repair it. One pressure needle twitches even while the gate is motionless.",
+        "Operator Orren Pike says a surge crossed the upper reservoir before dawn yesterday. He wants the gate sealed until the pressure falls."
+      ],
+      quote:"“Iona sees thirsty roots. I see thirty tons of water trying to become a shortcut.” — Orren",
+      fact:"CONTEXT: Orren can see the pressure system, but he cannot see whether the garden beds are actually flooding."
+    }
+  };
+
+  function derived(){ return SignalRelayCore.meaning(state.picks); }
+
+    function transcriptHTML(){
+    return state.picks.map((p,i)=>
+      '<span class="frag-'+p+'">'+fragments[i][p]+'</span>'
+    ).join(" ");
+  }
+
+  function afterScene(place){
+    const d=derived();
+    if(place==="harbor"){
+      let p1,p2,quote,fact;
+      if(d.action==="open"){
+        p1=d.time==="dusk"
+          ?"At dusk the inner channels take water. The harbor gauge drops, then steadies as the north lock opens."
+          :"Before sunrise the lock opens while most boats are still tied. The harbor gauge shifts under an empty sky.";
+        p2=d.time==="dusk"
+          ?"Mara delays the last ferry long enough for the ramp to settle. Nobody cheers, but nobody loses a hull."
+          :"Mara wakes to ropes pulled strangely taut and moves the first ferry departure by an hour.";
+      }else{
+        p1=d.time==="dusk"
+          ?"The north lock stays sealed through dusk. The harbor keeps the sea's rhythm instead of the reservoir's."
+          :"Before sunrise, the lock clamps shut. By breakfast the outer basin sits lower than Mara predicted.";
+        p2=d.time==="dusk"
+          ?"Mara keeps the evening ferry running, though she marks the seawall with a question mark where the reservoir change should have been."
+          :"The first ferry scrapes mud on departure. Mara says next time she'd like the tower to mention consequences, not just commands.";
+      }
+      quote=d.reason==="drown"
+        ?"“People moved fast because your message sounded like a warning. Warnings have weight.” — Mara"
+        :"“You made it sound like the garden mattered more than the harbor. Maybe it did. Still would've liked a heads-up.” — Mara";
+      fact="WORLD CHANGE: the harbor remembers both the gate action and the timing you chose.";
+      return {eyebrow:"Harbor / after transmission",title:"The tide becomes evidence",paragraphs:[p1,p2],quote,fact};
+    }
+
+    if(place==="garden"){
+      let p1,p2,quote,fact;
+      if(d.action==="open"){
+        p1=d.time==="dusk"
+          ?"At dusk, green water threads through the glass-root channels exactly as Iona hoped."
+          :"Before sunrise, water enters before the root beds fully open. It pools silver under the youngest seedlings.";
+        p2=d.reason==="drink"
+          ?"Volunteers call the transmission an instruction and begin measuring how much each bed received."
+          :"Volunteers heard a flood warning attached to an order to open the gate. Half arrive carrying buckets; half arrive carrying evacuation blankets.";
+      }else{
+        p1=d.time==="dusk"
+          ?"At dusk the channels remain dry. Iona watches the roots curl tighter inside their glass tubes."
+          :"The gate is sealed before sunrise. Condensation beads inside the closed irrigation pipes as the temperature drops.";
+        p2=d.reason==="drink"
+          ?"The phrase “seal it so the garden can drink” makes no engineering sense, so gardeners start collecting that condensation by hand."
+          :"The garden stays dry. Nobody can tell whether the feared flood was prevented or never coming.";
+      }
+      quote=state.picks[1]!==state.picks[2]
+        ?"“That's not either message. That's yours.” — Iona"
+        :"“You kept one of us intact long enough for the island to act.” — Iona";
+      fact="WORLD CHANGE: the garden responds to the gate, but people interpret the result through the reason you broadcast.";
+      return {eyebrow:"Glass Garden / after transmission",title:"The sentence grows roots",paragraphs:[p1,p2],quote,fact};
+    }
+
+    let p1,p2,quote,fact;
+    if(d.action==="open"){
+      p1=d.time==="dusk"
+        ?"Orren logs the gate opening at dusk. Pressure rises sharply, then falls without crossing the red mark."
+        :"The gate opens before sunrise. For nineteen seconds, the damaged pressure needle pins itself against the stop.";
+      p2=d.reason==="drown"
+        ?"He circles the word DROWN three times in the logbook, furious that a warning was used to justify opening the lock."
+        :"He writes that the outcome does not prove the opening was safe; it only proves the gate survived once.";
+    }else{
+      p1=d.time==="dusk"
+        ?"The lock remains sealed at dusk. Pressure accumulates behind the gate, then drains through the overflow throat."
+        :"Orren seals the gate before sunrise. Minutes later, a dark surge strikes the far side hard enough to shake dust from the ceiling.";
+      p2=d.reason==="drink"
+        ?"He stares at the phrase about helping the garden, then discovers condensation feeding the closed pipe network anyway."
+        :"For the first time all morning, Orren stops arguing with the tower.";
+    }
+    quote=state.picks[0]!==state.picks[1]||state.picks[1]!==state.picks[2]
+      ?"“If you're going to splice us, at least come down here afterward and look at the gauges.” — Orren"
+      :"“One clean voice is easier to obey. That doesn't make it more complete.” — Orren";
+    fact="WORLD CHANGE: the pressure system gives partial evidence, never a perfect verdict on whether your sentence was 'right.'";
+    return {eyebrow:"North Lock / after transmission",title:"The gauges refuse a moral",paragraphs:[p1,p2],quote,fact};
+  }
+
+  const endingVariants={
+    aaa:{
+      title:"The Keeper becomes a forecast",
+      text:"By morning, your intact version of Iona's instruction is copied onto greenhouse tags and harbor chalkboards. People begin treating the Garden Keeper's voice as if it were weather.",
+      echo:"TOWER 12 / 07:18 — Unknown speaker: “If Tower 11 repeats her, will you believe her twice?”"
+    },
+    aab:{
+      title:"A warning nobody originally gave",
+      text:"You opened the lock at dusk but attached Orren's fear of drowning. The island remembers the contradiction more vividly than the result. Children call the evening 'the careful flood.'",
+      echo:"TOWER 12 / 07:18 — Orren: “That last clause was mine. The order wasn't.”"
+    },
+    aba:{
+      title:"The quiet watering",
+      text:"Your sentence said to seal the lock so the garden could drink. Gardeners discover enough condensation in the closed pipes to keep one seed bed alive. An accident becomes a method.",
+      echo:"TOWER 12 / 07:18 — Iona: “I don't know why it worked. Please don't turn that into certainty.”"
+    },
+    abb:{
+      title:"The evacuation that found no disaster",
+      text:"The dusk warning empties the seed hall. Nothing floods. Some residents call the tower wrong; others say an avoided disaster always looks imaginary afterward.",
+      echo:"TOWER 12 / 07:18 — Mara: “How do you prove a warning saved you?”"
+    },
+    baa:{
+      title:"Morning water, unreadable writing",
+      text:"The pre-sunrise opening leaves luminous mineral traces across the greenhouse floor. Nobody can agree whether they form letters or just cracks.",
+      echo:"TOWER 12 / 07:18 — Unknown speaker: “You changed the time. That is why we can reach you now.”"
+    },
+    bab:{
+      title:"The impossible emergency",
+      text:"You told the island to open the lock before sunrise or the garden would drown. Both original speakers deny saying it. The sentence still prevented a pressure surge from reaching the old overflow pipe.",
+      echo:"TOWER 12 / 07:18 — Two voices together: “We did not say that.” A third: “But you did.”"
+    },
+    bba:{
+      title:"A contradiction becomes civic work",
+      text:"The island seals the gate so the garden can drink. Because the message sounds impossible, people inspect every pipe instead of blindly obeying. They find three leaks nobody knew existed.",
+      echo:"TOWER 12 / 07:18 — Maintenance band: “Bad sentence. Useful inspection.”"
+    },
+    bbb:{
+      title:"The Operator becomes a warning bell",
+      text:"Orren's intact warning survives. The surge comes, the gate holds, and by breakfast people are repeating his exact words whenever a gauge twitches.",
+      echo:"TOWER 12 / 07:18 — Iona: “He was right about the water. He was not right about everything.”"
+    }
+  };
+
+  function renderMap(){
+    ["harbor","garden","lock"].forEach(p=>{
+      $("check-"+p).textContent=(state.phase==="before"?state.visited:state.revisited).has(p)?"✓":"";
+      $("check-"+p).className="check";
+    });
+    $("visitCount").textContent=(state.phase==="before"?state.visited.size:state.revisited.size)+" / 3";
+    const ready=state.visited.size===3;
+    $("towerButton").disabled=!ready && state.phase==="before";
+    $("towerButton").classList.toggle("locked",!ready && state.phase==="before");
+    if(state.phase==="before"){
+      $("towerSub").textContent=ready?"receiver unlocked":"visit all three places first";
+      $("towerStatus").textContent=ready?"ready":"waiting for context";
+    }else{
+      $("towerSub").textContent="listen for tomorrow's echo";
+      $("towerStatus").textContent="transmission sent";
+    }
+    document.querySelectorAll(".place").forEach(b=>b.classList.toggle("active",b.dataset.place===state.current));
+  }
+
+  function sceneHTML(scene){
+    return scene.paragraphs.map(p=>"<p>"+p+"</p>").join("")+
+      '<div class="quote">'+scene.quote+"</div>";
+  }
+
+  function showPlace(place){
+    state.current=place;
+    $("tower").classList.remove("show");
+    $("scene").style.display="block";
+    if(state.phase==="before") state.visited.add(place); else state.revisited.add(place);
+    const s=state.phase==="before"?beforeScenes[place]:afterScene(place);
+    $("sceneHead").className="scene-head "+place;
+    $("sceneEyebrow").textContent=s.eyebrow;
+    $("sceneTitle").textContent=s.title;
+    $("sceneText").innerHTML=sceneHTML(s);
+    $("sceneFact").textContent=s.fact;
+    $("sceneNext").textContent=state.phase==="before"
+      ? (state.visited.size<3?"Keep exploring. Tower 11 unlocks after all three places.":"You now have enough context to climb Tower 11.")
+      : (state.revisited.size<3?"Revisit the other places to see how the same sentence traveled.":"You've seen the island answer. Return to Tower 11 for tomorrow's echo.");
+    renderMap();
+  }
+
+  function showTower(){
+    state.current="tower";
+    $("scene").style.display="none";
+    $("tower").classList.add("show");
+    if(state.phase==="before"){
+      $("transcript").innerHTML=transcriptHTML();
+      updateRoutes();
+      $("transmitButton").style.display="";
+      $("resetRelaysButton").style.display="";
+      $("contextNote").textContent="You have met both speakers' blind spots. Filtering is authorship now, not signal repair.";
+    }else{
+      $("transcript").innerHTML=transcriptHTML();
+      $("transmitButton").style.display="none";
+      $("resetRelaysButton").style.display="none";
+      $("contextNote").textContent=state.revisited.size===3
+        ?"The island has finished answering your first transmission. Tomorrow's echo is ready below."
+        :"The receiver holds your sentence. Revisit all three places before reading tomorrow's echo.";
+      if(state.revisited.size===3) showEnding();
+    }
+    renderMap();
+  }
+
+  function updateRoutes(){
+    const r=state.relay;
+    const rails=SignalRelayCore.rails(r.cross1,r.cross2);
+    state.picks=SignalRelayCore.select(r.tap,r.cross1,r.cross2);
+    for(let i=0;i<3;i++){
+      for(const [pos,src] of [["top",rails[i][0]],["bottom",rails[i][1]]]){
+        $(pos+i).style.setProperty("--rail",src==="a"?"var(--green)":"var(--blue)");
+      }
+      const tap=document.querySelector('[data-tap="'+i+'"]');
+      const src=state.picks[i];
+      tap.className="rail-tap "+src;
+      tap.querySelector(".tap-arrow").textContent=r.tap[i]==="top"?"↑":"↓";
+      tap.querySelector(".tap-source").textContent="Voice "+src.toUpperCase();
+      tap.setAttribute("aria-label",SignalRelayCore.BANDS[i]+" tap. "+r.tap[i]+" wire, Voice "+src.toUpperCase()+". Activate to change.");
+      tap.setAttribute("aria-pressed",String(r.tap[i]==="bottom"));
+      tap.disabled=state.phase!=="before";
+    }
+    for(const [id,on] of [["cross1",r.cross1],["cross2",r.cross2]]){
+      const el=$(id);
+      el.querySelector("strong").textContent=(id==="cross1"?"MID":"HIGH")+" crossing: "+(on?"CROSSED":"BYPASS");
+      el.setAttribute("aria-pressed",String(on));
+      el.disabled=state.phase!=="before";
+    }
+    $("railSummary").textContent="LOW / MID / HIGH: "+state.picks.map(x=>"Voice "+x.toUpperCase()).join(" / ")+
+      ". MID crossing "+(r.cross1?"on":"off")+"; HIGH crossing "+(r.cross2?"on":"off")+".";
+    $("transcript").innerHTML=transcriptHTML();
+    const pure=state.picks.every(x=>x===state.picks[0]);
+    $("contextNote").textContent=pure?
+      "One source survives across the sentence. You know what that speaker cannot see.":
+      "You have assembled a mixed sentence that neither person spoke. The island will attribute it to your tower.";
+  }
+
+    function transmit(){
+    state.phase="after";
+    state.transmitted=true;
+    state.current=null;
+    $("phaseLabel").textContent="after transmission";
+    const d=derived();
+    const words=d.action==="open"?"opened":"sealed";
+    $("afterBanner").textContent="TRANSMISSION SENT — "+fragments[0][state.picks[0]]+" "+fragments[1][state.picks[1]]+" "+fragments[2][state.picks[2]]+" The north lock was "+words+". Revisit the island.";
+    $("afterBanner").classList.add("show");
+    $("tower").classList.remove("show");
+    $("scene").style.display="block";
+    $("sceneHead").className="scene-head tower-bg";
+    $("sceneEyebrow").textContent="Tower 11 / carrier released";
+    $("sceneTitle").textContent="Your sentence leaves the tower.";
+    $("sceneText").innerHTML="<p>The broadcast crosses the island faster than you can walk. Harbor radios repeat it. Garden volunteers copy it onto scrap paper. Somewhere below the hill, Orren hears words he may or may not have said.</p><p>The receiver goes quiet. The consequences do not.</p>";
+    $("sceneFact").textContent="Return to the Harbor, Glass Garden, and North Lock. Each location responds to the same three-part message differently.";
+    $("sceneNext").textContent="Revisit all three locations.";
+    renderMap();
+  }
+
+  function showEnding(){
+    const e=endingVariants[derived().key];
+    $("endingTitle").textContent=e.title;
+    $("endingText").textContent=e.text;
+    $("endingEcho").textContent=e.echo;
+    $("rootVial").textContent="ARTIFACT — ROOT VIAL. Iona gives you a narrow glass maintenance sample. A translucent root inside bends toward the receiver. After Tower 12 speaks, the waterline rises without breaking the seal.";
+    $("ending").classList.add("show");
+    setTimeout(()=>$("ending").scrollIntoView({behavior:"smooth",block:"nearest"}),50);
+  }
+
+  function reset(){
+    state.phase="before";
+    state.visited=new Set();
+    state.revisited=new Set();
+    state.current=null;
+    state.picks=["a","a","a"];
+    state.relay={tap:["top","top","top"],cross1:false,cross2:false};
+    state.transmitted=false;
+    $("phaseLabel").textContent="before transmission";
+    $("afterBanner").classList.remove("show");
+    $("ending").classList.remove("show");
+    $("tower").classList.remove("show");
+    $("scene").style.display="block";
+    $("sceneHead").className="scene-head harbor";
+    $("sceneEyebrow").textContent="arrival / low tide";
+    $("sceneTitle").textContent="The island is listening.";
+    $("sceneText").innerHTML="<p>Three footpaths leave the tower road. Nobody agrees on what Tower 11 should say, only that it has started receiving voices again.</p><p>Visit the island before you touch the receiver. The places are close enough that excuses will not save you.</p>";
+    $("sceneFact").textContent="The receiver remains locked while its local context archive is empty.";
+    $("sceneNext").textContent="Choose a place from the island map.";
+    updateRoutes();
+    renderMap();
+  }
+
+  document.querySelectorAll(".place[data-place]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const p=btn.dataset.place;
+      if(p==="tower") showTower(); else showPlace(p);
+    });
+  });
+  document.querySelectorAll("[data-tap]").forEach(btn=>btn.addEventListener("click",()=>{
+    if(state.phase!=="before")return;
+    const i=Number(btn.dataset.tap);
+    state.relay.tap[i]=state.relay.tap[i]==="top"?"bottom":"top";
+    updateRoutes();
+  }));
+  for(const id of ["cross1","cross2"]){
+    $(id).addEventListener("click",()=>{
+      if(state.phase!=="before")return;
+      state.relay[id]=!state.relay[id];
+      updateRoutes();
+    });
+  }
+  $("resetRelaysButton").addEventListener("click",()=>{
+    if(state.phase!=="before")return;
+    state.relay={tap:["top","top","top"],cross1:false,cross2:false};
+    updateRoutes();
+  });
+    $("transmitButton").addEventListener("click",transmit);
+  $("returnButton").addEventListener("click",()=>{
+    $("tower").classList.remove("show");$("scene").style.display="block";state.current=null;renderMap();
+  });
+  $("resetButton").addEventListener("click",reset);
+
+  updateRoutes();
+  renderMap();
+})();
+</script>
+</body>
+</html>
