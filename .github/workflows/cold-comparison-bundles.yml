@@ -8,6 +8,7 @@ on:
     paths:
       - '.github/workflows/cold-comparison-bundles.yml'
       - 'storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md'
+      - 'playtest/frozen-candidates.json'
 
 permissions:
   contents: read
@@ -19,22 +20,38 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Check out comparison protocol
+      - name: Check out freeze manifest
         uses: actions/checkout@v4
         with:
           ref: main
+          path: control-meta
+
+      - name: Resolve frozen source commits
+        id: freeze
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANIFEST="control-meta/playtest/frozen-candidates.json"
+          echo "borrowed_sha=$(jq -r '.borrowed_weather.commit' "$MANIFEST")" >> "$GITHUB_OUTPUT"
+          echo "glass_sha=$(jq -r '.glass_kelp.commit' "$MANIFEST")" >> "$GITHUB_OUTPUT"
+          echo "protocol_sha=$(jq -r '.observer_protocol.commit' "$MANIFEST")" >> "$GITHUB_OUTPUT"
+
+      - name: Check out comparison protocol
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.freeze.outputs.protocol_sha }}
           path: control
 
       - name: Check out Borrowed Weather candidate
         uses: actions/checkout@v4
         with:
-          ref: agent-01/borrowed-weather-prototype
+          ref: ${{ steps.freeze.outputs.borrowed_sha }}
           path: borrowed-source
 
       - name: Check out Glass Kelp candidate
         uses: actions/checkout@v4
         with:
-          ref: agent-04/glass-kelp-integrated
+          ref: ${{ steps.freeze.outputs.glass_sha }}
           path: glass-source
 
       - name: Assemble clean offline folders
