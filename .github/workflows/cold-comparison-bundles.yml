@@ -1,0 +1,113 @@
+name: Cold comparison bundles
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/cold-comparison-bundles.yml'
+      - 'storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Package offline playtest candidates
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out comparison protocol
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: control
+
+      - name: Check out Borrowed Weather candidate
+        uses: actions/checkout@v4
+        with:
+          ref: agent-01/borrowed-weather-prototype
+          path: borrowed-source
+
+      - name: Check out Glass Kelp candidate
+        uses: actions/checkout@v4
+        with:
+          ref: agent-04/glass-kelp-integrated
+          path: glass-source
+
+      - name: Assemble clean offline folders
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p out/borrowed-weather out/glass-kelp
+
+          cp borrowed-source/storage/personal/agent-01/borrowed-weather/index.html out/borrowed-weather/
+          cp borrowed-source/storage/personal/agent-01/borrowed-weather/styles.css out/borrowed-weather/
+          cp borrowed-source/storage/personal/agent-01/borrowed-weather/story.js out/borrowed-weather/
+          cp borrowed-source/storage/personal/agent-01/borrowed-weather/game.js out/borrowed-weather/
+
+          cp glass-source/storage/personal/agent-04/glass-kelp-integrated/index.html out/glass-kelp/
+          cp glass-source/storage/personal/agent-04/glass-kelp-integrated/styles.css out/glass-kelp/
+          cp glass-source/storage/personal/agent-04/glass-kelp-integrated/relay.js out/glass-kelp/
+          cp glass-source/storage/personal/agent-04/glass-kelp-integrated/content.js out/glass-kelp/
+          cp glass-source/storage/personal/agent-04/glass-kelp-integrated/app.js out/glass-kelp/
+
+          cp control/storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md out/borrowed-weather/OBSERVER_PROTOCOL.md
+          cp control/storage/personal/agent-03/COLD_COMPARISON_PROTOCOL.md out/glass-kelp/OBSERVER_PROTOCOL.md
+
+          cat > out/borrowed-weather/PLAYTEST_README.txt <<'TXT'
+          BORROWED WEATHER — COLD COMPARISON BUILD
+
+          Source branch: agent-01/borrowed-weather-prototype
+          Candidate PR: #12
+
+          1. Extract this artifact completely.
+          2. Open index.html in a modern desktop or mobile browser.
+          3. Do not read OBSERVER_PROTOCOL.md until after the player finishes.
+          4. Do not explain strategy, preferred outcomes, or what the game is "about."
+          5. Record cold observations using OBSERVER_PROTOCOL.md.
+
+          This artifact is for comparison/playtesting. It is not a merged company-game release.
+          TXT
+
+          cat > out/glass-kelp/PLAYTEST_README.txt <<'TXT'
+          SIGNAL GARDEN — GLASS KELP COLD COMPARISON BUILD
+
+          Source branch: agent-04/glass-kelp-integrated
+          Candidate PR: #14
+
+          1. Extract this artifact completely.
+          2. Open index.html in a modern desktop or mobile browser.
+          3. Do not read OBSERVER_PROTOCOL.md until after the player finishes.
+          4. Do not teach the relay puzzle, source grammar, or preferred outcomes unless the player is genuinely stuck.
+          5. Record cold observations using OBSERVER_PROTOCOL.md.
+
+          Optional context-removal control:
+            index.html?towerOnly=1
+
+          This artifact is for comparison/playtesting. It is not a merged company-game release.
+          TXT
+
+          printf 'Borrowed Weather files:\n'
+          find out/borrowed-weather -maxdepth 1 -type f -printf '  %f\n' | sort
+          printf 'Glass Kelp files:\n'
+          find out/glass-kelp -maxdepth 1 -type f -printf '  %f\n' | sort
+
+      - name: Upload Borrowed Weather playtest bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: borrowed-weather-cold-playtest
+          path: out/borrowed-weather/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload Glass Kelp playtest bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: glass-kelp-cold-playtest
+          path: out/glass-kelp/
+          if-no-files-found: error
+          retention-days: 30
