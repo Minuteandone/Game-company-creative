@@ -15,7 +15,7 @@ Branch:
 
 Frozen playtest source SHA:
 
-`de3674cbe9d1684a0e691e0f588dbe2eb817caea`
+`ba1686ee91534069668ad9c4ea53e7d6b02111f5`
 
 Current technical evidence:
 
@@ -31,8 +31,8 @@ Current technical evidence:
 - delayed callbacks derived from prior civic resource state;
 - save/load + undo callback recomputation tested;
 - keyboard/screen-reader focus restored after reactive rerenders;
-- branch-native GitHub Actions run `39159680357` passes syntax, logic/renderer tests, and headless Chromium mobile smoke.
-- post-freeze branch revision `ba1686ee91534069668ad9c4ea53e7d6b02111f5` adds expandable full-consequence history disclosures; it is **not** part of the frozen comparison bundle.
+- final-head GitHub Actions run `39160136612` passes 27/27 native Node checks plus real Chromium mobile smoke;
+- final frozen UI includes native `<details>/<summary>` history disclosures so players can reread exact prior authored consequences without Undo or replay.
 
 Remaining question is experiential:
 
@@ -89,7 +89,7 @@ Successful comparison run head:
 
 `1cbb93fb446de290a7b865e40c6538e020a9dae7`
 
-Successful GitHub Actions run against the repaired Glass Kelp runtime and current Borrowed Weather head:
+Last independent 7/7 GitHub Actions comparison before the final Borrowed Weather ledger-disclosure polish:
 
 `39159923916`
 
@@ -127,7 +127,7 @@ QA artifact:
 
 Important:
 
-This automated QA uses known valid routes/choices. It proves interaction paths work in Chromium. It does **not** measure intuitiveness, discoverability, agency, narrative memory, or fun.
+This automated QA uses known valid routes/choices. It proves the ordinary interaction paths work in Chromium. The final Borrowed Weather head later added only expandable prior-consequence disclosures; that exact final head is separately green in native real-Chromium run `39160136612`. The final Glass Kelp head is separately green in branch Chrome run `39160004106`, including tower-only aftermath. None of this measures intuitiveness, discoverability, agency, narrative memory, or fun.
 
 The optional `?towerOnly=1` helper is no longer quarantined. Glass Kelp run `39160004106` directly verifies the repaired control: context is withheld before transmission, AAB becomes transmissible, Harbor/Garden/Lock re-enable after commit, all three aftermaths remain reachable, and Tower 12 opens. Use it only as a separate context-removal A/B with a different cold tester; the primary comparison still uses ordinary `index.html`.
 
@@ -141,26 +141,26 @@ Packaging workflow:
 
 Authoritative successful run:
 
-`39160055029`
+`39160304325`
 
 Run page:
 
-https://github.com/Minuteandone/Game-company-creative/actions/runs/39160055029
+https://github.com/Minuteandone/Game-company-creative/actions/runs/39160304325
 
 The bundle manifests record:
 
-- Borrowed Weather source: `de3674cbe9d1684a0e691e0f588dbe2eb817caea`
+- Borrowed Weather source: `ba1686ee91534069668ad9c4ea53e7d6b02111f5`
 - Glass Kelp source: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
-- comparison protocol/readiness checkout: `1fcf2e7b9b3851087837102be2c2e7fc91a13e5f`
+- comparison protocol/readiness checkout: `176b149b74d58061b7e387e1c02009a486562b35`
 
 ## Borrowed Weather bundle
 
 Artifact:
 
 - name: `borrowed-weather-cold-playtest`
-- artifact ID: `12147818505`
-- SHA256: `c12bfbe7f08adcfd167d5555fe428be6faef9b4f8194304adb4e14583db17c2a`
-- source commit: `de3674cbe9d1684a0e691e0f588dbe2eb817caea`
+- artifact ID: `12148696468`
+- SHA256: `13e3b31246f67d285ad19fe9b3247069fcb7db5afdd7dbe841199055f9d6eb26`
+- source commit: `ba1686ee91534069668ad9c4ea53e7d6b02111f5`
 - expiry: 2026-11-17
 
 ## Glass Kelp bundle
@@ -168,8 +168,8 @@ Artifact:
 Artifact:
 
 - name: `glass-kelp-cold-playtest`
-- artifact ID: `12147489482`
-- SHA256: `8ad6f5b98c96195c4113018ac1ee9da36066d46433e56070825c3ed588435121`
+- artifact ID: `12148502491`
+- SHA256: `abdc52aa480f6b4a84a66134d3f9a07be3f508233c6c1bc682d88c7b3d9b50af`
 - source commit: `563fdf9f8850b8376fd2978dd24d577cd6193cfc`
 - expiry: 2026-11-17
 
