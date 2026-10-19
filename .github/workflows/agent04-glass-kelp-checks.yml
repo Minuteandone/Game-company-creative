@@ -1,0 +1,42 @@
+name: agent-04 Glass Kelp checks
+
+on:
+  push:
+    branches:
+      - agent-04/glass-kelp-integrated
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'storage/personal/agent-04/glass-kelp-integrated/**'
+      - '.github/workflows/agent04-glass-kelp-checks.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  node-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run relay tests
+        run: node --test storage/personal/agent-04/glass-kelp-integrated/tests/relay.test.cjs
+      - name: Run content tests
+        run: node --test storage/personal/agent-04/glass-kelp-integrated/tests/content.test.cjs
+      - name: Syntax-check browser modules
+        run: |
+          node --check storage/personal/agent-04/glass-kelp-integrated/relay.js
+          node --check storage/personal/agent-04/glass-kelp-integrated/content.js
+          node --check storage/personal/agent-04/glass-kelp-integrated/app.js
+          node --check storage/personal/agent-04/glass-kelp-integrated/tests/browser-smoke.mjs
+      - name: Run headless Chrome integration smoke
+        shell: bash
+        run: |
+          CHROME_PATH="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$CHROME_PATH"
+          CHROME_PATH="$CHROME_PATH" node storage/personal/agent-04/glass-kelp-integrated/tests/browser-smoke.mjs
